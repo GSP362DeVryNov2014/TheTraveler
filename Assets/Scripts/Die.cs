@@ -1,33 +1,22 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 
 namespace GSP
 {
-	public class Die : MonoBehaviour
+	public class Die
 	{
-		private SafeRandom rand;
+		private SafeRandom m_rand;
 
 		// Constructor for the die behaviour
-		Die()
-		{
-		}
-
-		// Use this for initialisation
-		void Start()
+		public Die()
 		{
 			// Initialise the SafeRandom class for die rolls. Don't worry about the seed; it'll use TickCount.Now for that.
-			rand = new SafeRandom();
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
+			m_rand = new SafeRandom();
 		}
 
 		// Gets the SafeRandom object.
 		public SafeRandom Rand
 		{
-			get { return rand; }
+			get { return m_rand; }
 		}
 
 		// Roll the die. This defaults to a single six-sided die.
@@ -35,7 +24,7 @@ namespace GSP
 		public int Roll()
 		{
 			// Roll the default die.
-			Roll( 1, 6 );
+			return Roll( 1, 6 );
 		}
 
 		// Roll the die. This takes the number of di(c)e and its number of sides.
@@ -50,7 +39,7 @@ namespace GSP
 			var dieSum = 0;
 
 			// Roll the die for each die needed.
-			for (int i = 0; i < numDie; i++)
+			for ( int i = 0; i < numDie; i++ )
 			{
 				// Add the roll to the sum.
 				dieSum += Rand.Next( dieMinValue, dieMaxValue );
