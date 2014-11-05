@@ -43,7 +43,7 @@ namespace GSP
 		/// </summary>
 		public SafeRandom() : this( (int)TickCount.Now )
 		{
-		}
+		} // end SafeRandom constructor
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SafeRandom"/> class.
@@ -52,7 +52,7 @@ namespace GSP
 		public SafeRandom( int seed )
 		{
 			Reseed( seed );
-		}
+		} // end SafeRandom constructor
 
 		/// <summary>
 		/// Returns a nonnegative random number.
@@ -71,7 +71,7 @@ namespace GSP
 			} while ( ret == 0x7FFFFFFF );
 
 			return ret;
-		}
+		} // end Next integer function
 
 		/// <summary>
 		/// Returns a random number within a specified range.
@@ -93,7 +93,7 @@ namespace GSP
 			if ( minValue > maxValue )
 			{
 				throw new ArgumentOutOfRangeException( "maxValue", maxValue, "maxValue must be >= minValue" );
-			}
+			} // end if statement
 
 			var range = maxValue - minValue;
 			if ( range < 0 )
@@ -101,12 +101,12 @@ namespace GSP
 				// If range is <0 then an overflow has occured and must resort to using long integer arithmetic instead (slower).
 				// We also must use all 32 bits of precision, instead of the normal 31, which again is slower.	
 				return minValue + (int)( ( _realUnitUInt * NextUInt() ) * ( (long)maxValue - minValue ) );
-			}
+			} // end if statement
 
 			// 31 bits of precision will suffice if range <= int.MaxValue. This allows us to cast to an int and gain
 			// a little more performance.
 			return minValue + (int)( ( _realUnitInt * (int)( 0x7FFFFFFF & NextUInt() ) ) * range );
-		}
+		} // end Next integer function
 
 		/// <summary>
 		/// Returns a nonnegative random number less than the specified maximum.
@@ -127,7 +127,7 @@ namespace GSP
 			}
 
 			return (int)( ( _realUnitInt * NextInt() ) * maxValue );
-		}
+		} // end Next integer function
 
 		/// <summary>
 		/// Returns a random boolean value.
@@ -147,10 +147,10 @@ namespace GSP
 				// Reset the bitMask that tells us which bit to read next
 				_bitMask = 0x80000000;
 				return ( _bitBuffer & _bitMask ) == 0;
-			}
+			} // end if statement
 
 			return ( _bitBuffer & ( _bitMask >>= 1 ) ) == 0;
-		}
+		} // end Next bool function
 
 		/// <summary>
 		/// Fills the elements of a specified array of bytes with random numbers.
@@ -162,7 +162,7 @@ namespace GSP
 			if ( buffer == null )
 			{
 				throw new ArgumentNullException( "buffer" );
-			}
+			} // end if statement
 
 			var x = _x;
 			var y = _y;
@@ -186,7 +186,7 @@ namespace GSP
 				buffer [ i++ ] = (byte)( w >> 8 );
 				buffer [ i++ ] = (byte)( w >> 16 );
 				buffer [ i++ ] = (byte)( w >> 24 );
-			}
+			} // end while statement
 
 			// Generate the remaining values
 			if ( i < buffer.Length )
@@ -207,16 +207,16 @@ namespace GSP
 						if ( i < buffer.Length )
 						{
 							buffer [ i ] = (byte)( w >> 24 );
-						}
-					}
-				}
-			}
+						} // emd if statement
+					} // end if statement
+				} // end if statement
+			} // end if statement
 
 			_x = x;
 			_y = y;
 			_z = z;
 			_w = w;
-		}
+		} // end NextBytes function
 
 		/// <summary>
 		/// Returns a random number between 0.0 and 1.0.
@@ -227,7 +227,7 @@ namespace GSP
 		public override double NextDouble()
 		{
 			return _realUnitInt * NextInt();
-		}
+		} // end NextDouble function
 
 		/// <summary>
 		/// Generates a random number in the range of 0 to <see cref="int.MaxValue"/>, inclusive.
@@ -240,7 +240,7 @@ namespace GSP
 			_y = _z;
 			_z = _w;
 			return (int)( 0x7FFFFFFF & ( _w = ( _w ^ ( _w >> 19 ) ) ^ ( t ^ ( t >> 8 ) ) ) );
-		}
+		} // end NextInt function
 
 		/// <summary>
 		/// Generates an unsigned 32-bit number in the range of 0 to <see cref="uint.MaxValue"/>. This is the fastest
@@ -254,7 +254,7 @@ namespace GSP
 			_y = _z;
 			_z = _w;
 			return ( _w = ( _w ^ ( _w >> 19 ) ) ^ ( t ^ ( t >> 8 ) ) );
-		}
+		} // end NextUInt function
 
 		/// <summary>
 		/// Reinitializes the object using the specified seed value.
@@ -269,6 +269,6 @@ namespace GSP
 			_y = _cY;
 			_z = _cZ;
 			_w = _cW;
-		}
-	}
-}
+		} // end Reseed function
+	} // end SafeRandom class
+} // end namespace

@@ -21,7 +21,7 @@ namespace GSP
 		public TickCount( uint value )
 		{
 			_value = value;
-		}
+		} // end TickCount constructor
 
 		/// <summary>
 		/// Gets the largest possible value for a <see cref="TickCount"/>.
@@ -29,7 +29,7 @@ namespace GSP
 		public static TickCount MaxValue
 		{
 			get { return new TickCount ( uint.MaxValue ); }
-		}
+		} // end MaxValue property
 
 		/// <summary>
 		/// Gets the smallest possible value for a <see cref="TickCount"/>.
@@ -37,7 +37,7 @@ namespace GSP
 		public static TickCount MinValue
 		{
 			get { return new TickCount( uint.MinValue ); }
-		}
+		} // end MinValue property
 
 		/// <summary>
 		/// Gets the amount of time that has elapsed in milliseconds since this application has started. This value will initially
@@ -54,77 +54,77 @@ namespace GSP
 				// started, which allows us to start at 0.
 				return (uint)( Environment.TickCount - _startupTime );
 			}
-		}
+		} // end Now property
 
 		/// <summary>
-		/// Performs an implicit conversion from <see cref="NetGore.TickCount"/> to <see cref="System.UInt32"/>.
+		/// Performs an implicit conversion from <see cref="TickCount"/> to <see cref="System.UInt32"/>.
 		/// </summary>
 		/// <param name="time">The time.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static implicit operator uint( TickCount time )
 		{
 			return time._value;
-		}
+		} // end uint implicit conversion operator
 
 		/// <summary>
-		/// Performs an implicit conversion from <see cref="NetGore.TickCount"/> to <see cref="System.Int64"/>.
+		/// Performs an implicit conversion from <see cref="TickCount"/> to <see cref="System.Int64"/>.
 		/// </summary>
 		/// <param name="time">The time.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static implicit operator long( TickCount time )
 		{
 			return time._value;
-		}
+		} // end long implicit conversion operator
 
 		/// <summary>
-		/// Performs an implicit conversion from <see cref="NetGore.TickCount"/> to <see cref="System.Single"/>.
+		/// Performs an implicit conversion from <see cref="TickCount"/> to <see cref="System.Single"/>.
 		/// </summary>
 		/// <param name="time">The time.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static implicit operator float( TickCount time )
 		{
 			return time._value;
-		}
+		} // end float implicit conversion operator
 
 		/// <summary>
-		/// Performs an implicit conversion from <see cref="System.UInt32"/> to <see cref="NetGore.TickCount"/>.
+		/// Performs an implicit conversion from <see cref="System.UInt32"/> to <see cref="TickCount"/>.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static implicit operator TickCount( uint value )
 		{
 			return new TickCount ( value );
-		}
+		} // end TickCount implicit conversion operator
 
 		/// <summary>
-		/// Performs an implicit conversion from <see cref="NetGore.TickCount"/> to <see cref="System.Int32"/>.
+		/// Performs an implicit conversion from <see cref="TickCount"/> to <see cref="System.Int32"/>.
 		/// </summary>
 		/// <param name="time">The time.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static explicit operator int( TickCount time )
 		{
 			return (int)time._value;
-		}
+		} // end int explicit conversion operator
 
 		/// <summary>
-		/// Performs an explicit conversion from <see cref="System.Int32"/> to <see cref="NetGore.TickCount"/>.
+		/// Performs an explicit conversion from <see cref="System.Int32"/> to <see cref="TickCount"/>.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static explicit operator TickCount( int value )
 		{
 			return new TickCount( (uint)value );
-		}
+		} // end TickCount explicit conversion operator
 
 		/// <summary>
-		/// Performs an explicit conversion from <see cref="System.Int64"/> to <see cref="NetGore.TickCount"/>.
+		/// Performs an explicit conversion from <see cref="System.Int64"/> to <see cref="TickCount"/>.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static explicit operator TickCount( long value )
 		{
 			return new TickCount( (uint)value );
-		}
+		} // end TickCount explicit conversion operator
 
 		/// <summary>
 		/// Indicates whether the current object is equal to another object of the same type.
@@ -136,7 +136,7 @@ namespace GSP
 		public bool Equals( TickCount other )
 		{
 			return other._value == _value;
-		}
+		} // end Equals function
 
 		/// <summary>
 		/// Indicates whether this instance and a specified object are equal.
@@ -148,7 +148,7 @@ namespace GSP
 		public override bool Equals( object obj )
 		{
 			return obj is TickCount && this == (TickCount)obj;
-		}
+		} // end Equals function
 
 		/// <summary>
 		/// Returns the hash code for this instance.
@@ -160,7 +160,7 @@ namespace GSP
 		public override int GetHashCode()
 		{
 			return _value.GetHashCode();
-		}
+		} // end GetHashCode function
 
 		/// <summary>
 		/// Implements the operator ==.
@@ -171,7 +171,7 @@ namespace GSP
 		public static bool operator ==( TickCount left, TickCount right )
 		{
 			return left.Equals( right );
-		}
+		} // end equality operator
 
 		/// <summary>
 		/// Implements the operator !=.
@@ -182,6 +182,6 @@ namespace GSP
 		public static bool operator !=( TickCount left, TickCount right )
 		{
 			return !left.Equals( right );
-		}
-	}
-}
+		} // end inequality operator
+	} // end TickCount struct
+} // end namespace

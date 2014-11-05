@@ -176,6 +176,7 @@ GameObject:
   - 4: {fileID: 250632995}
   - 212: {fileID: 250632994}
   - 114: {fileID: 250632996}
+  - 114: {fileID: 250632997}
   m_Layer: 0
   m_Name: Die
   m_TagString: Untagged
@@ -237,6 +238,17 @@ MonoBehaviour:
   - {fileID: 21300006, guid: d81d3399d20e69848ae6a9a6ad3cbdfd, type: 3}
   - {fileID: 21300008, guid: d81d3399d20e69848ae6a9a6ad3cbdfd, type: 3}
   - {fileID: 21300010, guid: d81d3399d20e69848ae6a9a6ad3cbdfd, type: 3}
+--- !u!114 &250632997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 250632993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37347250f596bf146afd3621c15c9f3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &298489275
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +597,7 @@ GameObject:
   - 33: {fileID: 1288533192}
   - 23: {fileID: 1288533191}
   - 114: {fileID: 1288533190}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: mesh_[00]_[00]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -990,7 +1002,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2074658006}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: BackGround_00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1018,7 +1030,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2103345040}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: mapTiled_TMX_1280Wx1024H
   m_TagString: Untagged
   m_Icon: {fileID: 0}
