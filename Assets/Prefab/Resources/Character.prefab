@@ -25,8 +25,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 400002}
   - 212: {fileID: 21200002}
+  - 114: {fileID: 11400000}
+  - 114: {fileID: 11400002}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,6 +59,28 @@ Transform:
   - {fileID: 400000}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7b46761c764b434e9f083f468e6d944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe57cba3a0b8e764fa9d00be779b2097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
