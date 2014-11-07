@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿	using UnityEngine;
 using System.Collections;
 using GSP.Char;
 
@@ -21,7 +21,6 @@ namespace GSP
 			m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
 			m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
 
-
 			// Get the player and the character script attached.
 			m_player = GameObject.FindGameObjectWithTag( "Player" );
 			m_playerCharScript = m_player.GetComponent<Character>();
@@ -40,14 +39,14 @@ namespace GSP
 			if ( Input.GetKeyDown( KeyCode.B ) )
 			{
 				print( "Adding 10 currency" );
-				m_playerCharScript.AddCurrency( 10 );
+				m_playerCharScript.Currency += 10;
 			} // end if statement
 
 			// Test the player's removing currency.
 			if ( Input.GetKeyDown( KeyCode.C ) )
 			{
 				print( "Removing 10 currency" );
-				m_playerCharScript.RemoveCurrency( 10 );
+				m_playerCharScript.Currency -= 10;
 			} // end if statement
 
 			// Test the player's max weight.
@@ -117,7 +116,7 @@ namespace GSP
 				ally = Instantiate( m_prefabRefScript.prefabCharacter ) as GameObject;
 
 				// Change its name and give it the ally tag.
-				ally.name = "Ally";
+				ally.name = "Ally" + m_playerCharScript.NumAllies;
 				ally.tag = "Ally";
 
 				print( "Adding an ally" );
@@ -128,7 +127,19 @@ namespace GSP
 			if ( Input.GetKeyDown( KeyCode.N ) )
 			{
 				print( "Removing an ally" );
-				m_playerCharScript.RemoveAlly( ally, true );
+				if(m_playerCharScript.NumAllies == 0)
+				{
+					print ("No ally found.");
+				} //end if
+				else if(m_playerCharScript.NumAllies == 1)
+				{
+					m_playerCharScript.RemoveAlly( m_playerCharScript.NumAllies-1, ally, true);
+				} //end else if
+				else if(m_playerCharScript.NumAllies > 1)
+				{
+					m_playerCharScript.RemoveAlly( m_playerCharScript.NumAllies-1);
+
+				} //end else if
 			} // end if statement
 
 			// Test the ally's setting its owner
@@ -149,6 +160,46 @@ namespace GSP
 				print( "Removing all allies" );
 				m_playerCharScript.RemoveAllAllies( true );
 			} // end if statement
+
+			// Test the value of the player's attack
+			if( Input.GetKeyDown( KeyCode.Q ) )
+			{
+				print ("The player's attack value is " + m_playerCharScript.AttackPower);
+			} //end if
+		
+			// Test the player's adding of attack value
+			if( Input.GetKeyDown (KeyCode.R ) )
+			{
+				print ("Adding 10 attack.");
+				m_playerCharScript.AttackPower += 10;
+			} //end if
+
+			// Test the player's removing of attack value
+			if( Input.GetKeyDown (KeyCode.S ) )
+			{
+				print ("Removing 10 attack.");
+				m_playerCharScript.AttackPower -= 10;
+			} //end if
+
+			// Test the value of the player's defence
+			if( Input.GetKeyDown(KeyCode.T ) )
+			{
+				print ("The player's defence value is " + m_playerCharScript.DefencePower);
+			} //end if
+
+			// Test the player's adding of defence value
+			if( Input.GetKeyDown(KeyCode.U) )
+			{
+				print ("Adding 10 defence.");
+				m_playerCharScript.DefencePower += 10;
+			} //end if
+
+			// Test the player's removing of defence value
+			if( Input.GetKeyDown(KeyCode.V ) )
+			{
+				print ("Removing 10 defence.");
+				m_playerCharScript.DefencePower -= 10;
+			} //end if
 		} // end Update function
 	} // end Test class
 }// end namespace
