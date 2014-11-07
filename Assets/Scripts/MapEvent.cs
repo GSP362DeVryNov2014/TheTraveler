@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using GSP.Char;
 
 namespace GSP
 {
@@ -24,7 +25,42 @@ namespace GSP
 			if (Input.GetKeyDown (KeyCode.N)) 
 			{
 				int dieResult = m_die.Roll (1, (int)normalTile.SIZE) - 1;
-				print ("Map Event is " + Enum.GetName (typeof(normalTile), dieResult));
+				if(Enum.GetName (typeof(normalTile), dieResult) == "ENEMY")
+				{
+					//Declare what was landed on
+					print("Map Event is ENEMY");
+
+					//Refrence for enemy graphic
+					GameObject m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
+					PrefabReference m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
+
+					// Get the enemy and the character script attached.
+					GameObject m_enemy = GameObject.FindGameObjectWithTag( "Enemy" );
+					Character m_enemyCharScript = m_enemy.GetComponent<Character>();
+
+					//ERROR: Object reference not set to an instance of an object
+					GameObject enemy = Instantiate( m_prefabRefScript.prefabCharacter ) as GameObject;
+					enemy.name = "Enemy";
+					enemy.tag = "Enemy";
+					m_enemyCharScript.AttackPower = m_die.Roll(1, 20);
+					m_enemyCharScript.DefencePower = m_die.Roll(1, 20);
+				} //end if
+				else if (Enum.GetName (typeof(normalTile), dieResult) == "ALLY")
+				{
+					print("Map Event is ALLY");
+				} //end else if
+				else if(Enum.GetName (typeof(normalTile), dieResult) == "ITEM")
+				{
+					print ("Map Event is ITEM");
+				} //end else if
+				else if (Enum.GetName (typeof(normalTile), dieResult) == "WEATHER")
+				{
+					print ("Map Event is WEATHER");
+				} //end else if
+				else if(Enum.GetName (typeof(normalTile), dieResult) == "NOTHING")
+				{
+					print("Map Event is NOTHING");
+				} //end else if
 			} //end if
 			else if (Input.GetKeyDown (KeyCode.R)) 
 			{

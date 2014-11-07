@@ -12,6 +12,8 @@ namespace GSP.Char
 		int m_currency; 				// This is the amount of currency the character is holding.
 		GameObject m_owner;				// This is the owner of the character if any.
 		List<GameObject> m_allyList;	// This is the ally list for the character.
+		int m_attackPower;				// Attack of the character (from weapons)
+		int m_defencePower;				// Defence of the character (from armor)
 
 		// Gets the current value of resources the character is holding.
 		public int ResourceValue
@@ -45,10 +47,18 @@ namespace GSP.Char
 			}
 		} // end MaxWeight property
 
-		// Gets the currency a character is holding.
+		// Gets and Sets the currency a character is holding.
 		public int Currency
 		{
 			get { return m_currency; }
+			set
+			{
+				m_currency = value;
+				if(m_currency < 0)
+				{
+					m_currency = 0;
+				} //end if
+			}//end set
 		} // end Currency property
 
 		// Gets and Sets the owner of the character if any.
@@ -63,7 +73,34 @@ namespace GSP.Char
 		{
 			get { return m_allyList.Count; }
 		} // end NumAllies function
+	
+		// Gets and Sets the attack power of character
+		public int AttackPower
+		{
+			get { return m_attackPower; }
+			set 
+			{ 
+				m_attackPower = value;
+				if(m_attackPower < 0)
+				{
+					m_attackPower = 0;
+				} //end if
+			} //end set
+		} //end AttackPower
 
+		//Gets and Sets the defence power of the character
+		public int DefencePower
+		{
+			get { return m_defencePower; }
+			set 
+			{ 
+				m_defencePower = value; 
+				if(m_defencePower < 0)
+				{
+					m_defencePower = 0;
+				} //end if
+			} //end set
+		} //end DefencePower
 		// Use this for initialization
 		void Start()
 		{
@@ -73,6 +110,8 @@ namespace GSP.Char
 			m_currency = 0;
 			m_owner = null;
 			m_allyList = new List<GameObject>();
+			m_attackPower = 0;
+			m_defencePower = 0;
 		} // end Start function
 		
 		// Update is called once per frame
@@ -90,8 +129,10 @@ namespace GSP.Char
 				// Add the resource.
 				m_resource.AddResource( resourceValue, resourceWeight );
 			} // end if statement
-
-			// TODO: Maybe display the can't pickup the resource?
+			else
+			{
+				print ("Pickup failed. Max inventory reached.");
+			} //end else
 		} // end PickupResource function
 
 		// Sells the resources the character is currently holding.
@@ -101,39 +142,17 @@ namespace GSP.Char
 			if ( Owner != null )
 			{
 				Character ownerCharScript = Owner.GetComponent<Character>();
-				ownerCharScript.AddCurrency( m_resource.Amount );
+				ownerCharScript.Currency += m_resource.Amount;
 			} // end if statement
 			else
 			{
 				// Credit the character for the resources they are holding.
-				AddCurrency( m_resource.Amount );
+				Currency += m_resource.Amount;
 			} // end else statement
 
 			// Clear the resources now.
 			m_resource.ClearResources();
 		} // end SellResource function
-
-		// Adds the given amount of currency to what the character is currently holding.
-		public void AddCurrency( int amount )
-		{
-			m_currency += amount;
-		} // end AddCurrency function
-
-		// Removes the given amount of currency from what the character is currently holding.
-		public void RemoveCurrency( int amount )
-		{
-			// Check if the operation would result in a negative number.
-			if ((m_currency - amount) <= 0)
-			{
-				// Set the currency to zero.
-				m_currency = 0;
-			}
-			else
-			{
-				// Otherwise just subtract the given amount
-				m_currency -= amount;
-			}
-		} // end RemoveCurrency function
 
 		// Adds an ally to the list.
 		public void AddAlly( GameObject ally )
@@ -142,9 +161,9 @@ namespace GSP.Char
 		} // end AddAlly function
 
 		// Removes an ally from the list while optionally destroying it after.
-		public void RemoveAlly( GameObject ally, bool destroy = false )
+		public void RemoveAlly( int allyNumber, GameObject ally = null, bool destroy = false )
 		{
-			m_allyList.Remove( ally );
+			m_allyList.RemoveAt (allyNumber);
 
 			if (destroy)
 			{
@@ -172,10 +191,9 @@ namespace GSP.Char
 				if ( charScript.Owner == this.gameObject )
 				{
 					// There was a match so remove the ally at that spot.
-					RemoveAlly( allies[index], destroy );
+					RemoveAlly( index, allies[index], destroy );
 				} // end if
 			} // end for loop
-
 		} // end RemoveAllAllys function
 	} // end Character class
 } // end namespace
