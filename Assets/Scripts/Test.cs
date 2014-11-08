@@ -1,4 +1,5 @@
-﻿	using UnityEngine;
+﻿using UnityEngine;
+using System;
 using System.Collections;
 using GSP.Char;
 
@@ -13,7 +14,7 @@ namespace GSP
 		Ally m_playerAllyScript;			// This is the ally script on the player.
 		PrefabReference m_prefabRefScript;	// This is the prefab reference script.
 
-		// Use this for initialization
+		// Use this for initialisation
 		void Start()
 		{
 			// Get the prefab reference holder and its script.
@@ -91,8 +92,14 @@ namespace GSP
 			// Test the player's picking up a resource.
 			if ( Input.GetKeyDown( KeyCode.J ) )
 			{
-				print( "Picking up a resource of 10 value, 10 weight, and 10 size" );
-				m_playerCharScript.PickupResource( 10, 10, 10 );
+				// Create a new resource.
+				Resource rock = new Resource();
+
+				// Turn the resource into a rock.
+				rock.SetResource(ResourceType.ROCK.ToString());
+
+				print( "Picking up a rock" );
+				m_playerCharScript.PickupResource( rock, 1 );
 			} // end if statement
 
 			// Test the player's selling of their resources.
@@ -121,6 +128,12 @@ namespace GSP
 
 				print( "Adding an ally" );
 				m_playerAllyScript.AddAlly( ally );
+
+				// Get the sprite renderer of the ally.
+				SpriteRenderer sprRender = ally.GetComponent<SpriteRenderer>();
+				// Tint the colour of the ally black to signify it has been added.
+				// This is ony for this test.
+				sprRender.color = Color.black;
 			} // end if statement
 
 			// Test the player's removing of an ally.
@@ -132,6 +145,12 @@ namespace GSP
 				{
 					GameObject ally = m_playerAllyScript[m_playerCharScript.NumAllies - 1];
 
+					// Get the sprite renderer of the ally.
+					SpriteRenderer sprRender = ally.GetComponent<SpriteRenderer>();
+					// Remove the colour tint to signify it's no longer an ally.
+					// This is only for this tests.
+					sprRender.color = Color.white;
+
 					m_playerAllyScript.RemoveAlly( ally );
 				} // end if statement
 			} // end if statement
@@ -139,7 +158,23 @@ namespace GSP
 			// Test the player's removing of all their allies.
 			if ( Input.GetKeyDown( KeyCode.O ) )
 			{
+				GameObject ally;
+
 				print( "Clearing the ally list" );
+
+				// Loop over the ally list.
+				for (int index = 0; index < m_playerAllyScript.NumAllies; index++)
+				{
+					// Get the current ally.
+					ally = m_playerAllyScript[index];
+					
+					// Get the sprite renderer of the ally.
+					SpriteRenderer sprRender = ally.GetComponent<SpriteRenderer>();
+					// Remove the colour tint to signify it's no longer an ally.
+					// This is only for these tests.
+					sprRender.color = Color.white;
+				} // end for loop
+
 				m_playerAllyScript.ClearAllyList();
 			} // end if statement
 
