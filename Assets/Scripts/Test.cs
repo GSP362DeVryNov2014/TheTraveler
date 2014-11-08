@@ -91,8 +91,8 @@ namespace GSP
 			// Test the player's picking up a resource.
 			if ( Input.GetKeyDown( KeyCode.J ) )
 			{
-				print( "Picking up a resource of 10 value and 10 weight" );
-				m_playerCharScript.PickupResource( 10, 10 );
+				print( "Picking up a resource of 10 value, 10 weight, and 10 size" );
+				m_playerCharScript.PickupResource( 10, 10, 10 );
 			} // end if statement
 
 			// Test the player's selling of their resources.
