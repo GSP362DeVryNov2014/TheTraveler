@@ -12,6 +12,7 @@ namespace GSP.Char
 		// Declare out private variables. The default scope is private.
 		int m_totalValue;				// This is the value of all the resources combined.
 		int m_totalWeight;				// This is the weight of all the resources combined.
+		int m_totalSize;				// This is the total size of all the resources combined.
 		List<Resource> m_resourceList;	// This is the list of resources the character is holding.
 		
 		// Gets the total value of all the resources being carried.
@@ -26,6 +27,11 @@ namespace GSP.Char
 			get { return m_totalWeight; }
 		} // end TotalWeight property
 
+		public int TotalSize
+		{
+			get { return m_totalSize; }
+		} // end TotalSize property
+
 		// Gets the number of resources the character is holding.
 		public int NumResources
 		{
@@ -38,6 +44,7 @@ namespace GSP.Char
 			// Initialise the values.
 			m_totalValue = 0;
 			m_totalWeight = 0;
+			m_totalSize = 0;
 			m_resourceList = new List<Resource>();
 		} // end Start function
 		
@@ -67,6 +74,7 @@ namespace GSP.Char
 				// Add the resource's values.
 				m_totalValue += resource.SellValue;
 				m_totalWeight += resource.WeightValue;
+				m_totalSize += resource.SizeValue;
 			} // emd for loop
 		} // end AddResource function
 		
@@ -108,6 +116,18 @@ namespace GSP.Char
 					m_totalWeight -= resource.WeightValue;
 				} // end else statement
 
+				// Check if the operation will bring the weight value to zero or less.
+				if ((m_totalSize - resource.SizeValue) <= 0)
+				{
+					// Clamp to zero.
+					m_totalSize = 0;
+				} // end if statement
+				else
+				{
+					// Otherwise subtract the given value.
+					m_totalSize -= resource.SizeValue;
+				} // end else statement
+
 				// Remove the resource from the list.
 				m_resourceList.Remove( resource );
 			} // end for loop
@@ -120,6 +140,7 @@ namespace GSP.Char
 			// Zero out the values.
 			m_totalValue = 0;
 			m_totalWeight = 0;
+			m_totalSize = 0;
 
 			// Empty the list.
 			m_resourceList.Clear();

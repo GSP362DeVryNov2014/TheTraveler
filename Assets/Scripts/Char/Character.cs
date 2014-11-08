@@ -8,7 +8,7 @@ namespace GSP.Char
 	public class Character : MonoBehaviour
 	{
 		// Declare our private variables. The default scope is private.
-		ResourceList m_resourceList;		// This is the resource list script object.
+		ResourceList m_resourceList;	// This is the resource list script object.
 		Ally m_allyScript;				// This is the ally script object.
 		int m_maxWeight;				// This is the maximum weight the character can hold.
 		int m_maxInventory;				// Maximum inventory (max number player can hold)
@@ -152,10 +152,10 @@ namespace GSP.Char
 		public void PickupResource( Resource resource, int amount )
 		{
 			// Check if picking up this resource will put the character overweight.
-			if ( ResourceWeight + resource.WeightValue <= MaxWeight )
+			if ( (ResourceWeight + resource.WeightValue) * amount <= MaxWeight )
 			{
 				// Check if there is enough room for this resource.
-				if( m_resourceList.NumResources <= MaxInventory )
+				if( m_resourceList.TotalSize + resource.SizeValue <= MaxInventory )
 				{
 					// Add the resource.
 					m_resourceList.AddResource( resource, amount );
@@ -180,6 +180,93 @@ namespace GSP.Char
 			// Clear the resources now.
 			m_resourceList.ClearResources();
 		} // end SellResource function
+
+		// Transfers currency to another character.
+		public void TransferCurrency( GameObject other, int amount )
+		{
+			// Get the ammount clamping later.
+			int amt = amount;
+
+			// Get the character script attached the the other character object.
+			Character charScript = other.GetComponent<Character>();
+
+			// Check if the script object exists.
+			if ( charScript == null )
+			{
+				// Simply return.
+				return;
+			}
+
+			// Only proceed if the amount is greater than zero.
+			if ( amt > 0)
+			{
+				// Check if the ammount is greater than the character's currency.
+				if ( amt > this.Currency )
+				{
+					// Clamp it to the character's currency if so.
+					amt = this.Currency;
+
+				} // end if statement
+
+				// Add the amount of currency to the other character.
+				charScript.Currency += amt;
+
+				// Subtract the amount of currency from the character this is attached to.
+				this.Currency -= amt;
+			}
+		} // end TransferCurrency function
+
+		// Transfers a resource to another character.
+		public void TransferResource( GameObject other, Resource resource )
+		{
+			// Check if the resource object exists.
+			if ( resource == null )
+			{
+				// Simply return.
+				return;
+			}
+
+			// Get the resource list script attached the other character object.
+			ResourceList otherResourceScript = other.GetComponent<ResourceList>();
+			// Get the character script attached the other character object.
+			Character otherCharacterScript = other.GetComponent<Character>();
+			// Get the resource list script attached the character this is attached to.
+			ResourceList charResourceScript = this.gameObject.GetComponent<ResourceList>();
+			
+			// Check if the script objects exists.
+			if ( otherResourceScript == null || charResourceScript == null || otherCharacterScript == null )
+			{
+				print( "NULL" );
+				// Simply return.
+				return;
+			}
+
+			// Check if the other character recieving this resource will put the character overweight.
+			if (  otherResourceScript.TotalWeight + resource.WeightValue <= otherCharacterScript.MaxWeight )
+			{
+				// Check if there is enough room for this resource.
+				if( otherResourceScript.TotalSize + resource.SizeValue <= otherCharacterScript.MaxInventory )
+				{
+					// Add the resource to the other character.
+					otherResourceScript.AddResource(resource, 1);
+
+					// Remove the resource from the character this is attached to.
+					charResourceScript.RemoveResource(resource, 1);
+				} // end if size
+				else
+				{
+					print( "Transfer failed. Their max inventory capacity reached." );
+				} // end else size
+			} // end if weight
+			else
+			{
+				print( "WEIGHT: " + otherResourceScript.TotalWeight );
+				print( "MAX WEIGHT: " + otherCharacterScript.MaxWeight );
+				print( "THIS MAX WEIGHT: " + this.MaxWeight );
+				print( "ALLY MAX WEIGHT: " + m_allyScript[0].gameObject.GetComponent<Character>().MaxWeight );
+				print( "Transfer failed. Their max inventory weight reached." );
+			} // end else weight
+		} // end TransferGold function
 
 		//Equips custom or predefined items.
 		//NOTE!!
