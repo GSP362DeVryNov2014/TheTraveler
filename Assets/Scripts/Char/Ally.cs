@@ -8,7 +8,7 @@ namespace GSP.Char
 	{
 		List<GameObject> m_allyList;
 
-		// Use this for initialization
+		// Use this for initialisation
 		void Start()
 		{
 			// Initialise our list here.

@@ -1,85 +1,122 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 namespace GSP.Char
 {
-	// Very simple resource script. Handles the resource value and weight collectively.
-	// Could be expanded to be more complex with individual resources later.
-	public class Resource : MonoBehaviour
+	// Resource enums
+	// NOTE!!
+	// SIZE must be the last item in the enum so that anything based
+	// on the length of the enum can be used as normal. It is best to
+	// add items to the left of SIZE but after the current 2nd to last
+	// item in the enum. For instance if the list was {SWORD, MACE, SIZE}
+	// you should enter the new item between MACE and SIZE. Create name
+	// here and then define it under "SetItem" function.
+	public enum ResourceType {ROCK, WOOL, WOOD, SIZE};
+	
+	public class Resource
 	{
-		// Declare out private variables. The default scope is private.
-		int m_amount;	// This is the value of all the resources combined.
-		int m_weight;	// This is the weight of all the resources combined.
-
-		// Gets the current value of the resources.
-		public int Amount
+		// The constructor.
+		public Resource()
 		{
-			get { return m_amount; }
-		} // end Amount property
+			// Initialise the values.
+			m_resourceName = "NAN";
+			m_weightValue = 0;
+			m_sellValue = 0;
+			
+			// The size is to get the size of the enumeration, but it'll work in this case.
+			m_resType = ResourceType.SIZE;
+		} // end constructor
+
+		string m_resourceName;	// This is the name of the resource.
+		int m_weightValue;		// This is the weight value of the resource.
+		int m_sellValue;		// This is the sell value of the resource.
+		int m_sizeValue;		// This is the size value of the resource.
+		ResourceType m_resType;	// This is the type of the resource.
 		
-		// Gets the current weight of the resources.
-		public int Weight
+		// Gets and Sets the resource's name.
+		public string ResourceName
 		{
-			get { return m_weight; }
-		} // end Weight property
-
-		// Use this for initialisation.
-		void Start()
-		{
-			// Initialise the values to zero.
-			m_amount = 0;
-			m_weight = 0;
-		} // end Start function
+			get { return m_resourceName; }
+			set { m_resourceName = value; }
+		} // end ResourceName property
 		
-		// Update is called once per frame.
-		void Update()
+		// Gets and Sets the resource's weight value.
+		public int WeightValue
 		{
-			// Nothing to do here.
-		} // end Update function
-
-		// Adds a resource value and weight to their current values
-		// This is called upon picking up a resource.
-		public void AddResource( int resourceValue, int resourceWeight )
+			get{ return m_weightValue; }
+			set{ m_weightValue = value; }
+		} // end WeightValue property
+		
+		// Gets and Sets the resource's sell value.
+		public int SellValue
 		{
-			m_amount += resourceValue;
-			m_weight += resourceWeight;
-		} // end AddResource function
+			get{ return m_sellValue; }
+			set
+			{ 
+				m_sellValue = value; 
 
-		// Subtracts a resource value and weight from their current values
-		// This is called upon transferring a resource to an ally.
-		public void RemoveResource( int resourceValue, int resourceWeight )
+				// Check if the sell value is less than zero.
+				if(m_sellValue < 0)
+				{
+					// Clamp the sell value to zero.
+					m_sellValue = 0;
+				} // end if statement
+			} // end Set accessor
+		}// end SellValue property
+
+		// Gets the resource's type.
+		public ResourceType ResType
 		{
-			// Check if the operation will bring the resource value to zero or less.
-			if ((m_amount - resourceWeight) <= 0)
-			{
-				// Clamp to zero.
-				m_amount = 0;
-			} // end if statement
-			else
-			{
-				// Otherwise subtract the given value.
-				m_amount -= resourceValue;
-			} // end else statement
+			get { return m_resType; }
+		} // end ResType property
 
-			// Check if the operation will bring the weight value to zero or less.
-			if ((m_amount - resourceWeight) <= 0)
-			{
-				// Clamp to zero.
-				m_weight = 0;
-			} // end if statement
-			else
-			{
-				// Otherwise subtract the given value.
-				m_weight -= resourceWeight;
-			} // end else statement
-		} // end RemoveResource function
-
-		// Clear the resources. This sets the values back to zero.
-		// This is called after selling.
-		public void ClearResources()
+		// Sets resource to predetermined types.
+		// NOTE: These values can be changed.
+		public string SetResource(string resourceType)
 		{
-			m_amount = 0;
-			m_weight = 0;
-		} // end ClearResources function
+			// Holds the results of parsing.
+			ResourceType tmp;
+			
+			try
+			{
+				// Attempt to parse the string into the enum value.
+				tmp = (ResourceType)Enum.Parse( typeof( ResourceType ), resourceType );
+				
+				// Switch over the possible values. ToUpper() is used as a caution.
+				switch ( tmp )
+				{
+					case ResourceType.ROCK:
+						// Set the values for the resource.
+						m_resourceName = "Rock";
+						m_sellValue = 10;
+						m_weightValue = 20;
+						m_resType = ResourceType.ROCK;
+						return "rock";
+					case ResourceType.WOOL:
+						// Set the values for the resource.
+						m_resourceName = "Wool";
+						m_sellValue = 15;
+						m_weightValue = 10;
+						m_resType = ResourceType.WOOL;
+						return "wool";
+					case ResourceType.WOOD:
+						// Set the values for the resource.
+						m_resourceName = "Rock";
+						m_sellValue = 20;
+						m_weightValue = 15;
+						m_resType = ResourceType.WOOD;
+						return "wood";
+					default:
+						return "NAN";
+				} // end switch statment
+			} // end try statement
+			catch (Exception)
+			{
+				// The parsing failed so return NAN.
+				Debug.Log( "Requested resource type '" + resourceType + "' was not found." );
+				return "NAN";
+			} // end catch statement
+		} // end SetResource function
 	} // end Resource class
 } // end namespace

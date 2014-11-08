@@ -10,6 +10,18 @@ namespace GSP
 		//Holds object for refrencing die functions
 		private Die m_die = new Die();
 
+		//Holds the objects for referencing the player and its script functions.
+		GameObject m_player;
+		Character m_playerCharScript;
+		Ally m_playerAllyScript;
+
+		//Holds the objects for referencing prefabs
+		GameObject m_charRef;
+		PrefabReference m_prefabRefScript;
+
+		//Holds the object for referencing the player's item script functions
+		Items m_playerItem;
+
 		//NOTE!!
 		//SIZE must be the last item in the enum so that anything based
 		//on the length of the enum can be used as normal. It is best to
@@ -23,13 +35,25 @@ namespace GSP
 		//Holds list of resource tile events
 		enum resourceTile {WOOL, WOOD, FISH, ORE, SIZE};
 
+		// Use this for initialization
+		void Start()
+		{
+			// Get the player, the character script, and ally script attached.
+			m_player = GameObject.FindGameObjectWithTag( "Player" );
+			m_playerCharScript = m_player.GetComponent<Character>();
+			m_playerAllyScript = m_player.GetComponent<Ally>();
+
+			// Get the prefab reference holder and its script.
+			m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
+			m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
+
+			// Get player's item script.
+			m_playerItem = m_player.GetComponent<Items>();
+		} //end Start()
+
 		//Calls map event, which needs to have access to player functions
 		void Update()
 		{
-			// Get the player and the character script attached.
-			GameObject m_player = GameObject.FindGameObjectWithTag( "Player" );
-			Character m_playerCharScript = m_player.GetComponent<Character>();
-
 			//This will be replaced with the normal tile trigger
 			if (Input.GetKeyDown (KeyCode.N)) 
 			{
@@ -39,10 +63,6 @@ namespace GSP
 				{
 					//Declare what was landed on
 					print("Map Event is ENEMY");
-
-					//Refrence for enemy graphic
-					GameObject m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
-					PrefabReference m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
 
 					//Create the enemy
 					GameObject enemy = Instantiate( m_prefabRefScript.prefabCharacter, 
@@ -66,10 +86,6 @@ namespace GSP
 					//Declare what was landed on
 					print("Map Event is ALLY");
 
-					//Refrence for ally graphic
-					GameObject m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
-					PrefabReference m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
-
 					//Instantiate the ally
 					GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, 
 						new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
@@ -79,7 +95,8 @@ namespace GSP
 					newAlly.tag = "Ally";
 
 					//Get the character script attached to the ally
-					Ally m_allyScript = newAlly.GetComponent<Ally>();
+					//Uncomment the following line once the weight bonus thing is implemented and the script is used.
+					//Ally m_allyScript = newAlly.GetComponent<Ally>();
 
 					//TODO: Have ally able to receive random weight bonus
 
@@ -94,9 +111,7 @@ namespace GSP
 					//Declare what was landed on
 					print ("Map Event is ITEM");
 
-					//Set up Item script and graphics
 					//TODO: Item graphics and code
-					Items m_playerItem = m_player.GetComponent<Items>();
 
 					//Determine what item was found
 					int itemType = m_die.Roll(1, 4);

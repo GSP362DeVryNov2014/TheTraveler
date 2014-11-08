@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,7 +8,7 @@ namespace GSP.Char
 	public class Character : MonoBehaviour
 	{
 		// Declare our private variables. The default scope is private.
-		Resource m_resource;			// This is the resource script object.
+		ResourceList m_resourceList;		// This is the resource list script object.
 		Ally m_allyScript;				// This is the ally script object.
 		int m_maxWeight;				// This is the maximum weight the character can hold.
 		int m_maxInventory;				// Maximum inventory (max number player can hold)
@@ -22,13 +23,13 @@ namespace GSP.Char
 		// Gets the current value of resources the character is holding.
 		public int ResourceValue
 		{
-			get { return m_resource.Amount; }
+			get { return m_resourceList.TotalValue; }
 		} // end ResourceValue property
 
 		// Gets the current weight of resources the character is holding.
 		public int ResourceWeight
 		{
-			get { return m_resource.Weight; }
+			get { return m_resourceList.TotalWeight; }
 		} // end ResourceWeight property
 		#endregion
 
@@ -125,11 +126,11 @@ namespace GSP.Char
 			} // end Set accessor
 		} // end DefencePower property
 
-		// Use this for initialization
+		// Use this for initialisation
 		void Start()
 		{
 			// Initialise the variables.
-			m_resource = GetComponent<Resource>();
+			m_resourceList = GetComponent<ResourceList>();
 			m_allyScript = GetComponent<Ally>();
 			m_maxWeight = 300;
 			m_maxInventory = 20;
@@ -137,6 +138,8 @@ namespace GSP.Char
 			m_attackPower = 0;
 			m_defencePower = 0;
 			m_bonuses = new List<Items> ();
+			m_weapon = null;
+			m_armor = null;
 		} // end Start function
 
 		// Update is called once per frame
@@ -145,26 +148,26 @@ namespace GSP.Char
 			// Nothing to do here at the moment.
 		} // end Update function
 
-		// Picks up a resource for the character
-		public void PickupResource( int resourceValue, int resourceWeight, int resourceSize )
+		// Attempts to pick up a resource for the character.
+		public void PickupResource( Resource resource, int amount )
 		{
 			// Check if picking up this resource will put the character overweight.
-			if ( ResourceWeight + resourceWeight <= MaxWeight )
+			if ( ResourceWeight + resource.WeightValue <= MaxWeight )
 			{
-				//Check if there is enough room for this resource
-				if( resourceSize <= MaxInventory )
+				// Check if there is enough room for this resource.
+				if( m_resourceList.NumResources <= MaxInventory )
 				{
-					m_resource.AddResource( resourceValue, resourceWeight );
-				} //end if size
-				// Add the resource.
+					// Add the resource.
+					m_resourceList.AddResource( resource, amount );
+				} // end if size
 				else
 				{
-					print ("Pickup failed. Max inventory capacity reached.");
-				} //end else size
+					print( "Pickup failed. Max inventory capacity reached." );
+				} // end else size
 			} // end if weight
 			else
 			{
-				print ("Pickup failed. Max inventory weight reached.");
+				print( "Pickup failed. Max inventory weight reached." );
 			} // end else weight
 		} // end PickupResource function
 
@@ -172,10 +175,10 @@ namespace GSP.Char
 		public void SellResource()
 		{
 			// Credit the character for the resources they are holding.
-			Currency += m_resource.Amount;
+			Currency += m_resourceList.TotalValue;
 
 			// Clear the resources now.
-			m_resource.ClearResources();
+			m_resourceList.ClearResources();
 		} // end SellResource function
 
 		//Equips custom or predefined items.
