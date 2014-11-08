@@ -16,6 +16,12 @@ namespace GSP.Char
 	
 	public class Resource
 	{
+		string m_resourceName;	// This is the name of the resource.
+		int m_weightValue;		// This is the weight value of the resource.
+		int m_sellValue;		// This is the sell value of the resource.
+		int m_sizeValue;		// This is the size value of the resource.
+		ResourceType m_resType;	// This is the type of the resource.
+
 		// The constructor.
 		public Resource()
 		{
@@ -23,16 +29,11 @@ namespace GSP.Char
 			m_resourceName = "NAN";
 			m_weightValue = 0;
 			m_sellValue = 0;
+			m_sizeValue = 0;
 			
 			// The size is to get the size of the enumeration, but it'll work in this case.
 			m_resType = ResourceType.SIZE;
 		} // end constructor
-
-		string m_resourceName;	// This is the name of the resource.
-		int m_weightValue;		// This is the weight value of the resource.
-		int m_sellValue;		// This is the sell value of the resource.
-		int m_sizeValue;		// This is the size value of the resource.
-		ResourceType m_resType;	// This is the type of the resource.
 		
 		// Gets and Sets the resource's name.
 		public string ResourceName
@@ -65,6 +66,11 @@ namespace GSP.Char
 			} // end Set accessor
 		}// end SellValue property
 
+		public int SizeValue
+		{
+			get { return m_sizeValue; }
+		} // end SizeValue property
+
 		// Gets the resource's type.
 		public ResourceType ResType
 		{
@@ -91,6 +97,7 @@ namespace GSP.Char
 						m_resourceName = "Rock";
 						m_sellValue = 10;
 						m_weightValue = 20;
+						m_sizeValue = 5;
 						m_resType = ResourceType.ROCK;
 						return "rock";
 					case ResourceType.WOOL:
@@ -98,6 +105,7 @@ namespace GSP.Char
 						m_resourceName = "Wool";
 						m_sellValue = 15;
 						m_weightValue = 10;
+						m_sizeValue = 5;
 						m_resType = ResourceType.WOOL;
 						return "wool";
 					case ResourceType.WOOD:
@@ -105,6 +113,7 @@ namespace GSP.Char
 						m_resourceName = "Rock";
 						m_sellValue = 20;
 						m_weightValue = 15;
+						m_sizeValue = 5;
 						m_resType = ResourceType.WOOD;
 						return "wood";
 					default:
