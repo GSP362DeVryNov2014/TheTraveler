@@ -36,7 +36,6 @@ namespace GSP.Char
 		// Gets the number of allies the character has.
 		public int NumAllies
 		{
-			//ERROR: Object reference not set to instance of an object
 			get { return m_allyScript.NumAllies; }
 		} // end NumAllies function
 		#endregion

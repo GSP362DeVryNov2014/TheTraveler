@@ -44,14 +44,16 @@ namespace GSP
 					GameObject m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
 					PrefabReference m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
 
-					// Get the enemy and the character script attached.
-					Character m_enemyScript = m_player.GetComponent<Character>();
+					//Create the enemy
 					GameObject enemy = Instantiate( m_prefabRefScript.prefabCharacter, 
 						new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
 
 					//Name and tag
 					enemy.name = "Enemy";
 					enemy.tag = "Enemy";
+
+					//Get the character script attached to the enemy
+					Character m_enemyScript = enemy.GetComponent<Character>();
 
 					//Set stats
 					m_enemyScript.AttackPower = m_die.Roll(1, 20);
@@ -68,14 +70,16 @@ namespace GSP
 					GameObject m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
 					PrefabReference m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
 
-					//Set up ally script and instantiate
-					Ally m_playerAllyScript = m_player.GetComponent<Ally>();
+					//Instantiate the ally
 					GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, 
 						new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 
 					//Name and tag ally
 					newAlly.name = "Ally" + m_playerCharScript.NumAllies;
 					newAlly.tag = "Ally";
+
+					//Get the character script attached to the ally
+					Ally m_allyScript = newAlly.GetComponent<Ally>();
 
 					//TODO: Have ally able to receive random weight bonus
 
