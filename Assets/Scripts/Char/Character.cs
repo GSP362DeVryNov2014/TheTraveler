@@ -8,7 +8,7 @@ namespace GSP.Char
 	public class Character : MonoBehaviour
 	{
 		// Declare our private variables. The default scope is private.
-		ResourceList m_resourceList;		// This is the resource list script object.
+		ResourceList m_resourceList;	// This is the resource list script object.
 		Ally m_allyScript;				// This is the ally script object.
 		int m_maxWeight;				// This is the maximum weight the character can hold.
 		int m_maxInventory;				// Maximum inventory (max number player can hold)
@@ -194,22 +194,34 @@ namespace GSP.Char
 			//Assign values to a custom item
 			if(value != 0)
 			{
+				temp.ItemName = "CustomItem-" + item;
 				if(item == "attack")
 				{
+					temp.ItemType = "Weapon";
 					temp.AttackValue += value;
 				} //end if attack
 				else if(item == "defence")
 				{
+					temp.ItemType = "Armor";
 					temp.DefenceValue += value;
 				} //end else if defence
 				else if(item == "inventory")
 				{
+					temp.ItemType = "Inventory";
 					temp.InventoryValue += value;
 				} //end else if inventory
 				else if(item == "weight")
 				{
+					temp.ItemType = "Weight";
 					temp.WeightValue += value;
 				} //end else if weight
+				else
+				{
+					temp = null;
+					print ("No stat of " + item + " type found. Make sure you're" +
+					       " using lower case input. Valid types are attack, defence" +
+					       " inventory, and weight.");
+				} //end else
 			} //end if custom set
 			//Assign values to a predefined item
 			else
@@ -228,43 +240,139 @@ namespace GSP.Char
 			//Equip item
 			if (item == "NAN")
 			{
-				//Do nothing, code taken care of above
+				//Simply return
+				//NOTE: I left this here in case there is code we
+				//want to add for this condition, kind of a catch
+				//all for clean up after invalid input.
+				return;
 			} //end if NAN
 			else if(item == "attack")
 			{
-				m_weapon = temp;
+				if(m_weapon != null)
+				{
+					print ("Do you want this weapon? Hit y for yes and n for no.");
+					bool Loop = true;
+					while(Loop)
+					{
+						if(Input.GetKeyDown(KeyCode.Y))
+						{
+							//Clean up old weapon, then apply new
+							AttackPower -= m_weapon.AttackValue;
+							AttackPower += temp.AttackValue;
+							m_weapon = temp;
+							temp = null;
+							Loop = false;
+						}
+						else if(Input.GetKeyDown(KeyCode.N))
+						{
+							//Disable temp and end loop
+							temp = null;
+							Loop = false;
+						} //end else if
+					} //end while
+				} //end if existing weapon
+				else
+				{
+					AttackPower += temp.AttackValue;
+					m_weapon = temp;
+				} //end else no existing weapon
 			} //end else if attack
 			else if(item == "defence")
 			{
-				m_armor = temp;
+				if(m_armor != null)
+				{
+					print ("Do you want this armor? Hit y for yes and n for no.");
+					bool Loop = true;
+					while(Loop)
+					{
+						if(Input.GetKeyDown(KeyCode.Y))
+						{
+							//Clean up old armor, then apply new
+							DefencePower -= m_armor.DefenceValue;
+							DefencePower += temp.DefenceValue;
+							m_armor = temp;
+							temp = null;
+							Loop = false;
+						}
+						else if(Input.GetKeyDown(KeyCode.N))
+						{
+							//Disable temp and end loop
+							temp = null;
+							Loop = false;
+						} //end else if
+					} //end while
+				} //end if existing armor
+				else
+				{
+					DefencePower += temp.DefenceValue;
+					m_armor = temp;
+				} //end else no existing armor
 			} //end else if defence
-			else
+			else if(item == "inventory")
 			{
 				m_bonuses.Add(temp);
-			} //end else (Inventory and Weight)
-
-			//TODO: Apply stat changes, accounting for no previous weapon/armour
-			//or previous weapon/armour (since it's getting replaced). Also bonuses
-			//might want to have a limit, but for now leave it infinite. Stat change
-			//should only happen once, which is why applying the stat changes here 
-			//makes sense, but you might have a better idea.
-
+			} //end else if inventory
+			else if(item == "weight")
+			{
+				m_bonuses.Add(temp);
+			} //end else if weight
+			else
+			{
+				//Explain error, disable temp, then return
+				print ("Stat value " + item + " does not exist.");
+				temp = null;
+				return;
+			} //end else
 		} //end EquipItem(string item, int value)
 
 		public void RemoveItem(string item)
 		{
 			if(item == "weapon")
 			{
-				m_weapon = null;
+				//Verify item exists
+				if(m_weapon != null)
+				{
+					print (m_weapon.ItemName + " removed.");
+					AttackPower -= m_weapon.AttackValue;
+					m_weapon = null;
+				} //end if existing weapon
+				else
+				{
+					print ("No weapon found.");
+				} //end else no existing weapon
 			} //end if weapon
 			else if(item == "armor")
 			{
-				m_armor = null;
+				//Verify item exists
+				if(m_armor != null)
+				{
+					print (m_armor.ItemName + " removed.");
+					DefencePower -= m_armor.DefenceValue;
+					m_armor = null;
+				} //end if existing armor
+				else
+				{
+					print ("No armor found.");
+				} //end else no existing armor
 			} //end else if armor
-
-			//TODO: Figure out how to remove bonus items (since there can be multiple)
-
-			//TODO: Remove stat bonus from player when item is removed
+			else if(item == "inventory")
+			{
+				Items temp = m_bonuses.Find(x => x.ItemType == "Inventory");
+				MaxInventory -= temp.InventoryValue;
+				m_bonuses.Remove(temp);
+			} //end else if inventory
+			else if(item == "weight")
+			{
+				Items temp = m_bonuses.Find(x => x.ItemType == "Weight");
+				MaxWeight -= temp.WeightValue;
+				m_bonuses.Remove(temp);
+			} //end else if weight
+			else
+			{
+				print ("No item of " + item + " stat found. Make sure you " +
+					"are using lower case. Valid types are weapon, armor, inventory, " +
+				       " and weight.");
+			} //end else
 		} //end RemoveItem(string item)
 	} // end Character class
 } // end namespace
