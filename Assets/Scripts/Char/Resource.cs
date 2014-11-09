@@ -11,8 +11,8 @@ namespace GSP.Char
 	// add items to the left of SIZE but after the current 2nd to last
 	// item in the enum. For instance if the list was {SWORD, MACE, SIZE}
 	// you should enter the new item between MACE and SIZE. Create name
-	// here and then define it under "SetItem" function.
-	public enum ResourceType {ROCK, WOOL, WOOD, SIZE};
+	// here and then define it under "SetResource" function.
+	public enum ResourceType {WOOL, WOOD, FISH, ORE, SIZE};
 	
 	public class Resource
 	{
@@ -92,14 +92,6 @@ namespace GSP.Char
 				// Switch over the possible values. ToUpper() is used as a caution.
 				switch ( tmp )
 				{
-					case ResourceType.ROCK:
-						// Set the values for the resource.
-						m_resourceName = "Rock";
-						m_sellValue = 10;
-						m_weightValue = 20;
-						m_sizeValue = 5;
-						m_resType = ResourceType.ROCK;
-						return "rock";
 					case ResourceType.WOOL:
 						// Set the values for the resource.
 						m_resourceName = "Wool";
@@ -110,12 +102,28 @@ namespace GSP.Char
 						return "wool";
 					case ResourceType.WOOD:
 						// Set the values for the resource.
-						m_resourceName = "Rock";
+						m_resourceName = "Wood";
 						m_sellValue = 20;
 						m_weightValue = 15;
 						m_sizeValue = 5;
 						m_resType = ResourceType.WOOD;
 						return "wood";
+					case ResourceType.FISH:
+						// Set the values for the resource.
+						m_resourceName = "Fish";
+						m_sellValue = 15;
+						m_weightValue = 25;
+						m_sizeValue = 5;
+						m_resType = ResourceType.FISH;
+						return "fish";
+					case ResourceType.ORE:
+						// Set the values for the resource.
+						m_resourceName = "Ore";
+						m_sellValue = 10;
+						m_weightValue = 20;
+						m_sizeValue = 5;
+						m_resType = ResourceType.ORE;
+						return "ore";
 					default:
 						return "NAN";
 				} // end switch statment

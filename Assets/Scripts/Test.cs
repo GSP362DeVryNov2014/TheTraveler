@@ -95,13 +95,13 @@ namespace GSP
 			if ( Input.GetKeyDown( KeyCode.J ) )
 			{
 				// Create a new resource.
-				Resource rock = new Resource();
+				Resource ore = new Resource();
 
-				// Turn the resource into a rock.
-				rock.SetResource(ResourceType.ROCK.ToString());
+				// Turn the resource into an ore.
+				ore.SetResource(ResourceType.ORE.ToString());
 
-				print( "Picking up a rock" );
-				m_playerCharScript.PickupResource( rock, 1 );
+				print( "Digging up an ore" );
+				m_playerCharScript.PickupResource( ore, 1 );
 			} // end if statement
 
 			// Test the player's selling of their resources.
@@ -306,7 +306,7 @@ namespace GSP
 				StartCoroutine( "DelayedRemoveMultiple" );
 			}
 
-			// Test the creation and removal of many allies using RemoveAllOwnedAllies.
+			// Test the creation and removal of many allies using ClearAllyList.
 			// The coroutine is only for showing the ally on the screen before its removal.
 			if ( Input.GetKeyDown( KeyCode.Alpha3 ) )
 			{
@@ -358,8 +358,57 @@ namespace GSP
 				StartCoroutine( "DelayedRemoveSingle", ally);
 			}
 
-			// Test for transfering currency from an ally.
+			// Test the creation and removal of many allies using ClearAllyList.
+			// The coroutine is only for showing the ally on the screen before its removal.
+			// This is the index version
 			if ( Input.GetKeyDown( KeyCode.Alpha4 ) )
+			{
+				// The starting values for displaying all on the screen.
+				float x = -6.0f;
+				
+				// Create five allies.
+				for (int index = 0; index < 5; index++)
+				{
+					// Instantiate a copy of the character prefab.
+					print( "Creating allies" );
+					GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, new Vector3( x, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+					
+					// Add 3 to the x value
+					x += 3.0f;
+					
+					// Change the ally's name.
+					newAlly.name = "Ally" + m_playerCharScript.NumAllies;
+					print( "Ally name changed to: " + newAlly.name );
+					
+					// Change the ally's tag.
+					newAlly.tag = "Ally";
+					print( "Ally tagged as: " + newAlly.tag );
+					
+					// Add the ally to the character this is attached to's ally list.
+					print( "Adding an ally to the list" );
+					m_playerAllyScript.AddAlly( newAlly );
+					
+					// Get the sprite renderer of the ally.
+					SpriteRenderer sprRender = newAlly.GetComponent<SpriteRenderer>();
+					// Tint the colour of the ally black to signify it has been added.
+					// This is ony for this test.
+					sprRender.color = Color.black;
+					
+					// Display the ally count.
+					print( "Ally count is now: " + m_playerCharScript.NumAllies );
+					
+					// Get the index of the ally.
+					print( "Ally index:" + m_playerAllyScript.GetIndex( newAlly ) );
+				} // end for statement
+				
+				print( "Removing the middle ally." );
+				
+				// Coroutine to remove the ally after 3 seconds.
+				StartCoroutine( "DelayedRemoveSingleInt", 2);
+			}
+
+			// Test for transfering currency from an ally.
+			if ( Input.GetKeyDown( KeyCode.Alpha5 ) )
 			{
 				// Instantiate a copy of the character prefab.
 				print( "Creating an ally" );
@@ -405,8 +454,8 @@ namespace GSP
 				print( "Ally now has " + allyCharScript.Currency + " currency" );
 			}
 
-			// Test for transfering gold from an ally.
-			if ( Input.GetKeyDown( KeyCode.Alpha5 ) )
+			// Test for transfering a resource from an ally.
+			if ( Input.GetKeyDown( KeyCode.Alpha6 ) )
 			{
 				// Instantiate a copy of the character prefab.
 				print( "Creating an ally" );
@@ -439,13 +488,13 @@ namespace GSP
 				// Create a resource.
 				Resource resource = new Resource();
 
-				// Set it to a rock.
-				resource.SetResource(ResourceType.ROCK.ToString());
+				// Set it to an ore.
+				resource.SetResource(ResourceType.ORE.ToString());
 
 				// Give the player the resource.
 				print( "Player has " + m_playerResScript.NumResources + " resources" );
 				m_playerResScript.AddResource(resource, 1);
-				print( "Giving the player a rock" );
+				print( "Giving the player an ore" );
 				print( "Player now has " + m_playerResScript.NumResources + " resources" );
 
 				// We need to delay the transfer as it's executing too quickly in this test.
@@ -456,7 +505,7 @@ namespace GSP
 			#endregion
 		} // end Update function
 
-		// Coroutine for delayed removal of a signle ally.
+		// Coroutine for delayed removal of a single ally.
 		IEnumerator DelayedRemoveSingle(GameObject ally)
 		{
 			// Wait for 3 seconds.
@@ -468,6 +517,24 @@ namespace GSP
 
 			// Get the sprite renderer of the ally.
 			SpriteRenderer sprRender = ally.GetComponent<SpriteRenderer>();
+			// Remove the colour tint to signify it's no longer an ally.
+			// This is only for these tests.
+			sprRender.color = Color.white;
+		}
+
+		// Coroutine for delayed removal of a single ally via index.
+		IEnumerator DelayedRemoveSingleInt(int index)
+		{
+			// Wait for 3 seconds.
+			yield return new WaitForSeconds( 3.0f );
+
+			// Get the sprite renderer of the ally.
+			SpriteRenderer sprRender = m_playerAllyScript.GetObject(index).GetComponent<SpriteRenderer>();
+
+			// Remove the ally from list.
+			print( "Removing the ally from the list" );
+			m_playerAllyScript.RemoveAlly( index );
+
 			// Remove the colour tint to signify it's no longer an ally.
 			// This is only for these tests.
 			sprRender.color = Color.white;

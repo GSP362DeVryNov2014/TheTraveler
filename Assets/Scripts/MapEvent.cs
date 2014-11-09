@@ -46,9 +46,6 @@ namespace GSP
 			// Get the prefab reference holder and its script.
 			m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
 			m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
-
-			// Get player's item script.
-			m_playerItem = m_player.GetComponent<Items>();
 		} //end Start()
 
 		//Calls map event, which needs to have access to player functions
@@ -57,9 +54,8 @@ namespace GSP
 			//This will be replaced with the normal tile trigger
 			if (Input.GetKeyDown (KeyCode.N)) 
 			{
-				//TODO: Skew roll so outcomes have non-equal percentages.
-				int dieResult = m_die.Roll (1, (int)normalTile.SIZE) - 1;
-				if(Enum.GetName (typeof(normalTile), dieResult) == "ENEMY")
+				int dieResult = m_die.Roll (1, 100);
+				if(dieResult < 36)
 				{
 					//Declare what was landed on
 					print("Map Event is ENEMY");
@@ -81,7 +77,7 @@ namespace GSP
 
 					//TODO: Make fight function and feed this enemy as the target
 				} //end if ENEMY
-				else if (Enum.GetName (typeof(normalTile), dieResult) == "ALLY")
+				else if (dieResult < 51 && dieResult >= 36)
 				{
 					//Declare what was landed on
 					print("Map Event is ALLY");
@@ -100,13 +96,25 @@ namespace GSP
 
 					//TODO: Have ally able to receive random weight bonus
 
-					//Add to ally list
-					m_playerAllyScript.AddAlly( newAlly );
-
-					//TODO: Have player able to refuse ally, and check if ally
-					//list if full
+					print ("Do you want this ally? Hit y for yes and n for no.");
+					bool Loop = true;
+					while(Loop)
+					{
+						if(Input.GetKeyDown(KeyCode.Y))
+						{
+							//Add to ally list
+							m_playerAllyScript.AddAlly( newAlly );
+							Loop = false;
+						}
+						else if(Input.GetKeyDown(KeyCode.N))
+						{
+							//Disable newAlly and end loop
+							newAlly = null;
+							Loop = false;
+						} //end else if
+					} //end while
 				} //end else if ALLY
-				else if(Enum.GetName (typeof(normalTile), dieResult) == "ITEM")
+				else if(dieResult < 61 && dieResult >= 51)
 				{
 					//Declare what was landed on
 					print ("Map Event is ITEM");
@@ -116,16 +124,21 @@ namespace GSP
 					//Determine what item was found
 					int itemType = m_die.Roll(1, 4);
 
+					//TODO: ERROR: You are trying to create a MonoBehavior using the 'new'
+					//keyword. This is not allowed. MonoBehaviors can only be added
+					//using AddComponent(). Alternatively, your script can inherit
+					//from ScriptableObject or no base class at all.
 					if(itemType == 1)
 					{
 						//Pick an item from the weapons enum
 						int itemNumber = m_die.Roll(1, (int)Weapons.SIZE) - 1;
 
 						//Assign chosen number as the item
-						m_playerItem.SetItem(Enum.GetName(typeof(Weapons), itemNumber));
+						string itemName = Enum.GetName(typeof(Weapons), itemNumber);
 
-						//TODO: Allow player to accept or refuse item.
-						//If accepted, assign item to player through EquipItem
+						//Equip to player
+						m_playerCharScript.EquipItem(itemName);
+
 					} //end if Weapon
 					else if(itemType == 2)
 					{
@@ -133,11 +146,10 @@ namespace GSP
 						int itemNumber = m_die.Roll(1, (int)Armor.SIZE) - 1;
 						
 						//Assign chosen number as the item
-						//ERROR: Object reference not set to an instance of an object
-						m_playerItem.SetItem(Enum.GetName(typeof(Armor), itemNumber));
+						string itemName = Enum.GetName(typeof(Armor), itemNumber);
 						
-						//TODO: Allow player to accept or refuse item.
-						//If accepted, assign item to player through EquipItem
+						//Equip to player
+						m_playerCharScript.EquipItem(itemName);
 					} //end else if Armor
 					else if(itemType == 3)
 					{
@@ -145,42 +157,49 @@ namespace GSP
 						int itemNumber = m_die.Roll(1, (int)Inventory.SIZE) - 1;
 						
 						//Assign chosen number as the item
-						m_playerItem.SetItem(Enum.GetName(typeof(Inventory), itemNumber));
+						string itemName = Enum.GetName(typeof(Inventory), itemNumber);
 						
-						//TODO: Allow player to accept or refuse item.
-						//If accepted, assign item to player through EquipItem
+						//Equip to player
+						m_playerCharScript.EquipItem(itemName);
 					} //end else if Inventory
 					else if(itemType == 4)
 					{
 						//Pick an item from the weight enum
 						int itemNumber = m_die.Roll(1, (int)Weight.SIZE) - 1;
-						
+
 						//Assign chosen number as the item
-						//ERROR: Object reference not set to instance of an object
-						m_playerItem.SetItem(Enum.GetName(typeof(Weight), itemNumber));
+						string itemName = Enum.GetName(typeof(Weight), itemNumber);
 						
-						//TODO: Allow player to accept or refuse item.
-						//If accepted, assign item to player through EquipItem
+						//Equip to player
+						m_playerCharScript.EquipItem(itemName);
 					} //end else if Weight
 				} //end else if ITEM
-				else if (Enum.GetName (typeof(normalTile), dieResult) == "WEATHER")
+				else if (dieResult < 71 && dieResult >= 61)
 				{
 					print ("Map Event is WEATHER");
 
 					//TODO: Create weather effect variable for each map, then refrence it here
 				} //end else if WEATHER
-				else if(Enum.GetName (typeof(normalTile), dieResult) == "NOTHING")
+				else
 				{
-					print("Map Event is NOTHING");
+					print("Map Event is NOTHING ");
 				} //end else if NOTHING
 			} //end if NORMAL TILE
 			//This will be replaced by the resource tile trigger
 			else if (Input.GetKeyDown (KeyCode.R)) 
 			{
-				int dieResult = m_die.Roll (1, (int)resourceTile.SIZE) - 1;
-				print ("Map Event is " + Enum.GetName (typeof(resourceTile), dieResult));
+				//TODO: Figure out how to feed tile resource type into this.
+				//Create temp resource
+				Resource temp = new Resource();
 
-				//TODO: Still waiting for defined resources.
+				// Turn the resource into an ore.
+				temp.SetResource(ResourceType.ORE.ToString());
+
+				//Pick up ore
+				m_playerCharScript.PickupResource( temp, 1 );
+
+				//Declare what was landed on
+				print ("Map Event is " + temp.ResourceName);
 			} //end else if RESOURCE TILE
 		} //end Update()
 	} //end MapEvent class

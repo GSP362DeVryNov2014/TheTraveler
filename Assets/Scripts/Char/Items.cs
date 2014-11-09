@@ -19,6 +19,7 @@ namespace GSP.Char
 	public class Items : MonoBehaviour 
 	{
 		string m_itemName;				//Name of this item
+		string m_itemType;				//Type of item (dont forget to make enum of new types
 		int m_attackValue;				//Attack value this item adds/removes
 		int m_defenceValue;				//Defence value this item adds/removes
 		int m_inventoryValue;			//Inventory value this item adds/removes
@@ -32,6 +33,16 @@ namespace GSP.Char
 			set
 			{
 				m_itemName = value;
+			} //end Set
+		} //end ItemName
+
+		//Get/Set ItemType
+		public string ItemType
+		{
+			get { return m_itemType; }
+			set
+			{
+				m_itemType = value;
 			} //end Set
 		} //end ItemName
 
@@ -81,6 +92,7 @@ namespace GSP.Char
 		void Start () 
 		{
 			m_itemName = "NAN";
+			m_itemType = "NAN";
 			m_attackValue = 0;
 			m_defenceValue = 0;
 			m_inventoryValue = 0;
@@ -101,6 +113,7 @@ namespace GSP.Char
 			if (Item == "SWORD") 
 			{
 				m_itemName = "Sword";
+				m_itemType = "Weapon";
 				m_attackValue = 5;
 				return "attack";
 			} //end if
@@ -109,6 +122,7 @@ namespace GSP.Char
 			else if (Item == "PLATEBODY") 
 			{
 				m_itemName = "Platebody";
+				m_itemType = "Armor";
 				m_defenceValue = 8;
 				return "defence";
 			} //end else if
@@ -117,6 +131,7 @@ namespace GSP.Char
 			else if (Item == "SACHEL")
 			{
 				m_itemName = "Sachel";
+				m_itemType = "Inventory";
 				m_inventoryValue = 3;
 				return "inventory";
 			} //end else if
@@ -125,6 +140,7 @@ namespace GSP.Char
 			else if (Item == "RUBBERBOOTS")
 			{
 				m_itemName = "Rubber Boots";
+				m_itemType = "Weight";
 				m_weightValue = 10;
 				return "weight";
 			} //end else if
