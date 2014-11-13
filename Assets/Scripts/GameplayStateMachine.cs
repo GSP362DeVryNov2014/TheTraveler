@@ -1,10 +1,169 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace GSP
 {
+	public class StateMachine : MonoBehaviour
+	{
+		//Contains overall states of program
+		enum OVERALLSTATES {INTRO, MENU, GAME, END};
+		//Contains states of menu
+		enum MENUSTATES {HOME, SOLO, MULTI, CREDITS, OPTIONS, QUIT};
+		//Contains states of gameplay
+		enum GAMESTATES {HOME, INITIALIZE, DETERMINE, ROLLDICE, CALCDISTANCE, PRESENT, CONFIRM, MAPEVENT, 
+			ENDTURN, ENDGAME};
 
-	public class GameplayStateMachine : MonoBehaviour 
+		//State machine variables
+		GUI GuiStateMachine;			//GUI
+		OVERALLSTATES m_programState;	//Current overall state
+		MENUSTATES m_menuState;			//Current menu state
+		GAMESTATES m_gameplayState;		//Current state of gameplay
+
+		//Game state machine variables
+		int m_dieRoll;					//Value of roll. A zero means no roll was made.
+		int m_allowedTravelDist;		//Distance player can move after algorithm
+		int m_currTravelDist;	 		//Holds number of spaces moved this turn (may be unnecessary variable)
+		Vector2 m_highlightPosition; 	//Highlight will indicate chosen tile
+
+		//Initialize variables
+		void Start()
+		{
+			m_programState = OVERALLSTATES.INTRO;	//Initial beginning of game
+			m_menuState = MENUSTATES.HOME;			//Prevents triggers from occuring before called
+			m_gameplayState = GAMESTATES.HOME;      //Prevents triggers from occuring before called
+			m_dieRoll = 0;							//Start at no roll
+			m_allowedTravelDist = 0;				//Start at no travel
+			m_currTravelDist = 0;					//Start at no movement
+			m_highlightPosition = new Vector2 ();	//Initialize vector
+		} //end Start
+
+		//Main function for controlling game
+		void Update()
+		{
+			//Will fill in later with game controls. Refer to UMLs for other details.
+			//PROGRAM ENTRY POINT
+			switch(m_programState)
+			{
+			//INTRO
+			case OVERALLSTATES.INTRO:
+				//Play video or whatever
+				break;
+			//MENU
+			case OVERALLSTATES.MENU:
+				//MENU ENTRY POINT
+				switch(m_menuState)
+				{
+				//HOME - Menu hub, displays all buttons for menu
+				case MENUSTATES.HOME:
+					break;
+				//SOLO - Single Player game
+				case MENUSTATES.SOLO:
+					break;
+				//MULTI - Multiplayer game
+				case MENUSTATES.MULTI:
+					break;
+				//CREDITS - Display names and instructions
+				case MENUSTATES.CREDITS:
+					break;
+				//OPTIONS - Display and allow change to any options we want
+				case MENUSTATES.OPTIONS:
+					break;
+				//QUIT - Change program to END to wrap up any loose ends
+				case MENUSTATES.QUIT:
+					break;
+				} //end Menu Switch
+				break;
+			//GAME
+			case OVERALLSTATES.GAME:
+				//GAMEPLAY ENTRY POINT
+				switch(m_gameplayState)
+				{
+				//HOME - Prevents game from starting prematurely
+				case GAMESTATES.HOME:
+					break;
+				//INITIALIZE - Starts game variables with corresponding choices
+				case GAMESTATES.INITIALIZE:
+					break;
+				//DETERMINE - Determines which player is going, this is the start of the turn
+				case GAMESTATES.DETERMINE:
+					break;
+				//***********
+				//NOTE: ROLL, CALC, and ENDTURN can be used to implement effects that might be added later
+				//***********
+				//ROLLDICE - Rolls dice
+				case GAMESTATES.ROLLDICE:
+					break;
+				//CALCDISTANCE - Plugs roll into algorithm and returns allowed movement
+				case GAMESTATES.CALCDISTANCE:
+					break;
+				//PRESENT - Presents the tiles the player can choose to move to
+				case GAMESTATES.PRESENT:
+					break;
+				//CONFIRM - Player confirms if they like their choice
+				case GAMESTATES.CONFIRM:
+					break;
+				//MAPEVENT - Call the appropriate map event
+				case GAMESTATES.MAPEVENT:
+					break;
+				//ENDTURN - This is the end of the player's turn
+				case GAMESTATES.ENDTURN:
+					break;
+				//ENDGAME - End of game, display results, return to menu when done
+				case GAMESTATES.ENDGAME:
+					break;
+				} //end Gameplay Switch
+				break;
+			//END
+			case OVERALLSTATES.END:
+				//Wrap up any loose ends here since the program is now exiting.
+				break;
+			default:
+				print ("Error - No program state " + m_programState + " found.");
+				break;
+			} //end Program Switch
+
+			//Update and draw the GUI
+			DrawGUIText ();
+		} //end Update
+
+		//State machine functions
+		//Program state
+		public int GetState()
+		{
+			return (int)m_programState;
+		} //end GetState()
+
+		//Menu state
+		public int GetMenu()
+		{
+			return (int)m_menuState;
+		} //end GetMenu()
+
+		//Game state
+		public int GetGame()
+		{
+			return (int)m_gameplayState;
+		} //end GetGame()
+
+		//GUI Text function
+		public void DrawGUIText()
+		{
+			//Sample of collecting overall state. Can be changed for Menu and Game states
+			var state = GameObject.FindGameObjectWithTag("GUITextTag").GetComponent<GUIText>();
+			state.text = Enum.GetName (typeof(OVERALLSTATES), (int)m_programState);
+		} //end DrawGUIText
+
+		//GUI drawing
+		public void OnDrawGizmos()
+		{
+
+		} //end OnDrawGizmos()
+	} //end StateMachine class
+} //end namespace GSP
+	
+	///Kept for historical purposes
+	/*public class GameplayStateMachine : MonoBehaviour 
 	//====================================================================
 	// +will be in charge of designing the stateMachine
 	// +GetState() returns int
@@ -128,6 +287,4 @@ namespace GSP
 
 		} //end public void OnDrawGizmos()
 
-	}	//end public class GameplayStateMachine : MonoBehaviour
-
-}	//end namespace GSP
+	}	//end public class GameplayStateMachine : MonoBehaviour */
