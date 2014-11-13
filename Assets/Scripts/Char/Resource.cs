@@ -113,10 +113,7 @@ namespace GSP.Char
 						m_resourceName = "Fish";
 						m_sellValue = 15;
 						m_weightValue = 25;
-<<<<<<< HEAD
-=======
 						m_sizeValue = 5;
->>>>>>> upstream/master
 						m_resType = ResourceType.FISH;
 						return "fish";
 					case ResourceType.ORE:
@@ -124,10 +121,7 @@ namespace GSP.Char
 						m_resourceName = "Ore";
 						m_sellValue = 10;
 						m_weightValue = 20;
-<<<<<<< HEAD
-=======
 						m_sizeValue = 5;
->>>>>>> upstream/master
 						m_resType = ResourceType.ORE;
 						return "ore";
 					default:
