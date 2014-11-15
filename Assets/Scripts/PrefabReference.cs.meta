@@ -2,7 +2,11 @@ fileFormatVersion: 2
 guid: 11b86f585b4476942a1434e83f43bea7
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - prefabCharacter: {fileID: 100000, guid: 0c2b1c643617ecb47a551f7a696d48d4, type: 2}
+  - prefabDiceButton: {fileID: 100000, guid: 9955e16ce51043a43ba22f874fc6ca26, type: 2}
+  - prefabResource_Rock: {fileID: 100000, guid: ec70512383edd094b9125b321ed4d262,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
