@@ -15,10 +15,6 @@ namespace GSP
 		Character m_playerCharScript;
 		Ally m_playerAllyScript;
 
-		//Holds the objects for referencing prefabs
-		GameObject m_charRef;
-		PrefabReference m_prefabRefScript;
-
 		//Holds the object for referencing the player's item script functions
 		Items m_playerItem;
 
@@ -42,10 +38,6 @@ namespace GSP
 			m_player = GameObject.FindGameObjectWithTag( "Player" );
 			m_playerCharScript = m_player.GetComponent<Character>();
 			m_playerAllyScript = m_player.GetComponent<Ally>();
-
-			// Get the prefab reference holder and its script.
-			m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
-			m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
 		} //end Start()
 
 		//Calls map event, which needs to have access to player functions
