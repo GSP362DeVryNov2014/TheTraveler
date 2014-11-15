@@ -8,20 +8,14 @@ namespace GSP
 	public class Test : MonoBehaviour
 	{
 		// Declare our private variables.
-		GameObject m_charRef;				// This is the reference to the character prefab for instantiation.
 		GameObject m_player;				// This is the player game object.
 		Character m_playerCharScript;		// This is the character script on the player.
 		ResourceList m_playerResScript;		// This is the resource list script on the player.
 		Ally m_playerAllyScript;			// This is the ally script on the player.
-		PrefabReference m_prefabRefScript;	// This is the prefab reference script.
 
 		// Use this for initialisation
 		void Start()
 		{
-			// Get the prefab reference holder and its script.
-			m_charRef = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
-			m_prefabRefScript = m_charRef.GetComponent<PrefabReference>();
-
 			// Get the player and its scripts attached.
 			m_player = GameObject.FindGameObjectWithTag( "Player" );
 			m_playerCharScript = m_player.GetComponent<Character>();
@@ -122,7 +116,7 @@ namespace GSP
 			{
 				// Instantiate a copy of the character prefab.
 				print( "Creating an ally");
-				GameObject ally = Instantiate( m_prefabRefScript.prefabCharacter ) as GameObject;
+				GameObject ally = Instantiate( PrefabReference.prefabCharacter ) as GameObject;
 
 				// Change its name and give it the ally tag.
 				ally.name = "Ally" + m_playerCharScript.NumAllies;
@@ -230,7 +224,7 @@ namespace GSP
 			{
 				// Instantiate a copy of the character prefab.
 				print( "Creating an ally" );
-				GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+				GameObject newAlly = Instantiate( PrefabReference.prefabCharacter, new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 
 				// Change the ally's name.
 				newAlly.name = "Ally" + m_playerCharScript.NumAllies;
@@ -272,7 +266,7 @@ namespace GSP
 				{
 					// Instantiate a copy of the character prefab.
 					print( "Creating allies" );
-					GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, new Vector3( x, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+					GameObject newAlly = Instantiate( PrefabReference.prefabCharacter, new Vector3( x, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 
 					// Add 3 to the x value
 					x += 3.0f;
@@ -318,7 +312,7 @@ namespace GSP
 				{
 					// Instantiate a copy of the character prefab.
 					print( "Creating allies" );
-					GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, new Vector3( x, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+					GameObject newAlly = Instantiate( PrefabReference.prefabCharacter, new Vector3( x, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 					
 					// Add 3 to the x value
 					x += 3.0f;
@@ -371,7 +365,7 @@ namespace GSP
 				{
 					// Instantiate a copy of the character prefab.
 					print( "Creating allies" );
-					GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, new Vector3( x, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+					GameObject newAlly = Instantiate( PrefabReference.prefabCharacter, new Vector3( x, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 					
 					// Add 3 to the x value
 					x += 3.0f;
@@ -412,7 +406,7 @@ namespace GSP
 			{
 				// Instantiate a copy of the character prefab.
 				print( "Creating an ally" );
-				GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+				GameObject newAlly = Instantiate( PrefabReference.prefabCharacter, new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 				
 				// Change the ally's name.
 				newAlly.name = "Ally" + m_playerCharScript.NumAllies;
@@ -459,7 +453,7 @@ namespace GSP
 			{
 				// Instantiate a copy of the character prefab.
 				print( "Creating an ally" );
-				GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+				GameObject newAlly = Instantiate( PrefabReference.prefabCharacter, new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 				
 				// Change the ally's name.
 				newAlly.name = "Ally" + m_playerCharScript.NumAllies;
