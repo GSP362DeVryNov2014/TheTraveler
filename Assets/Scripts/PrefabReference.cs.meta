@@ -1,17 +1,8 @@
 fileFormatVersion: 2
-guid: 4cb588f65b2527742b0d013ff26fc278
+guid: 11b86f585b4476942a1434e83f43bea7
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - prefabCharacter: {fileID: 100000, guid: 0c2b1c643617ecb47a551f7a696d48d4, type: 2}
-  - prefabDiceButton: {fileID: 100000, guid: 9955e16ce51043a43ba22f874fc6ca26, type: 2}
-  - prefabResource_Ore: {fileID: 100000, guid: fdbae0b768149e34d897a68ac90fb52c, type: 2}
-  - prefabResource_Wood: {fileID: 100000, guid: 80a43cea3f6db294c96ad6ef770d4282,
-      type: 2}
-  - prefabResource_Wool: {fileID: 100000, guid: f5bfc422ae921ef4ca92a8886867762c,
-      type: 2}
-  - prefabResource_Fish: {fileID: 100000, guid: d36a0f65a2fc48b428d3d6830f6ae3a0,
-      type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
