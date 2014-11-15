@@ -4,7 +4,7 @@ using System;
 
 namespace GSP
 {
-	public class StateMachine : MonoBehaviour
+	public class BrentsStateMachine : MonoBehaviour
 	{
 		//Contains overall states of program
 		enum OVERALLSTATES {INTRO, MENU, GAME, END};

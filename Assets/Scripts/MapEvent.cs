@@ -61,13 +61,8 @@ namespace GSP
 					print("Map Event is ENEMY");
 
 					//Create the enemy
-					GameObject enemy = Instantiate( m_prefabRefScript.prefabCharacter, 
-						new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
-
-					// NOTE: Comment/get rid of the above instantiation and use/uncomment
-					//       the below code to fix the compiler error here.
-					//GameObject enemy = Instantiate( PrefabReference.prefabCharacter,
-					//  new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
+					GameObject enemy = Instantiate( PrefabReference.prefabCharacter,
+					  new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
 
 					//Name and tag
 					enemy.name = "Enemy";
@@ -88,13 +83,8 @@ namespace GSP
 					print("Map Event is ALLY");
 
 					//Instantiate the ally
-					GameObject newAlly = Instantiate( m_prefabRefScript.prefabCharacter, 
-						new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
-
-					// NOTE: Comment/get rid of the above instantiation and use/uncomment
-					//       the below code to fix the compiler error here.
-					//GameObject newAlly = Instantiate( PrefabReference.prefabCharacter,
-					//  new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+					GameObject newAlly = Instantiate( PrefabReference.prefabCharacter,
+					  new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
 
 					//Name and tag ally
 					newAlly.name = "Ally" + m_playerCharScript.NumAllies;
