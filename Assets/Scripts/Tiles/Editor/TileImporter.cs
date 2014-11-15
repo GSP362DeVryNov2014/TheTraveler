@@ -26,14 +26,6 @@ namespace GSP.Tiles
 				return;
 			}
 
-			// Get the prefab reference holder.
-			GameObject prefabRefObj = GameObject.FindGameObjectWithTag( "PrefabReferenceHolder" );
-			PrefabReference prefabRefScript = prefabRefObj.GetComponent<PrefabReference>();
-
-			// Get the prefab reference holder.
-			GameObject tileDictObj = GameObject.FindGameObjectWithTag( "TileDictionaryHolder" );
-			TileDictionary tileDictScript = tileDictObj.GetComponent<TileDictionary>();
-
 			// Now we meed to determine which type of resource it is.
 			ResourceType tmp; 		// Holds the results of parsing.
 
@@ -51,10 +43,10 @@ namespace GSP.Tiles
 					case ResourceType.WOOL:
 					{
 						// Instantiate the resource prefab.
-						instance = GameObject.Instantiate( prefabRefScript.prefabResource_Wool ) as GameObject;
+						instance = GameObject.Instantiate( PrefabReference.prefabResource_Wool ) as GameObject;
 						
 						// Set the instances name to the name of the prefab.
-						instance.name = prefabRefScript.prefabResource_Wool.name;
+						instance.name = PrefabReference.prefabResource_Wool.name;
 
 						// Set the resource type.
 						resType = ResourceType.WOOL;
@@ -63,10 +55,10 @@ namespace GSP.Tiles
 					case ResourceType.WOOD:
 					{
 						// Instantiate the resource prefab.
-						instance = GameObject.Instantiate( prefabRefScript.prefabResource_Wood ) as GameObject;					
+						instance = GameObject.Instantiate( PrefabReference.prefabResource_Wood ) as GameObject;					
 						
 						// Set the instances name to the name of the prefab.
-						instance.name = prefabRefScript.prefabResource_Wood.name;
+						instance.name = PrefabReference.prefabResource_Wood.name;
 						
 						// Set the resource type.
 						resType = ResourceType.WOOD;
@@ -75,10 +67,10 @@ namespace GSP.Tiles
 					case ResourceType.FISH:
 					{
 						// Instantiate the resource prefab.
-						instance = GameObject.Instantiate( prefabRefScript.prefabResource_Fish ) as GameObject;
+						instance = GameObject.Instantiate( PrefabReference.prefabResource_Fish ) as GameObject;
 						
 						// Set the instances name to the name of the prefab.
-						instance.name = prefabRefScript.prefabResource_Fish.name;
+						instance.name = PrefabReference.prefabResource_Fish.name;
 						
 						// Set the resource type.
 						resType = ResourceType.FISH;
@@ -87,10 +79,10 @@ namespace GSP.Tiles
 					case ResourceType.ORE:
 					{
 						// Instantiate the resource prefab.
-						instance = GameObject.Instantiate( prefabRefScript.prefabResource_Ore ) as GameObject;
+						instance = GameObject.Instantiate( PrefabReference.prefabResource_Ore ) as GameObject;
 						
 						// Set the instances name to the name of the prefab.
-						instance.name = prefabRefScript.prefabResource_Ore.name;
+						instance.name = PrefabReference.prefabResource_Ore.name;
 						
 						// Set the resource type.
 						resType = ResourceType.ORE;
