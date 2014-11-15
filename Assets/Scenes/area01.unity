@@ -179,7 +179,7 @@ GameObject:
   - 114: {fileID: 250632997}
   m_Layer: 0
   m_Name: Die
-  m_TagString: Untagged
+  m_TagString: DieTag
   m_Icon: {fileID: -1500306622, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -313,13 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_gamePlayState: 0
-  m_diceRoll: 0
-  m_allowedTravelDist: 0
-  m_startingHighlightPosition: {x: 0, y: 0}
-  m_stageTransition: 0
-  m_movementConfirm: 0
-  m_doingAction: 0
-  m_endTurn: 0
+  m_DieScript: {fileID: 0}
 --- !u!212 &430711472
 SpriteRenderer:
   m_ObjectHideFlags: 0
