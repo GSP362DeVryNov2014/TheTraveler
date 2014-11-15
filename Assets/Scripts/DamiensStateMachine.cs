@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace GSP
+namespace GSP.Damien
 {
 	public class StateMachine : MonoBehaviour
 	{
