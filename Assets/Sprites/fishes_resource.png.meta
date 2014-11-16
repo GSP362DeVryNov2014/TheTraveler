@@ -1,13 +1,16 @@
 fileFormatVersion: 2
-guid: d81d3399d20e69848ae6a9a6ad3cbdfd
+guid: 32a8a0fbc8027704ea5aec54794e14b8
 TextureImporter:
   fileIDToRecycleName:
-    21300000: dice_0
-    21300002: dice_1
-    21300004: dice_2
-    21300006: dice_3
-    21300008: dice_4
-    21300010: dice_5
+    21300000: fishes_resource_0
+    21300002: fishes_resource_1
+    21300004: fishes_resource_2
+    21300006: fishes_resource_3
+    21300008: fishes_resource_4
+    21300010: fishes_resource_5
+    21300012: fishes_resource_6
+    21300014: fishes_resource_7
+    21300016: fishes_resource_8
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -30,7 +33,7 @@ TextureImporter:
   textureFormat: -3
   maxTextureSize: 4096
   textureSettings:
-    filterMode: -1
+    filterMode: 2
     aniso: 1
     mipBias: -1
     wrapMode: 1
@@ -43,69 +46,99 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 100
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: dice_0
+    - name: fishes_resource_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
-        width: 64
-        height: 64
+        x: 7
+        y: 72
+        width: 13
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: dice_1
+    - name: fishes_resource_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 79
+        width: 24
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: fishes_resource_2
       rect:
         serializedVersion: 2
         x: 64
-        y: 64
-        width: 64
-        height: 64
+        y: 79
+        width: 24
+        height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: dice_2
+    - name: fishes_resource_3
       rect:
         serializedVersion: 2
-        x: 128
-        y: 64
-        width: 64
-        height: 64
+        x: 6
+        y: 39
+        width: 13
+        height: 25
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: dice_3
+    - name: fishes_resource_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 64
+        x: 32
+        y: 46
+        width: 25
+        height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: dice_4
+    - name: fishes_resource_5
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 46
+        width: 25
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: fishes_resource_6
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 8
+        width: 14
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: fishes_resource_7
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 14
+        width: 24
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: fishes_resource_8
       rect:
         serializedVersion: 2
         x: 64
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: dice_5
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
+        y: 14
+        width: 24
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
