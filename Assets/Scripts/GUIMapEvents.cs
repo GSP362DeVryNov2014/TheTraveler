@@ -56,15 +56,10 @@ namespace GSP
 		void OnGUI()
 		{
 			m_currEnumMpEvent = GetMapEvent();
-			GUIMapEventsMachine(); //runs once every cycle; checks, what state we are in
 
-			if (m_currEnumMpEvent == m_EnumMapEvent.NOTHING) 
+
+			if (m_showHideGUI == true) 
 			{
-				m_showHideGUI = false;
-			}
-			else
-			{
-				m_showHideGUI = true;
 				GUIContainer();
 			}
 
@@ -79,26 +74,32 @@ namespace GSP
 		{
 			if( Input.GetKeyDown(KeyCode.Alpha1) )
 			{
+				m_showHideGUI = true;
 				m_currEnumMpEvent = m_EnumMapEvent.ENEMY;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha2) )
 			{
+				m_showHideGUI = true;
 				m_currEnumMpEvent = m_EnumMapEvent.ALLY;			
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha3) )
 			{
+				m_showHideGUI = true;
 				m_currEnumMpEvent = m_EnumMapEvent.ITEM;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha4) )
 			{
+				m_showHideGUI = true;
 				m_currEnumMpEvent = m_EnumMapEvent.WEATHER;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha5) )
 			{
+				m_showHideGUI = true;
 				m_currEnumMpEvent = m_EnumMapEvent.NOTHING;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha6) )
 			{
+				m_showHideGUI = true;
 				m_currEnumMpEvent = m_EnumMapEvent.SIZE;
 			}
 			
@@ -114,22 +115,27 @@ namespace GSP
 		{
 			if( Input.GetKeyDown(KeyCode.Alpha1) )
 			{
+				m_showHideGUI = true;
 				m_currRsrcType = m_EnumResourceType.WOOL;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha2) )
 			{
+				m_showHideGUI = true;
 				m_currRsrcType = m_EnumResourceType.WOOD;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha3) )
 			{
+				m_showHideGUI = true;
 				m_currRsrcType = m_EnumResourceType.FISH;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha4) )
 			{
+				m_showHideGUI = true;
 				m_currRsrcType = m_EnumResourceType.ORE;
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha5) )
 			{
+				m_showHideGUI = true;
 				m_currRsrcType = m_EnumResourceType.SIZE;
 			}
 			
@@ -139,23 +145,40 @@ namespace GSP
 		private void GUIMapEventsMachine()
 			//----------------------------------------------------------
 			//	Switch that displays the current MapEvent
+			//		-has to be called from OnGUI() or a function within OnGUI
+			//			in order for Unity's GUI features to work.
 			//
 			//----------------------------------------------------------
 		{
+			//GUI parameters
+			int gap =2;
+			int numOfContainers =2;
+			int guiWidth = Screen.width /3;
+			int guiHeight = Screen.height /numOfContainers;
+
 			switch (m_currEnumMpEvent) 
 			{
 			case m_EnumMapEvent.ENEMY:
+				
 				break;
+
 			case m_EnumMapEvent.ALLY:
 				break;
+
 			case m_EnumMapEvent.ITEM:
 				break;
+
 			case m_EnumMapEvent.RESOURCES:
 				break;
+
 			case m_EnumMapEvent.NOTHING:
+				m_showHideGUI = false;
 				break;
+
 			case m_EnumMapEvent.SIZE:
+				m_showHideGUI = false;
 				break;
+
 			default:
 				print ("GUIMapEventsMachine is in Default");
 				break;
@@ -191,14 +214,12 @@ namespace GSP
 		
 		private void GUIContainer()
 		{
-			//GUI parameters
-			int gap =2;
-			int numOfContainers =2;
-			int guiWidth = Screen.width /3;
-			int guiHeight = Screen.height /numOfContainers;
-			
 			//main container
-			GUI.Box (new Rect(0,65, Screen.width /3, Screen.height /2 ), "Main Container");
+			GUI.Box (new Rect(0,65 +32, Screen.width /3, Screen.height /2 ), m_currEnumMpEvent.ToString() );
+
+			//Check which GUI to Display
+			GUIMapEventsMachine(); //runs once every cycle; checks, what state we are in
+		
 		} //end private void GUIContainer()
 		
 	} //class GUIMapEvents{}
