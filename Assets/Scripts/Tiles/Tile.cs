@@ -4,7 +4,7 @@ using GSP.Char;
 
 namespace GSP.Tiles
 {
-	// Only used for the resource tiles on the map.
+	// Used for the tiles on the map. These aren't real tiles, just fake ones.
 	public class Tile
 	{
 		// Declare our private variables.
@@ -36,7 +36,7 @@ namespace GSP.Tiles
 		{
 			// Initialise the variables to a default state.
 			m_position = new Vector3( 0.0f, 0.0f, 0.0f );
-			m_resourceType = ResourceType.SIZE;
+			m_resourceType = ResourceType.NONE;
 			m_resource = null;
 		} // end default constructor function
 

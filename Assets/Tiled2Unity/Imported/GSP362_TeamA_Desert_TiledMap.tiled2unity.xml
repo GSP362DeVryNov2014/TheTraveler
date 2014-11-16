@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--Tiled2Unity generated xml data-->
 <!--Do not modify by hand-->
-<!--Last exported: 11/15/2014 12:14:29 PM-->
+<!--Last exported: 11/15/2014 7:01:52 PM-->
 <Tiled2Unity version="0.9.5.3">
   <AssignMaterial mesh="mesh_[00]_[00]" material="GSP362_TeamA_Desert_Tiles_64x64" sortingLayerName="" sortingOrder="0" />
   <AssignMaterial mesh="mesh_[01]_[00]" material="GSP362_TeamA_Desert_Tiles_64x64" sortingLayerName="" sortingOrder="1" />
@@ -12,7 +12,7 @@
     <GameObject name="Foreground_01">
       <GameObject copy="mesh_[01]_[00]" />
     </GameObject>
-    <GameObject name="Resource" tag="Resource">
+    <GameObject name="Resource">
       <GameObject name="TileObject" x="512" y="-256">
         <Property name="ResType" value="WOOD" />
       </GameObject>
@@ -46,16 +46,16 @@
       <GameObject name="TileObject" x="1152" y="-64">
         <Property name="ResType" value="ORE" />
       </GameObject>
-      <GameObject name="TileObject" x="0" y="-1024">
-        <Property name="ResType" value="ORE" />
-      </GameObject>
-      <GameObject name="TileObject" x="448" y="-1024">
+      <GameObject name="TileObject" x="1152" y="-1024">
         <Property name="ResType" value="ORE" />
       </GameObject>
       <GameObject name="TileObject" x="704" y="-1024">
         <Property name="ResType" value="ORE" />
       </GameObject>
-      <GameObject name="TileObject" x="1152" y="-1024">
+      <GameObject name="TileObject" x="448" y="-1024">
+        <Property name="ResType" value="ORE" />
+      </GameObject>
+      <GameObject name="TileObject" x="0" y="-1024">
         <Property name="ResType" value="ORE" />
       </GameObject>
     </GameObject>

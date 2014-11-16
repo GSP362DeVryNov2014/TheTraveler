@@ -29,7 +29,7 @@ namespace GSP.Tiles
 			// Now we meed to determine which type of resource it is.
 			ResourceType tmp; 		// Holds the results of parsing.
 
-			ResourceType resType = ResourceType.SIZE;	// Holds the resource type.
+			ResourceType resType = ResourceType.NONE;	// Holds the resource type.
 			GameObject instance = null;					// Holds the game object instance.
 
 			try
@@ -92,7 +92,7 @@ namespace GSP.Tiles
 					{
 						// Couldn't parse correctly so set the instance to null and resource type to size.
 						instance = null;
-						resType = ResourceType.SIZE;
+						resType = ResourceType.NONE;
 
 						break;
 					}
@@ -103,15 +103,18 @@ namespace GSP.Tiles
 				// The parsing failed so set the instance to null and resource type to size.
 				Debug.Log( "Something went wrong. Exception: " + ex.Message );
 				instance = null;
-				resType = ResourceType.SIZE;
+				resType = ResourceType.NONE;
 			} // end catch statement
 
 			// Make sure instance exists.
-			if ( instance == null && resType == ResourceType.SIZE )
+			if ( instance == null && resType == ResourceType.NONE )
 			{
 				// Simply return.
 				return;
 			}
+
+			// Tag the instance as a Resource.
+			instance.tag = "Resource";
 
 			// Use the position of the game object we're attached to.
 			instance.transform.parent = gameObject.transform;

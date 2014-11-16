@@ -8,11 +8,11 @@ namespace GSP.Char
 	// NOTE!!
 	// SIZE must be the last item in the enum so that anything based
 	// on the length of the enum can be used as normal. It is best to
-	// add items to the left of SIZE but after the current 2nd to last
-	// item in the enum. For instance if the list was {SWORD, MACE, SIZE}
-	// you should enter the new item between MACE and SIZE. Create name
+	// add items to the left of NONE but after the current 3rd to last
+	// item in the enum. For instance if the list was {SWORD, MACE, NONE, SIZE}
+	// you should enter the new item between MACE and NONE. Create name
 	// here and then define it under "SetResource" function.
-	public enum ResourceType {WOOL, WOOD, FISH, ORE, SIZE};
+	public enum ResourceType {WOOL, WOOD, FISH, ORE, NONE, SIZE};
 	
 	public class Resource
 	{
@@ -31,8 +31,8 @@ namespace GSP.Char
 			m_sellValue = 0;
 			m_sizeValue = 0;
 			
-			// The size is to get the size of the enumeration, but it'll work in this case.
-			m_resType = ResourceType.SIZE;
+			// Set resource type to none.
+			m_resType = ResourceType.NONE;
 		} // end constructor
 		
 		// Gets and Sets the resource's name.
