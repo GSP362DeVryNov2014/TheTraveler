@@ -3,17 +3,8 @@
 --- !u!78 &1
 TagManager:
   tags:
-  - GUITextTag
-  - PrefabReferenceHolder
-  - GamePlayStateMachineTag
-  - Enemy
-  - Ally
-  - DieTag
-<<<<<<< HEAD
+  - 
   - Resource
-=======
-  - GUIMapEventSpriteTag
->>>>>>> 562c9aa04787b4379275b38a82f88fb5b1921c91
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
@@ -23,7 +14,7 @@ TagManager:
   Builtin Layer 5: UI
   Builtin Layer 6: 
   Builtin Layer 7: 
-  User Layer 8: background
+  User Layer 8: 
   User Layer 9: 
   User Layer 10: 
   User Layer 11: 
@@ -51,12 +42,4 @@ TagManager:
   - name: Default
     userID: 0
     uniqueID: 0
-    locked: 0
-  - name: background
-    userID: 2
-    uniqueID: 863835025
-    locked: 0
-  - name: Player
-    userID: 1
-    uniqueID: 3755042791
     locked: 0
