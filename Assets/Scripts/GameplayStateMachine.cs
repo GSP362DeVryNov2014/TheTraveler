@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;	//required for List<GameObjects>
 
 namespace GSP
 {
@@ -13,6 +14,7 @@ namespace GSP
 		// -ShowResources()	//toggles between hiding and showing Resources in the GUI bar
 		//
 		// +GetState() returns int
+		//		//BEGINTURN
 		//		//ROLLDICE
 		//		//CALCDISTANCE
 		//		//DISPLAYDISTANCE
@@ -28,6 +30,7 @@ namespace GSP
 			// +enum will hold the values of gameplay states
 			//--------------------------------------------
 		{
+			BEGINTURN,
 			ROLLDICE,
 			CALCDISTANCE,
 			DISPLAYDISTANCE,
@@ -48,8 +51,8 @@ namespace GSP
 		//		public bool m_endTurn = false; 		//when true, will activate a timer and display to the player that turn is ending
 		
 		//......Holds Current State......
-		public GamePlayState m_gamePlayState = GamePlayState.ROLLDICE;	//beginning state
-		
+		public GamePlayState m_gamePlayState;
+
 		//......GUI Values......
 		string m_GUIActionString;	//Changes the String in the Action button According to State player is in
 		bool m_GUIActionPressed = false;	//determines if the Action Button has been pressed.
@@ -64,10 +67,16 @@ namespace GSP
 		int m_GUINumOfPlayers = 2; 	// how many players playing
 		
 		//...Instances...
-		public GSP.DieInput m_DieScript;	//Access the sigleton Die and its functions
-		
+		private GSP.DieInput m_DieScript;	//Access the sigleton Die and its functions
+		private GSP.GUIMapEvents m_GUIMapEventsScript; //Access the sigleton Die and its functions
+
+		//players list
+		private GameObject m_playerEntity; //player!
+		private List<GameObject> m_playerList;	//create players
+		private List<GSP.Char.Character> m_playerScriptList; //access Character.cs scripts from each player to get player values
+
 		//=================================================================================================
-		//-------------------------------------------------------------------------------------------------
+		//-----------------------------------Functions-----------------------------------------------------
 		//=================================================================================================
 		
 		void Start()
@@ -78,9 +87,48 @@ namespace GSP
 			//		-Values should be updated at EndTurn State of StateMachine()
 			//-------------------------------------------------------------------
 		{
+			//initialize empty lists
+			m_playerList = new List<GameObject>();
+			m_playerScriptList = new List<GSP.Char.Character>();
+
+			//TODO: get num of players from BrentsStateMachine
+
+			//Add Players Instances
+			AddPlayers (m_GUINumOfPlayers);
+
+			//Beginning State
+			m_gamePlayState = GamePlayState.BEGINTURN;
+
+			//get scripts needed
 			m_DieScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<DieInput>();
+			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
 			m_GUIActionString = "Action\nButton";
 		}
+
+		private void AddPlayers( int p_numOfPlayers )
+		{
+			//Player is already added in Unity's GUI, 
+			//TODO: adjust script after prototype testing to adjust to change between different players
+			//i.e. player1Script, player2Script, etc...
+
+			//TODO: Add this script below after testing prototype and remove above
+			Vector3 startingPos = new Vector3 (32, 32, -1.6f); //first tile
+			float tmpTransY = 0.0f; 
+
+			for (int count = 0; count < p_numOfPlayers; count++) 
+			{
+				startingPos.y = 32 +((count+1) *64); 
+				//create players
+				m_playerEntity = Instantiate( PrefabReference.prefabCharacter, startingPos, Quaternion.identity ) as GameObject;
+				m_playerEntity.transform.localScale = new Vector3 (100, 100, 1);
+
+				m_playerList.Add( m_playerEntity ); //add PlayerEntity to list
+
+				m_playerScriptList.Add( m_playerEntity.GetComponent<GSP.Char.Character>() );
+
+			} //end for loop
+
+		} // end private void AddPlayers( int p_numOfPlayers )
 		
 		void OnGUI()
 			//-------------------------------------------------------------------
@@ -159,7 +207,7 @@ namespace GSP
 				GUI.Box(new Rect ((col*width)+(col+1)*gap,64,width, height), "Wool: "+m_GUIWool.ToString());
 				//GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight: "+m_GUIGoldVal.ToString());
 				//GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight: "+m_GUIGoldVal.ToString());
-			}
+			}	//end if(m_GUIShowResources)
 			
 		} //end private void ShowResources()
 		
@@ -261,6 +309,11 @@ namespace GSP
 			var state = GameObject.FindGameObjectWithTag("GUITextTag").GetComponent<GUIText>();
 			switch (m_gamePlayState) 
 			{
+			case GamePlayState.BEGINTURN:
+				//Get All the Players values
+				GetPlayerValues();
+				m_gamePlayState = GamePlayState.ROLLDICE;
+				break;
 			case GamePlayState.ROLLDICE:
 				
 				state.text = "roll dice";
@@ -327,7 +380,7 @@ namespace GSP
 					m_GUIPlayerTurn = 1;
 				}
 				
-				m_gamePlayState = GamePlayState.ROLLDICE;
+				m_gamePlayState = GamePlayState.BEGINTURN;
 				break;
 				
 			default:
@@ -337,7 +390,27 @@ namespace GSP
 			} //end switch (m_gamePlayState)
 			
 		} //end private void StateMachine()
-		
+
+		private void GetPlayerValues()
+		//-----------------------------------------------------------------------------
+		//	At the BEGINTURN state, values are grabbed from each player and stored into
+		//		respective m_GUI variable.
+		//
+		//-----------------------------------------------------------------------------
+		{
+			m_GUIGoldVal = m_playerScriptList [m_GUIPlayerTurn].Currency;
+			m_GUIMaxWeight = m_playerScriptList [m_GUIPlayerTurn].MaxWeight;
+			//TODO: does this weight need to be added with armor and weapon weight??? Ask
+			// 		Brent how to get Totale Weapon and armor weight Values for varible below.
+			m_GUIWeight = m_playerScriptList [m_GUIPlayerTurn].ResourceWeight;
+
+			//TODO:ask BRENT SPECTOR how to get the resources below
+			//m_GUIOre = m_playerScriptList [m_GUIPlayerTurn].m_resourceList.GetResourceByType ("ORE").SizeValue;
+			//m_GUIWool = m_playerScriptList [m_GUIPlayerTurn].m_resourceList.GetResourceByType ("WOOL").SizeValue;
+
+
+		}	//end private void GetPlayerValues()
+
 		public int GetState()
 			//---------------------------------------------------------
 			//	-If another class wants to get the Current State, 
