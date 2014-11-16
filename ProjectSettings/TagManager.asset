@@ -9,7 +9,11 @@ TagManager:
   - Enemy
   - Ally
   - DieTag
+<<<<<<< HEAD
+  - Resource
+=======
   - GUIMapEventSpriteTag
+>>>>>>> 562c9aa04787b4379275b38a82f88fb5b1921c91
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
