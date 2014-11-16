@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using GSP.Char;
 
 namespace GSP.Tiles
 {
@@ -31,6 +32,25 @@ namespace GSP.Tiles
 			// Otherwise the key exists so return the value according to the key.
 			return m_tileDictionary[key];
 		} // end GetTile function
+
+		// Update a tile's resource type and object.
+		public static void UpdateTile( Vector3 key, ResourceType resourceType, GameObject resource )
+		{
+			// Get the tile at key.
+			Tile tile = GetTile( key );
+
+			if (resource == null)
+			{
+				Debug.Log("NULL");
+			}
+
+			Debug.Log("DEBUG: " + tile.ResourceType);
+
+			Debug.Log("DEBUG: " + tile.Resource.transform.position);
+
+			// Update the tile.
+			//tile.UpdateTile( resourceType, resource );
+		} // end UpdateTile
 
 		// Add an entry to the dictionary.
 		public static void AddEntry( Vector3 key, Tile tile )

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 using GSP.Char;
 
 namespace GSP.Tiles
@@ -34,11 +35,12 @@ namespace GSP.Tiles
 		{
 			get
 			{
-				// Calculate the height of the map. Then subtract the tile size. This is the highest coord the tile can be placed at.
-				int temp = NumTilesHigh * TileSize - TileSize;
+				// Calculate the height of the map. Then subtract half the tile size. This is the highest coord the tile can be placed at.
+				// This is because we start at 32.
+				int temp = NumTilesHigh * TileSize - ( TileSize / 2 );
 
 				// Since we're in the fourth quadrant, the y value is negative.
-				return (temp * -1);
+				return ( temp * -1 );
 			} // end get accessor
 		} // end MaxHeight property
 
@@ -47,8 +49,9 @@ namespace GSP.Tiles
 		{
 			get
 			{
-				// Calculate the width of the map. Then subtract the tile size. This is the highest coord the tile can be placed at.
-				return (NumTilesWide * TileSize - TileSize);
+				// Calculate the width of the map. Then subtract half the tile size. This is the highest coord the tile can be placed at.
+				// This is because we start at 32.
+				return ( NumTilesWide * TileSize - ( TileSize / 2 ) );
 			} // end get accessor
 		} // end MaxHeight property
 
@@ -58,13 +61,13 @@ namespace GSP.Tiles
 			get
 			{
 				return new Vector2( NumTilesWide * TileSize, NumTilesHigh * TileSize );
-			}
-		}
+			} // end get accessor
+		} // end MapSize property
 
 		// Sets the dimensions of the Tiled map. This should only be called once when initialising the map.
 		// You shouldn't change these values unless you redo the map in Tiled.
 		// NOTE: Setting these incorrectly will screw things up.
-		public static void SetDimensions(int tileSize, int numTilesWide, int numTilesHigh)
+		public static void SetDimensions( int tileSize, int numTilesWide, int numTilesHigh )
 		{
 			m_tileSize = tileSize;
 			m_numTilesWide = numTilesWide;
@@ -80,30 +83,149 @@ namespace GSP.Tiles
 			Debug.Log("ResourceObject Position: " + resourceObjects[0].transform.position);
 
 			// Loop over the map. Width first.
-			for (int width = 32; width < (int)MapSize.x; width += 64)
+			for ( int width = 32; width < (int)MapSize.x; width += 64 )
 			{
 				// Then height.
-				for (int height = 32; height < (int)MapSize.y; height += 64)
+				for ( int height = 32; height < (int)MapSize.y; height += 64 )
 				{
 					// We are in the fourth quadrant so the y is negative.
-					Vector3 key = new Vector3(width, height * -1, 0.0f);
+					Vector3 key = new Vector3( width, height * -1, 0.0f );
 
 					// Create an empty tile at the given position.
-					Tile newTile = new Tile(key, ResourceType.NONE, null);
+					Tile newTile = new Tile( key, ResourceType.NONE, null );
 
 					// Add the tile to the dictionary.
-					TileDictionary.AddEntry(key, newTile);
+					TileDictionary.AddEntry( key, newTile );
 				} // end inner height for loop
 			} // end outer width for loop
 
 			// Now loop over the resource array and set the tiles to resources.
-			foreach (GameObject resourceObject in resourceObjects)
+			foreach ( GameObject resourceObject in resourceObjects )
 			{
-				// Find the position in the dictionary.
-				Debug.Log("Position: " + resourceObject.transform.position);
-				//TileDictionary.GetTile(resourceObject.transform.position);
+				// Find the position in the dictionary converting to pixels.
+				Debug.Log("Position: " + resourceObject.transform.position.ToString("F2"));
+
+				// Get the key in pixels.
+				Vector3 key = ToPixels( resourceObject.transform.position );
+
+				// HACK: Damien will do this bit better later on.
+				// Get the resource name, this will be used for its type.
+				string resourceName = resourceObject.name;
+
+				// Split the string by the underscore
+				string[] tokens = resourceName.Split('_');
+
+				// Holds the default value for the enum.
+				ResourceType resourceType = ResourceType.NONE;
+
+				// Holds the results of the parsing.
+				ResourceType tmp = ResourceType.NONE;
+
+				// Attempt to parse the string into the enum value.
+				try
+				{
+					// Get the last component and send it to the enum.
+					tmp = (ResourceType)Enum.Parse( typeof( ResourceType ), tokens[tokens.Length - 1].ToUpper() );
+
+					// Switch over the possible values.
+					switch ( tmp )
+					{
+						case ResourceType.WOOL:
+						{
+							// Set the resource type.
+							resourceType = ResourceType.WOOL;
+							break;
+						} // end case
+						case ResourceType.WOOD:
+						{
+							// Set the resource type.
+							resourceType = ResourceType.WOOD;
+							break;
+						} // end case
+						case ResourceType.FISH:
+						{
+							// Set the resource type.
+							resourceType = ResourceType.FISH;
+							break;
+						} // end case
+						case ResourceType.ORE:
+						{
+							// Set the resource type.
+							resourceType = ResourceType.ORE;
+							break;
+						} // end case
+						default:
+						{
+							// Couldn't parse correctly so set the resource type to none.
+							resourceType = ResourceType.NONE;
+							break;
+						} // end default case
+					} // end switch statement.
+				} // end try clause
+				catch (Exception ex)
+				{
+					// The parsing failed so set the instance to null and resource type to size.
+					Debug.Log( "Something went wrong. Exception: " + ex.Message );
+				} // end catch clause
+
+				// Check if the resource type is not none.
+				if ( resourceType != ResourceType.NONE)
+				{
+					// Update the tile at the given position.
+					TileDictionary.UpdateTile( key, resourceType, resourceObject );
+				} // end if statement.
 			} // end for each loop
-		} // end GenerateAndAddTiles function.
+
+			// Get the tile at a key.
+		} // end GenerateAndAddTiles function. 11.8, -9.9
+
+		// Converts unity units to pixels for use on the map.
+		public static Vector3 ToPixels( Vector3 param )
+		{
+			// To convert the parameter to pixels that the resource positions use, multiply by 100.
+			Vector3 tmp = new Vector3( param.x * 100.0f, param.y * 100.0f, param.z * 100.0f );
+
+			// Check if the width (x) is within the valid map positions and Clamp if not.
+			if ( tmp.x > MaxWidth)
+			{
+				tmp.x = MaxWidth;
+			} // end if statement
+
+			// Check if the height (y) is within the valid map positions and Clamp if not.
+			if ( tmp.y > MaxHeight)
+			{
+				tmp.y = MaxHeight;
+			} // end if statement
+
+			// Everything should be fine now sp return the result.
+			return tmp;
+		} // end ToPixels function
+
+		// Converts pixels to unity units for use on the map.
+		public static Vector3 ToUnits( Vector3 param )
+		{
+			// To convert the parameter to units that unity positions use, divide by 100.
+			Vector3 tmp = new Vector3( param.x / 100.0f, param.y / 100.0f, param.z / 100.0f );
+
+			// Gets the max width and height in units.
+			float maxWidth = MaxWidth / 100.0f;
+			float maxHeight = MaxHeight / 100.0f;
+			
+			// Check if the width (x) is within the valid map positions and Clamp if not.
+			if ( tmp.x > maxWidth)
+			{
+				tmp.x = maxWidth;
+			} // end if statement
+			
+			// Check if the height (y) is within the valid map positions and Clamp if not.
+			if ( tmp.y > maxHeight)
+			{
+				tmp.y = maxHeight;
+			} // end if statement
+			
+			// Everything should be fine now sp return the result.
+			return tmp;
+		} // end ToPixels function
 
 	} // end TileManager class
 } // end namespace

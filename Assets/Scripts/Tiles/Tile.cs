@@ -49,5 +49,13 @@ namespace GSP.Tiles
 			m_resource = resource;
 		} // end contstructor function
 
+		// Updates the tiles resource type and object.
+		public void UpdateTile( ResourceType resourceType, GameObject resource )
+		{
+			// Update the variables.
+			m_resourceType = resourceType;
+			m_resource = resource;
+		} // end UpdateTile
+
 	} // end Tile class
 } // end namespace

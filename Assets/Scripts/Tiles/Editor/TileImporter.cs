@@ -51,7 +51,7 @@ namespace GSP.Tiles
 						// Set the resource type.
 						resType = ResourceType.WOOL;
 						break;
-					}
+					} // end case
 					case ResourceType.WOOD:
 					{
 						// Instantiate the resource prefab.
@@ -63,7 +63,7 @@ namespace GSP.Tiles
 						// Set the resource type.
 						resType = ResourceType.WOOD;
 						break;
-					}
+					} // end case
 					case ResourceType.FISH:
 					{
 						// Instantiate the resource prefab.
@@ -75,7 +75,7 @@ namespace GSP.Tiles
 						// Set the resource type.
 						resType = ResourceType.FISH;
 						break;
-					}
+					} // end case
 					case ResourceType.ORE:
 					{
 						// Instantiate the resource prefab.
@@ -87,7 +87,7 @@ namespace GSP.Tiles
 						// Set the resource type.
 						resType = ResourceType.ORE;
 						break;
-					}
+					} // end case
 					default:
 					{
 						// Couldn't parse correctly so set the instance to null and resource type to size.
@@ -95,7 +95,7 @@ namespace GSP.Tiles
 						resType = ResourceType.NONE;
 
 						break;
-					}
+					} // end default case
 				} // end switch statment
 			} // end try statement
 			catch (Exception ex)
