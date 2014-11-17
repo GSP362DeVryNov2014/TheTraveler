@@ -79,8 +79,6 @@ namespace GSP.Tiles
 		{
 			// Get all the game objects tagged as resources.
 			GameObject[] resourceObjects = GameObject.FindGameObjectsWithTag( "Resource" );
-			Debug.Log("ResourceObject Name: " + resourceObjects[0].name);
-			Debug.Log("ResourceObject Position: " + resourceObjects[0].transform.position);
 
 			// Loop over the map. Width first.
 			for ( int width = 32; width < (int)MapSize.x; width += 64 )
@@ -100,24 +98,20 @@ namespace GSP.Tiles
 			} // end outer width for loop
 
 			// Now loop over the resource array and set the tiles to resources.
-			foreach ( GameObject resourceObject in resourceObjects )
+			for (int index = 0; index < resourceObjects.Length; index++)
 			{
-				// Find the position in the dictionary converting to pixels.
-				Debug.Log("Position: " + resourceObject.transform.position.ToString("F2"));
-
-				// Get the key in pixels.
-				Vector3 key = ToPixels( resourceObject.transform.position );
+				Vector3 key = ToPixels( resourceObjects[index].transform.position );
 
 				// HACK: Damien will do this bit better later on.
 				// Get the resource name, this will be used for its type.
-				string resourceName = resourceObject.name;
-
+				string resourceName = resourceObjects[index].name;
+				
 				// Split the string by the underscore
 				string[] tokens = resourceName.Split('_');
-
+				
 				// Holds the default value for the enum.
 				ResourceType resourceType = ResourceType.NONE;
-
+				
 				// Holds the results of the parsing.
 				ResourceType tmp = ResourceType.NONE;
 
@@ -126,7 +120,7 @@ namespace GSP.Tiles
 				{
 					// Get the last component and send it to the enum.
 					tmp = (ResourceType)Enum.Parse( typeof( ResourceType ), tokens[tokens.Length - 1].ToUpper() );
-
+					
 					// Switch over the possible values.
 					switch ( tmp )
 					{
@@ -167,23 +161,21 @@ namespace GSP.Tiles
 					// The parsing failed so set the instance to null and resource type to size.
 					Debug.Log( "Something went wrong. Exception: " + ex.Message );
 				} // end catch clause
-
+				
 				// Check if the resource type is not none.
 				if ( resourceType != ResourceType.NONE)
 				{
-					// Update the tile at the given position.
-					TileDictionary.UpdateTile( key, resourceType, resourceObject );
+					// Update the tile at the given key.
+					TileDictionary.UpdateTile( key, resourceType, resourceObjects[index] );
 				} // end if statement.
-			} // end for each loop
-
-			// Get the tile at a key.
-		} // end GenerateAndAddTiles function. 11.8, -9.9
+			} // end for loop
+		} // end GenerateAndAddTiles function.
 
 		// Converts unity units to pixels for use on the map.
 		public static Vector3 ToPixels( Vector3 param )
 		{
 			// To convert the parameter to pixels that the resource positions use, multiply by 100.
-			Vector3 tmp = new Vector3( param.x * 100.0f, param.y * 100.0f, param.z * 100.0f );
+			Vector3 tmp = new Vector3(param.x * 100, param.y * 100, param.z * 100);
 
 			// Check if the width (x) is within the valid map positions and Clamp if not.
 			if ( tmp.x > MaxWidth)
@@ -192,13 +184,19 @@ namespace GSP.Tiles
 			} // end if statement
 
 			// Check if the height (y) is within the valid map positions and Clamp if not.
-			if ( tmp.y > MaxHeight)
+			if ( tmp.y < MaxHeight)
 			{
 				tmp.y = MaxHeight;
 			} // end if statement
 
-			// Everything should be fine now sp return the result.
-			return tmp;
+			// We need integers for the keys to work. So convert the temp vector3's params to integers.
+			// NOTE: Trying to use "(int)tmp.x" results in the wrong number. So use "Convert.ToInt32(tmp.x)"
+			int resX = Convert.ToInt32(tmp.x);
+			int resY = Convert.ToInt32(tmp.y);
+			int resZ = Convert.ToInt32(tmp.z);
+
+			// Everything should be fine now so return the result.
+			return new Vector3( resX, resY, resZ );
 		} // end ToPixels function
 
 		// Converts pixels to unity units for use on the map.
@@ -218,7 +216,7 @@ namespace GSP.Tiles
 			} // end if statement
 			
 			// Check if the height (y) is within the valid map positions and Clamp if not.
-			if ( tmp.y > maxHeight)
+			if ( tmp.y < maxHeight)
 			{
 				tmp.y = maxHeight;
 			} // end if statement
