@@ -36,7 +36,7 @@ namespace GSP
 			case OVERALLSTATES.INTRO:
 				//Play video or whatever. Wait for seconds is placeholder
 				print ("The intro is currently playing.");
-				state.text = "Intro";
+				state.text = "Welcome To The Traveler!";
 				//After intro finishes, move to menu
 				if(Time.time > timeHolder)
 				{
@@ -53,39 +53,40 @@ namespace GSP
 					//Button code goes here
 					//Placeholder for testing
 					print ("S for Solo, M for Multi, C for Credits, O for Options, Q for Quit");
-					state.text = "Menu - Home";
+					state.text = "Menu:\nS - Solo Player Mode\nM - Multiplayer Mode\n" +
+						"C - Credits\nO - Options\nQ - Quit";
 					if(Input.GetKeyDown(KeyCode.S))
 					{
 						print ("Solo mode chosen.");
-						state.text = "Menu - Solo";
+						state.text = "Solo mode chosen, please wait.";
 						timeHolder = Time.time + 1.5f;
 						m_menuState = MENUSTATES.SOLO;
 					} //end Solo chosen if
 					else if(Input.GetKeyDown(KeyCode.M))
 					{
 						print ("Multiplayer mode chosen.");
-						state.text = "Menu - Multi";
+						state.text = "Multiplayer mode chosen, please wait.";
 						timeHolder = Time.time + 1.5f;
 						m_menuState = MENUSTATES.MULTI;
 					} //end Multiplayer chosen else if
 					else if(Input.GetKeyDown(KeyCode.C))
 					{
 						print ("Credits chosen.");
-						state.text = "Menu - Credits";
+						state.text = "Loading credits, please wait.";
 						timeHolder = Time.time + 1.5f;
 						m_menuState = MENUSTATES.CREDITS;
 					} //end Credits chosen else if
 					else if(Input.GetKeyDown(KeyCode.O))
 					{
 						print ("Options chosen.");
-						state.text = "Menu - Options";
+						state.text = "Loading options, please wait.";
 						timeHolder = Time.time + 1.5f;
 						m_menuState = MENUSTATES.OPTIONS;
 					} //end Options chosen else if
 					else if(Input.GetKeyDown(KeyCode.Q))
 					{
 						print ("Quit chosen.");
-						state.text = "Menu - Quit";
+						state.text = "Closing game, please wait.";
 						timeHolder = Time.time + 1.5f;
 						m_menuState = MENUSTATES.QUIT;
 					} //end Quit chosen else if
@@ -96,7 +97,7 @@ namespace GSP
 					if(Time.time > timeHolder)
 					{
 						print ("Setting up solo mode.");
-						state.text = "Solo";
+						state.text = "Setting up solo mode, one moment.";
 						//Transition into game state
 						m_programState = OVERALLSTATES.GAME;
 						timeHolder = Time.time + 1.5f;
@@ -108,7 +109,7 @@ namespace GSP
 					if(Time.time > timeHolder)
 					{
 						print ("Setting up multiplayer mode.");
-						state.text = "Multi";
+						state.text = "Setting up multiplayer mode, one moment.";
 						//Transition into game state
 						m_programState = OVERALLSTATES.GAME;
 						timeHolder = Time.time + 1.5f;
@@ -120,7 +121,9 @@ namespace GSP
 					if(Time.time > timeHolder)
 					{
 						print ("This is currently displaying credits. Hit enter to return to menu.");
-						state.text = "Credits";
+						state.text = "The Traveler\n\nCreated by:\nBrent Spector - Lead Game Designer\n" +
+							"Damien Robbs - Lead Programmer\nJavier Mendoza - Lead UI\n" +
+							"Jacky Yuen - Lead Graphics and Audio.\n\nHit Enter/Return to go back to the menu.";
 						//Return back to menu home when done
 						if(Input.GetKeyDown(KeyCode.Return))
 						{
@@ -134,7 +137,8 @@ namespace GSP
 					if(Time.time > timeHolder)
 					{
 						print ("This is currently displaying options. Hit enter to return to menu.");
-						state.text = "Options";
+						state.text = "There are currently no options. Hit Enter/Return to go back" +
+							" to the menu.";
 						//Return back to menu home when done
 						if(Input.GetKeyDown(KeyCode.Return))
 						{
@@ -148,7 +152,7 @@ namespace GSP
 					if(Time.time > timeHolder)
 					{
 						print("Clearing up game files.");
-						state.text = "Quit";
+						state.text = "Cleaning up game files, one moment.";
 						//Move to end of program
 						m_programState = OVERALLSTATES.END;
 					} //end wait if
@@ -170,6 +174,7 @@ namespace GSP
 				if(Time.time > timeHolder)
 				{
 					print ("Program is now ending. Clearing remaining files.");
+					state.text = "Cleaning remaining program files, thank you for playing!";
 					m_menuState = MENUSTATES.HOME;
 					m_programState = OVERALLSTATES.INTRO;
 					timeHolder = Time.time + 3.0f;
