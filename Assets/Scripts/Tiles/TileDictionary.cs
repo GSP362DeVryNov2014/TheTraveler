@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using GSP.Char;
 
+using System;
+using System.IO;
+
 namespace GSP.Tiles
 {
 	public static class TileDictionary
@@ -26,6 +29,7 @@ namespace GSP.Tiles
 			if ( !EntryExists( key ) )
 			{
 				// The key doesn't exist so return null.
+				Debug.LogError("Key at " + key.ToString("F2") + " doesn't exist!");
 				return null;
 			} // end if statement
 
@@ -39,17 +43,8 @@ namespace GSP.Tiles
 			// Get the tile at key.
 			Tile tile = GetTile( key );
 
-			if (resource == null)
-			{
-				Debug.Log("NULL");
-			}
-
-			Debug.Log("DEBUG: " + tile.ResourceType);
-
-			Debug.Log("DEBUG: " + tile.Resource.transform.position);
-
 			// Update the tile.
-			//tile.UpdateTile( resourceType, resource );
+			tile.UpdateTile( resourceType, resource );
 		} // end UpdateTile
 
 		// Add an entry to the dictionary.
@@ -100,6 +95,6 @@ namespace GSP.Tiles
 
 			// Finally, empty the dictionary.
 			m_tileDictionary.Clear();
-		}
+		} // end Clean function
 	} // end TileDictionary class
 } // end namespace
