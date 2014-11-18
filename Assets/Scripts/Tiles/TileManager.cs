@@ -102,72 +102,14 @@ namespace GSP.Tiles
 			{
 				Vector3 key = ToPixels( resourceObjects[index].transform.position );
 
-				// HACK: Damien will do this bit better later on.
-				// Get the resource name, this will be used for its type.
-				string resourceName = resourceObjects[index].name;
-				
-				// Split the string by the underscore
-				string[] tokens = resourceName.Split('_');
-				
-				// Holds the default value for the enum.
-				ResourceType resourceType = ResourceType.NONE;
-				
-				// Holds the results of the parsing.
-				ResourceType tmp = ResourceType.NONE;
+				// Get the ResourceTile component.
+				ResourceTile resTile = resourceObjects[index].GetComponent<ResourceTile>();
 
-				// Attempt to parse the string into the enum value.
-				try
-				{
-					// Get the last component and send it to the enum.
-					tmp = (ResourceType)Enum.Parse( typeof( ResourceType ), tokens[tokens.Length - 1].ToUpper() );
-					
-					// Switch over the possible values.
-					switch ( tmp )
-					{
-						case ResourceType.WOOL:
-						{
-							// Set the resource type.
-							resourceType = ResourceType.WOOL;
-							break;
-						} // end case
-						case ResourceType.WOOD:
-						{
-							// Set the resource type.
-							resourceType = ResourceType.WOOD;
-							break;
-						} // end case
-						case ResourceType.FISH:
-						{
-							// Set the resource type.
-							resourceType = ResourceType.FISH;
-							break;
-						} // end case
-						case ResourceType.ORE:
-						{
-							// Set the resource type.
-							resourceType = ResourceType.ORE;
-							break;
-						} // end case
-						default:
-						{
-							// Couldn't parse correctly so set the resource type to none.
-							resourceType = ResourceType.NONE;
-							break;
-						} // end default case
-					} // end switch statement.
-				} // end try clause
-				catch (Exception ex)
-				{
-					// The parsing failed so set the instance to null and resource type to size.
-					Debug.Log( "Something went wrong. Exception: " + ex.Message );
-				} // end catch clause
-				
-				// Check if the resource type is not none.
-				if ( resourceType != ResourceType.NONE)
-				{
-					// Update the tile at the given key.
-					TileDictionary.UpdateTile( key, resourceType, resourceObjects[index] );
-				} // end if statement.
+				// Holds the tile's resource type.
+				ResourceType resourceType = resTile.resourceType;
+
+				// Update the tile at the given key.
+				TileDictionary.UpdateTile( key, resourceType, resourceObjects[index] );
 			} // end for loop
 		} // end GenerateAndAddTiles function.
 
@@ -210,13 +152,13 @@ namespace GSP.Tiles
 			float maxHeight = MaxHeight / 100.0f;
 			
 			// Check if the width (x) is within the valid map positions and Clamp if not.
-			if ( tmp.x > maxWidth)
+			if ( tmp.x > maxWidth )
 			{
 				tmp.x = maxWidth;
 			} // end if statement
 			
 			// Check if the height (y) is within the valid map positions and Clamp if not.
-			if ( tmp.y < maxHeight)
+			if ( tmp.y < maxHeight )
 			{
 				tmp.y = maxHeight;
 			} // end if statement
