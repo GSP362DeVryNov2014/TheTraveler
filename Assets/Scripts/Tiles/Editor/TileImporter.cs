@@ -27,10 +27,9 @@ namespace GSP.Tiles
 			}
 
 			// Now we meed to determine which type of resource it is.
-			ResourceType tmp; 		// Holds the results of parsing.
+			ResourceType tmp; 			// Holds the results of parsing.
 
-			ResourceType resType = ResourceType.NONE;	// Holds the resource type.
-			GameObject instance = null;					// Holds the game object instance.
+			GameObject instance = null;	// Holds the game object instance.
 
 			try
 			{
@@ -47,9 +46,12 @@ namespace GSP.Tiles
 						
 						// Set the instances name to the name of the prefab.
 						instance.name = PrefabReference.prefabResource_Wool.name;
-
-						// Set the resource type.
-						resType = ResourceType.WOOL;
+						
+						// Add the ResourceTile component to the instance.
+						ResourceTile resTile = instance.AddComponent<ResourceTile>();
+					
+						// Add the resource type to the script component.
+						resTile.resourceType = ResourceType.WOOL;
 						break;
 					} // end case
 					case ResourceType.WOOD:
@@ -59,9 +61,12 @@ namespace GSP.Tiles
 						
 						// Set the instances name to the name of the prefab.
 						instance.name = PrefabReference.prefabResource_Wood.name;
+					
+						// Add the ResourceTile component to the instance.
+						ResourceTile resTile = instance.AddComponent<ResourceTile>();
 						
-						// Set the resource type.
-						resType = ResourceType.WOOD;
+						// Add the resource type to the script component.
+						resTile.resourceType = ResourceType.WOOD;
 						break;
 					} // end case
 					case ResourceType.FISH:
@@ -71,9 +76,12 @@ namespace GSP.Tiles
 						
 						// Set the instances name to the name of the prefab.
 						instance.name = PrefabReference.prefabResource_Fish.name;
+					
+						// Add the ResourceTile component to the instance.
+						ResourceTile resTile = instance.AddComponent<ResourceTile>();
 						
-						// Set the resource type.
-						resType = ResourceType.FISH;
+						// Add the resource type to the script component.
+						resTile.resourceType = ResourceType.FISH;
 						break;
 					} // end case
 					case ResourceType.ORE:
@@ -83,31 +91,31 @@ namespace GSP.Tiles
 						
 						// Set the instances name to the name of the prefab.
 						instance.name = PrefabReference.prefabResource_Ore.name;
+					
+						// Add the ResourceTile component to the instance.
+						ResourceTile resTile = instance.AddComponent<ResourceTile>();
 						
-						// Set the resource type.
-						resType = ResourceType.ORE;
+						// Add the resource type to the script component.
+						resTile.resourceType = ResourceType.ORE;
 						break;
 					} // end case
 					default:
 					{
-						// Couldn't parse correctly so set the instance to null and resource type to size.
+						// Couldn't parse correctly so set the instance to null.
 						instance = null;
-						resType = ResourceType.NONE;
-
 						break;
 					} // end default case
 				} // end switch statment
 			} // end try statement
 			catch (Exception ex)
 			{
-				// The parsing failed so set the instance to null and resource type to size.
+				// The parsing failed so set the instance to null.
 				Debug.Log( "Something went wrong. Exception: " + ex.Message );
 				instance = null;
-				resType = ResourceType.NONE;
 			} // end catch statement
 
 			// Make sure instance exists.
-			if ( instance == null && resType == ResourceType.NONE )
+			if ( instance == null )
 			{
 				// Simply return.
 				return;
