@@ -56,9 +56,8 @@ namespace GSP
 					GameObject enemy = Instantiate( PrefabReference.prefabCharacter,
 					  new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
 
-					//Name and tag
+					//Name
 					enemy.name = "Enemy";
-					enemy.tag = "Enemy";
 
 					//Get the character script attached to the enemy
 					Character m_enemyScript = enemy.GetComponent<Character>();
@@ -80,7 +79,6 @@ namespace GSP
 
 					//Name and tag ally
 					newAlly.name = "Ally" + m_playerCharScript.NumAllies;
-					newAlly.tag = "Ally";
 
 					//Get the character script attached to the ally
 					//Uncomment the following line once the weight bonus thing is implemented and the script is used.
@@ -106,7 +104,7 @@ namespace GSP
 						} //end else if
 					} //end while
 				} //end else if ALLY
-				else if(dieResult < 61 && dieResult >= 51)
+				else if(dieResult < 66 && dieResult >= 51)
 				{
 					//Declare what was landed on
 					print ("Map Event is ITEM");
@@ -116,10 +114,6 @@ namespace GSP
 					//Determine what item was found
 					int itemType = m_die.Roll(1, 4);
 
-					//TODO: ERROR: You are trying to create a MonoBehavior using the 'new'
-					//keyword. This is not allowed. MonoBehaviors can only be added
-					//using AddComponent(). Alternatively, your script can inherit
-					//from ScriptableObject or no base class at all.
 					if(itemType == 1)
 					{
 						//Pick an item from the weapons enum
@@ -166,12 +160,6 @@ namespace GSP
 						m_playerCharScript.EquipItem(itemName);
 					} //end else if Weight
 				} //end else if ITEM
-				else if (dieResult < 71 && dieResult >= 61)
-				{
-					print ("Map Event is WEATHER");
-
-					//TODO: Create weather effect variable for each map, then refrence it here
-				} //end else if WEATHER
 				else
 				{
 					print("Map Event is NOTHING ");
