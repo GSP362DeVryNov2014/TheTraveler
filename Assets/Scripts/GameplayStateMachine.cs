@@ -311,7 +311,7 @@ namespace GSP
 			{
 			case GamePlayState.BEGINTURN:
 				//Get All the Players values
-				GetPlayerValues();
+//				GetPlayerValues();
 				m_gamePlayState = GamePlayState.ROLLDICE;
 				break;
 			case GamePlayState.ROLLDICE:
