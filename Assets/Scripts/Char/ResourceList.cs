@@ -147,13 +147,13 @@ namespace GSP.Char
 		} // end ClearResources function
 
 		// Gets the first resource found in the list of the given type.
-		public Resource GetResourceByType( string resourceType )
+		public List<Resource> GetResourcesByType( string resourceType )
 		{
 			// Holds the results of parsing.
 			ResourceType tmp;
 
-			// Holds the resource.
-			Resource resource = null;
+			// Holds the resource list.
+			List<Resource> resourceList = new List<Resource>();
 
 			try
 			{
@@ -161,17 +161,16 @@ namespace GSP.Char
 				tmp = (ResourceType)Enum.Parse( typeof( ResourceType ), resourceType );
 				
 				// Search the list for the resource type.
-				resource = m_resourceList.Find( res => res.ResType == tmp );
+				resourceList = m_resourceList.FindAll( res => res.ResType == tmp );
 			} // end try statement
 			catch (Exception)
 			{
-				// The parsing failed so make sure the resource is null.
-				resource = null;
+				// The parsing failed.
 				print( "Requested resource type '" + resourceType + "' was not found." );
 			} // end catch statement
 
 			// Otherwise, return the object.
-			return resource;
+			return resourceList;
 		} // end GetResourceByType function
 
 		// Gets the resource by its index
