@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using System; //needed for Exception
 using System.Collections;
 
-	
 namespace GSP
 {
-		
+	
 	public class GUIMapEvents : MonoBehaviour
 		//////////////////////////////////////////////////////////////
 		// GUI features for all the map Events
@@ -36,6 +36,15 @@ namespace GSP
 		
 		//variables
 		bool m_showHideGUI = false;
+		bool m_isActionRunning = true;
+		
+		//playerObject
+		private GameObject m_PlayerEntity;
+		
+		//scripts
+		GSP.Char.Ally m_AllyScripts;
+		GSP.Char.ResourceList m_ResourceListScript;
+		GSP.Char.Items m_ItemScript;
 		
 		//==========================================================
 		//--------------------Functions-----------------------------
@@ -46,25 +55,85 @@ namespace GSP
 			m_currEnumMpEvent = m_EnumMapEvent.NOTHING;
 		}
 		
-		// Update is called once per frame
-		void Update () 
+		public void InitThis(GameObject p_PlayerEntity, string p_mapEventType, string p_resourceType )
+			//----------------------------------------------------
+			//	own custome overloaded constructor
+			//
+			//----------------------------------------------------
 		{
+			//get player info
+			m_PlayerEntity = p_PlayerEntity;
+			m_AllyScripts = m_PlayerEntity.GetComponent<GSP.Char.Ally>();
+			m_ResourceListScript = m_PlayerEntity.GetComponent<GSP.Char.ResourceList>();
+			m_ItemScript = m_PlayerEntity.GetComponent<GSP.Char.Items>();
+
+			// Holds the results of parsing.
+			m_EnumMapEvent tmpEnumMapEvent = m_EnumMapEvent.NOTHING;
+
+			try
+			{
+				// Attempt to parse the string into the enum value.
+				tmpEnumMapEvent = (m_EnumMapEvent)Enum.Parse( typeof( m_EnumMapEvent ), p_mapEventType );
+
+			} // end try statement
+			catch (Exception)
+			{
+				// The parsing failed so make sure the resource is null.
+				print( "Requested MapEvent type '" + p_mapEventType + "' was not found." );
+			} // end catch statement
 			
-		} //end Update()
+			//set to currEvent
+			m_currEnumMpEvent = tmpEnumMapEvent;
+
+			//tell StateMachin action is running
+			if (m_currEnumMpEvent != m_EnumMapEvent.NOTHING) 
+			{
+				m_isActionRunning = true;
+				m_showHideGUI = true;
+			} 
+			else 
+			{
+				m_showHideGUI = false;
+				m_isActionRunning = false;
+			}
+
+			//LOAD RESOURCE IF NECESSARY
+			if ( (p_resourceType != null) && (p_mapEventType == "ITEM") )
+			{
+				m_ResourceListScript.GetResourceByType( p_resourceType );
+			}
+
+			
+		} //end InitThis()
+		
+		public bool isActionRunning()
+			//-----------------------------------------------
+			// returs true if the map event is still running
+			// returns false if action is complete
+			//-------------------------------------------------
+		{
+			return m_isActionRunning;
+			
+		} //end public void isActionRunning()
+		
 		
 		//OnGUI called once per cycle
 		void OnGUI()
 		{
-			m_currEnumMpEvent = GetMapEvent();
-
-
+			//function no longer exist, using a function in GamePlaySateMachine that start this
+			//MapEvent GUI. READ COMMENTS further down on GetMapEventFunction
+			//m_currEnumMpEvent = GetMapEvent();
+			
+			
 			if (m_showHideGUI == true) 
 			{
 				GUIContainer();
 			}
-
+			
 		} //end void OnGUI()
-		
+
+/*		//Replaced this GetMapEvent Function in GameplayStateMachine.cs with DoAction() function
+ * 		//which calls InitThis( GameObject playerEntity, string MapEventType, string ResourceType );
 		private m_EnumMapEvent GetMapEvent()
 			//----------------------------------------------------------
 			//	Gets (enum) MapEvent.normalTile{ ENEMY, ALLY, ITEM, 
@@ -80,7 +149,8 @@ namespace GSP
 			else if( Input.GetKeyDown(KeyCode.Alpha2) )
 			{
 				m_showHideGUI = true;
-				m_currEnumMpEvent = m_EnumMapEvent.ALLY;			
+				m_currEnumMpEvent = m_EnumMapEvent.ALLY;
+				
 			}
 			else if( Input.GetKeyDown(KeyCode.Alpha3) )
 			{
@@ -105,7 +175,7 @@ namespace GSP
 			
 			return m_currEnumMpEvent;
 		}
-		
+*/
 		private m_EnumResourceType GetResourceEnum()
 			//----------------------------------------------------------
 			//	Gets (enum) MapEvent.normalTile{ WOOL, WOOD, FISH, ORE,
@@ -155,37 +225,38 @@ namespace GSP
 			int numOfContainers =2;
 			int guiWidth = Screen.width /3;
 			int guiHeight = Screen.height /numOfContainers;
-
+			
 			switch (m_currEnumMpEvent) 
 			{
 			case m_EnumMapEvent.ENEMY:
 				
 				break;
-
+				
 			case m_EnumMapEvent.ALLY:
 				break;
-
+				
 			case m_EnumMapEvent.ITEM:
 				break;
-
+				
 			case m_EnumMapEvent.RESOURCES:
 				break;
-
+				
 			case m_EnumMapEvent.NOTHING:
 				m_showHideGUI = false;
 				break;
-
+				
 			case m_EnumMapEvent.SIZE:
 				m_showHideGUI = false;
 				break;
-
+				
 			default:
 				print ("GUIMapEventsMachine is in Default");
 				break;
 			} //end switch (m_currEnumMpEvent
 			
 		} //end private void GUIMapEventsMachine()
-		
+
+
 		private void GUIResourceTypeMachine()
 			//----------------------------------------------------------
 			//	Gets (enum) MapEvent.normalTile{ WOOL, WOOD, FISH, ORE,
@@ -216,10 +287,10 @@ namespace GSP
 		{
 			//main container
 			GUI.Box (new Rect(0,65 +32, Screen.width /3, Screen.height /2 ), m_currEnumMpEvent.ToString() );
-
+			
 			//Check which GUI to Display
 			GUIMapEventsMachine(); //runs once every cycle; checks, what state we are in
-		
+			
 		} //end private void GUIContainer()
 		
 	} //class GUIMapEvents{}
