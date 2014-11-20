@@ -100,7 +100,8 @@ namespace GSP
 			//LOAD RESOURCE IF NECESSARY
 			if ( (p_resourceType != null) && (p_mapEventType == "ITEM") )
 			{
-				m_ResourceListScript.GetResourceByType( p_resourceType );
+				// NOTE: I don't know what is trying to be done here. This needs to be fixed. -- Damien
+				//m_ResourceListScript.GetResourceByType( p_resourceType );
 			}
 
 			
