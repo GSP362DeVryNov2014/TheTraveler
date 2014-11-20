@@ -280,42 +280,22 @@ namespace GSP
 		private void ActionButtonConfig( int gap, int col, int width, int height )
 			//-----------------------------------------------------------------------------
 			//	Action button has a few different settings to consider,
-			//		-In most states it is a simple click to change state,
-			//			and it can only be clicked once
-			//		-But in the SelectPathToTake phase, it can be clicked 
-			//			multiple times to confirm path, and cancel path
+			//		-Makes sure Action button gets pressed only once per state
 			//		 
 			//------------------------------------------------------------------------------
 		{
-			//If state is not SELECTPATHTOTAKE, Action Button changes states
-			if ( (m_gamePlayState != GamePlayState.SELECTPATHTOTAKE)) {
-				if (!(m_GUIActionPressed)) {
-					if (GUI.Button (new Rect ((col * width) + (col + 1) * gap, 2, width, 2 * height), m_GUIActionString)) 
-					{
-						m_GUIActionPressed = true;
-					}
-				} 
-				else 
-				{
-					GUI.Box (new Rect ((col * width) + (col + 1) * gap, 2, width, 2 * height), m_GUIActionString);
-				}
-			} 
-			//Else Action Button Has multiple uses in one phase
-			else 
-			{
+			//Makes sure Action Button gets pressed only once per State
+			if (!(m_GUIActionPressed)) {
 				if (GUI.Button (new Rect ((col * width) + (col + 1) * gap, 2, width, 2 * height), m_GUIActionString)) 
 				{
-					if( m_GUIActionPressed )
-					{
-						m_GUIActionPressed = false;
-					}
-					else
-					{
-						m_GUIActionPressed = true;
-					}
-				}	
-			} //end if (Gameplaystate == SelectPathToTake){} else {}
-			
+					m_GUIActionPressed = true;
+				}
+			} 
+			else 
+			{
+				GUI.Box (new Rect ((col * width) + (col + 1) * gap, 2, width, 2 * height), m_GUIActionString);
+			}
+	
 		} //end private void ActionButtonConfig(int gap, int col, int width, int height)
 
 		private void MovementButtonConfig()
@@ -344,13 +324,13 @@ namespace GSP
 
 			case GamePlayState.ROLLDICE:
 				
-				state.text = "roll dice";
+				state.text = "Player " +m_GUIPlayerTurn.ToString() +" roll dice";
 				//create a roll dice button
 				m_GUIActionString = "Action\nRoll Dice";
 				//if button is clicked, destroy button
 				if( m_GUIActionPressed )
 				{
-					m_GUIDiceDistVal = m_DieScript.Dice.Roll();
+					m_GUIDiceDistVal = m_DieScript.Dice.Roll(1,6);
 					//nextState()
 					m_gamePlayState = GamePlayState.CALCDISTANCE;
 				}					
@@ -358,8 +338,10 @@ namespace GSP
 
 			case GamePlayState.CALCDISTANCE:
 				state.text = "Calculate Distance";
+
 				//get dice value /calculate m_allowedTravelDistance
 				m_GUIDiceDistVal = (m_GUIMaxWeight-m_GUIWeight)/m_GUIMaxWeight;
+
 				//nextState()
 				m_GUIActionPressed = false;
 				m_gamePlayState = GamePlayState.DISPLAYDISTANCE;
@@ -367,23 +349,28 @@ namespace GSP
 
 			case GamePlayState.DISPLAYDISTANCE:
 				state.text = "DisplayDistance";
-				//starting from playersNode positions, highlight
-				// tiles that can be traveled on
+
+				//TODO: Add function to display tiles
+
 				//nextState()
-				m_GUIMovementScript.InitThis( m_GUIDiceDistVal );
 				m_gamePlayState = GamePlayState.SELECTPATHTOTAKE;
 				break;
 
 			case GamePlayState.SELECTPATHTOTAKE:
 				state.text = "Select Path To Take\nPress 1 to EndTurn,\nPress 2 to Do Action";
+				m_GUIActionString = "End Turn";
 
+				//display arrows
+				m_GUIMovementScript.InitThis( m_GUIDiceDistVal );
 
-				if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
+				//if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
+				if ( m_GUIActionPressed )
 				{
 					m_gamePlayState = GamePlayState.ENDTURN;
+					m_GUIActionPressed = false;
 				}
+
 				//if Mapevent occurs
-				//m_gamePlayState = GamePlayState.DOACTION
 				if ( Input.GetKeyDown( KeyCode.Alpha2 ) )
 				{
 					m_gamePlayState = GamePlayState.DOACTION;
@@ -497,7 +484,12 @@ namespace GSP
 			m_GUIRunMapEventOnce = false;
 			
 		}	//end private void ResetValues();
-		
+
+		public GameObject GetCurrentPlayer()
+		{
+			return	m_playerList[m_GUIPlayerTurn];
+		} //end public GameObject Get
+
 		public void OnDrawGizmos()
 			//---------------------------------------------------------
 			//to draw on the scene.

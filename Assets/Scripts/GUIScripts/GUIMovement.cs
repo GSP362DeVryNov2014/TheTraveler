@@ -28,11 +28,17 @@ namespace GSP
 		{
 			if (m_canStillMove == true)
 			{
-				int width = 16;
-				int height = 16;
-				int gap = 2;
+				int width = 32;
+				int height = 32;
+				int gridXShift =-8;
+				int gridYShift =-8;
 
-				GUI.Button( new Rect( (Screen.width-(3*width)-gap), (Screen.height-(2*height)-gap), width, height ), "Left" );
+				GUI.backgroundColor = Color.red;
+				GUI.Button( new Rect( (Screen.width -(3*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), "<" );
+				GUI.Button( new Rect( (Screen.width -(1*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), ">" );
+				GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), "X" );
+				GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(3*height) +gridYShift), width, height ), "^" );
+				GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(1*height) +gridYShift), width, height ), "v" );
 			}
 
 		} //end OnGUI()
