@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;	//required for List<GameObjects>
 
 namespace GSP
 {
-
+	
 	public class GameplayStateMachine : MonoBehaviour 
 		//====================================================================
 		// +will be in charge of designing the stateMachine
@@ -39,22 +39,15 @@ namespace GSP
 			ENDTURN
 		} //end public enum GamePlayState
 		
-		//		private GUI GuiStateMachine;
-		
-		//		public int m_diceRoll = 0; 		//if diceRoll equals zero, player has not rolled dice
-		//		public int m_allowedTravelDist = 0;	//calculated using dice roll
-		//		//public int m_currTravelDist = 0; 	//when this equals or is greater than allowed traveled distance, turn ends.
-		//		public Vector2 m_startingHighlightPosition; //high light will begin in players position
-		//		public bool m_stageTransition = false;
-		//		public bool m_movementConfirm = false;	//this will allow the player to cancel their movement
-		//		public bool m_doingAction = false;	//when player hits a map event, this becomes true
-		//		public bool m_endTurn = false; 		//when true, will activate a timer and display to the player that turn is ending
-		
+
 		//......Holds Current State......
 		public GamePlayState m_gamePlayState;
-
+		
 		//......GUI Values......
 		string m_GUIActionString;	//Changes the String in the Action button According to State player is in
+		string m_MapEventString; 	//holds what type of action event will occur
+		string m_MapEventResourceString; 	//if mapEvent is Item, what Resource is picked up? Null if not a resource event
+		bool m_GUIRunMapEventOnce = false;
 		bool m_GUIActionPressed = false;	//determines if the Action Button has been pressed.
 		int m_GUIPlayerTurn = 1;	//whos turn is it
 		int m_GUIGoldVal = 0;
@@ -66,14 +59,16 @@ namespace GSP
 		int m_GUIDiceDistVal = 0;	//HOlds the dice value, then is converted into Distance Value
 		int m_GUINumOfPlayers = 2; 	// how many players playing
 		
-		//...Instances...
+		//...Script Instances...
 		private GSP.DieInput m_DieScript;	//Access the sigleton Die and its functions
 		private GSP.GUIMapEvents m_GUIMapEventsScript; //Access the sigleton Die and its functions
-
+		private GSP.GUIMovement m_GUIMovementScript;
+		
 		//players list
 		private GameObject m_playerEntity; //player!
 		private List<GameObject> m_playerList;	//create players
 		private List<GSP.Char.Character> m_playerScriptList; //access Character.cs scripts from each player to get player values
+		private List<GSP.Char.ResourceList> m_PlayerResourceList; //access Characters.cs resourcesList scripts
 
 		//=================================================================================================
 		//-----------------------------------Functions-----------------------------------------------------
@@ -90,45 +85,69 @@ namespace GSP
 			//initialize empty lists
 			m_playerList = new List<GameObject>();
 			m_playerScriptList = new List<GSP.Char.Character>();
-
+			m_PlayerResourceList = new List<GSP.Char.ResourceList>();
+			
 			//TODO: get num of players from BrentsStateMachine
-
+			
 			//Add Players Instances
 			AddPlayers (m_GUINumOfPlayers);
 
 			//Beginning State
 			m_gamePlayState = GamePlayState.BEGINTURN;
-
+			
 			//get scripts needed
 			m_DieScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<DieInput>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
-			m_GUIActionString = "Action\nButton";
-		}
+			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
 
+			//text for the action button
+			m_GUIActionString = "Action\nButton";
+
+			//no map event at start;
+			m_MapEventString = "NOTHING";
+			m_MapEventResourceString = null;
+		}
+		
 		private void AddPlayers( int p_numOfPlayers )
 		{
-			//Player is already added in Unity's GUI, 
-			//TODO: adjust script after prototype testing to adjust to change between different players
-			//i.e. player1Script, player2Script, etc...
-
-			//TODO: Add this script below after testing prototype and remove above
 			Vector3 startingPos = new Vector3 (32, 32, -1.6f); //first tile
 			float tmpTransY = 0.0f; 
-
+			
 			for (int count = 0; count < p_numOfPlayers; count++) 
 			{
 				startingPos.y = 32 +((count+1) *64); 
 				//create players
 				m_playerEntity = Instantiate( PrefabReference.prefabCharacter, startingPos, Quaternion.identity ) as GameObject;
 				m_playerEntity.transform.localScale = new Vector3 (100, 100, 1);
-
+				
 				m_playerList.Add( m_playerEntity ); //add PlayerEntity to list
-
+				
 				m_playerScriptList.Add( m_playerEntity.GetComponent<GSP.Char.Character>() );
-
+				m_PlayerResourceList.Add( m_playerEntity.GetComponent<GSP.Char.ResourceList>() );
+				
 			} //end for loop
-
+			
 		} // end private void AddPlayers( int p_numOfPlayers )
+
+		private void GetPlayerValues()
+			//-----------------------------------------------------------------------------
+			//	At the BEGINTURN state, values are grabbed from each player and stored into
+			//		respective m_GUI variable.
+			//
+			//-----------------------------------------------------------------------------
+		{
+			m_GUIGoldVal = m_playerScriptList [m_GUIPlayerTurn].Currency;
+			m_GUIMaxWeight = m_playerScriptList [m_GUIPlayerTurn].MaxWeight;
+			//TODO: does this weight need to be added with armor and weapon weight??? Ask
+			// 		Brent how to get Totale Weapon and armor weight Values for varible below.
+			m_GUIWeight = m_playerScriptList [m_GUIPlayerTurn].ResourceWeight;
+			
+			//get the resources for current player
+			m_GUIOre = m_PlayerResourceList[m_GUIPlayerTurn].GetResourceByType("ORE").SizeValue;
+			m_GUIWool = m_PlayerResourceList[m_GUIPlayerTurn].GetResourceByType("WOOL").SizeValue;
+			
+		}	//end private void GetPlayerValues()
+
 		
 		void OnGUI()
 			//-------------------------------------------------------------------
@@ -161,7 +180,9 @@ namespace GSP
 			// ...WEIGHT AND RESOURCE COLUMN...
 			//..................................
 			col = col+1;
-			GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight: "+m_GUIGoldVal.ToString());	//weight container
+			//TODO: Instead of displaying "Weight: " Maybe better info will be given
+			//if GUI dispay "Weight/MaxWeight\n" + 
+			GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight:"+m_GUIWeight.ToString() +"/"+ m_GUIMaxWeight.ToString() );	//weight container
 			ResourceButtonConfig (gap, col, width, height);
 			//Show/hides Resources
 			ShowResources();
@@ -296,7 +317,12 @@ namespace GSP
 			} //end if (Gameplaystate == SelectPathToTake){} else {}
 			
 		} //end private void ActionButtonConfig(int gap, int col, int width, int height)
-		
+
+		private void MovementButtonConfig()
+		{
+
+		} //end private void MovementButtonConfig()
+
 		
 		private void StateMachine()
 			//---------------------------------------------------------------------
@@ -309,11 +335,13 @@ namespace GSP
 			var state = GameObject.FindGameObjectWithTag("GUITextTag").GetComponent<GUIText>();
 			switch (m_gamePlayState) 
 			{
+
 			case GamePlayState.BEGINTURN:
 				//Get All the Players values
-//				GetPlayerValues();
+				//				GetPlayerValues();
 				m_gamePlayState = GamePlayState.ROLLDICE;
 				break;
+
 			case GamePlayState.ROLLDICE:
 				
 				state.text = "roll dice";
@@ -327,8 +355,8 @@ namespace GSP
 					m_gamePlayState = GamePlayState.CALCDISTANCE;
 				}					
 				break;
+
 			case GamePlayState.CALCDISTANCE:
-				
 				state.text = "Calculate Distance";
 				//get dice value /calculate m_allowedTravelDistance
 				m_GUIDiceDistVal = (m_GUIMaxWeight-m_GUIWeight)/m_GUIMaxWeight;
@@ -336,22 +364,20 @@ namespace GSP
 				m_GUIActionPressed = false;
 				m_gamePlayState = GamePlayState.DISPLAYDISTANCE;
 				break;
+
 			case GamePlayState.DISPLAYDISTANCE:
 				state.text = "DisplayDistance";
 				//starting from playersNode positions, highlight
 				// tiles that can be traveled on
 				//nextState()
+				m_GUIMovementScript.InitThis( m_GUIDiceDistVal );
 				m_gamePlayState = GamePlayState.SELECTPATHTOTAKE;
 				break;
+
 			case GamePlayState.SELECTPATHTOTAKE:
 				state.text = "Select Path To Take\nPress 1 to EndTurn,\nPress 2 to Do Action";
-				//player object can request for m_allowedTravelDistance
-				//...this code should be created in player object...
-				//if GamePlayState.SELECTPATHTOTAKE
-				//node selection
-				//pathfind to node selection
-				//if playerTravelCount == 0
-				//m_gamePlayState = GamePlayState.ENDTURN
+
+
 				if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
 				{
 					m_gamePlayState = GamePlayState.ENDTURN;
@@ -361,14 +387,28 @@ namespace GSP
 				if ( Input.GetKeyDown( KeyCode.Alpha2 ) )
 				{
 					m_gamePlayState = GamePlayState.DOACTION;
+					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
+					//TODO: after testing, delete command above and use this one below
+					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString );
 				}
 				break;
+
 			case GamePlayState.DOACTION:
 				state.text = "Do Action/MapEvent";
+
 				//map events
-				//if map event is complete
+				if( !(m_GUIMapEventsScript.isActionRunning()) )
+				{
+					//TODO: After Testing, uncomment the following
+					//m_MapEventString = "NOTHING"
+					//m_MapEventResourceString = NULL;
+
+					//send back to previous state
+					m_gamePlayState = GamePlayState.SELECTPATHTOTAKE;
+				}
 				//NextState()
 				break;
+
 			case GamePlayState.ENDTURN:
 				state.text = "End Turn";
 				
@@ -391,26 +431,7 @@ namespace GSP
 			
 		} //end private void StateMachine()
 
-		private void GetPlayerValues()
-		//-----------------------------------------------------------------------------
-		//	At the BEGINTURN state, values are grabbed from each player and stored into
-		//		respective m_GUI variable.
-		//
-		//-----------------------------------------------------------------------------
-		{
-			m_GUIGoldVal = m_playerScriptList [m_GUIPlayerTurn].Currency;
-			m_GUIMaxWeight = m_playerScriptList [m_GUIPlayerTurn].MaxWeight;
-			//TODO: does this weight need to be added with armor and weapon weight??? Ask
-			// 		Brent how to get Totale Weapon and armor weight Values for varible below.
-			m_GUIWeight = m_playerScriptList [m_GUIPlayerTurn].ResourceWeight;
-
-			//TODO:ask BRENT SPECTOR how to get the resources below
-			//m_GUIOre = m_playerScriptList [m_GUIPlayerTurn].m_resourceList.GetResourceByType ("ORE").SizeValue;
-			//m_GUIWool = m_playerScriptList [m_GUIPlayerTurn].m_resourceList.GetResourceByType ("WOOL").SizeValue;
-
-
-		}	//end private void GetPlayerValues()
-
+		
 		public int GetState()
 			//---------------------------------------------------------
 			//	-If another class wants to get the Current State, 
@@ -432,7 +453,21 @@ namespace GSP
 		{
 			m_gamePlayState = m_gamePlayState +1;
 		} //end public void NextStage()
-		
+
+		public void DoAction( string p_MapEventType, string p_TypeOfResource )
+			//--------------------------------------------------------
+			//	can be called from other objects to start an action
+			//
+			//--------------------------------------------------------
+		{
+			//set state machine to DOACTION
+			m_gamePlayState = GamePlayState.DOACTION;
+
+			//set map event typs and call the init
+			m_MapEventString = p_MapEventType;
+			m_MapEventResourceString = p_TypeOfResource;
+		} // void 
+
 		public void EndTurn()
 			//---------------------------------------------------------
 			// automatically changes to endTurn state
@@ -451,14 +486,15 @@ namespace GSP
 			//---------------------------------------------------------
 		{
 			m_GUIActionString = "Action\nButton";
-			bool m_GUIActionPressed = false;
-			int m_GUIGoldVal = 0;
-			int m_GUIWeight = 0;
-			int m_GUIMaxWeight = 100;
-			bool m_GUIShowResources = false;
-			int m_GUIOre = 0;
-			int m_GUIWool = 0;
-			int m_GUIDiceDistVal = 0;
+			m_GUIActionPressed = false;
+			m_GUIGoldVal = 0;
+			m_GUIWeight = 0;
+			m_GUIMaxWeight = 100;
+			m_GUIShowResources = false;
+			m_GUIOre = 0;
+			m_GUIWool = 0;
+			m_GUIDiceDistVal = 0;
+			m_GUIRunMapEventOnce = false;
 			
 		}	//end private void ResetValues();
 		
@@ -473,5 +509,5 @@ namespace GSP
 		} //end public void OnDrawGizmos()
 		
 	}	//end public class GameplayStateMachine : MonoBehaviour
-
+	
 }	//end namespace GSP
