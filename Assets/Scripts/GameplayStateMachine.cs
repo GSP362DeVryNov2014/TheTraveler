@@ -143,8 +143,8 @@ namespace GSP
 			m_GUIWeight = m_playerScriptList [m_GUIPlayerTurn].ResourceWeight;
 			
 			//get the resources for current player
-			m_GUIOre = m_PlayerResourceList[m_GUIPlayerTurn].GetResourceByType("ORE").SizeValue;
-			m_GUIWool = m_PlayerResourceList[m_GUIPlayerTurn].GetResourceByType("WOOL").SizeValue;
+			m_GUIOre = m_PlayerResourceList[ m_GUIPlayerTurn ].GetResourcesByType( "ORE" ).Count;
+			m_GUIWool = m_PlayerResourceList[m_GUIPlayerTurn].GetResourcesByType("WOOL").Count;
 			
 		}	//end private void GetPlayerValues()
 
