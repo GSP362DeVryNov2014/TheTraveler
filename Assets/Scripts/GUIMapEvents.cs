@@ -101,7 +101,7 @@ namespace GSP
 			if ( (p_resourceType != null) && (p_mapEventType == "ITEM") )
 			{
 				// NOTE: I don't know what is trying to be done here. This needs to be fixed. -- Damien
-				//m_ResourceListScript.GetResourceByType( p_resourceType );
+				m_ResourceListScript.GetResourcesByType( p_resourceType );
 			}
 
 			
