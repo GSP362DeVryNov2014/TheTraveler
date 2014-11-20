@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;	//required for List<GameObjects>
+using GSP.Tiles;
 
 namespace GSP
 {
@@ -82,6 +83,9 @@ namespace GSP
 			//		-Values should be updated at EndTurn State of StateMachine()
 			//-------------------------------------------------------------------
 		{
+			TileManager.SetDimensions (64, 20, 16);
+			TileManager.GenerateAndAddTiles ();
+
 			//initialize empty lists
 			m_playerList = new List<GameObject>();
 			m_playerScriptList = new List<GSP.Char.Character>();
@@ -110,15 +114,15 @@ namespace GSP
 		
 		private void AddPlayers( int p_numOfPlayers )
 		{
-			Vector3 startingPos = new Vector3 (32, 32, -1.6f); //first tile
+			Vector3 startingPos = new Vector3 (.32f, -(Screen.height/2.0f), -1.6f); //first tile
 			float tmpTransY = 0.0f; 
 			
 			for (int count = 0; count < p_numOfPlayers; count++) 
 			{
-				startingPos.y = 32 +((count+1) *64); 
+				startingPos.y = .32f -((count+1) *.64f); 
 				//create players
 				m_playerEntity = Instantiate( PrefabReference.prefabCharacter, startingPos, Quaternion.identity ) as GameObject;
-				m_playerEntity.transform.localScale = new Vector3 (100, 100, 1);
+				m_playerEntity.transform.localScale = new Vector3 (1, 1, 1);
 				
 				m_playerList.Add( m_playerEntity ); //add PlayerEntity to list
 				
