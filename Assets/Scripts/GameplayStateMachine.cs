@@ -385,7 +385,7 @@ namespace GSP
 				break;
 
 			case GamePlayState.SELECTPATHTOTAKE:
-				state.text = "Select Path To Take\nPress 1 to EndTurn,\nPress 2 to Do Action";
+				state.text = "Select Path To Take\nPress Action butotn to End Turn\nor X to start over.";
 				m_GUIActionString = "End Turn";
 
 				//update new value of DiceDist if player pressed a move button
@@ -394,32 +394,29 @@ namespace GSP
 				//if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
 				if ( m_GUIActionPressed )
 				{
-					m_gamePlayState = GamePlayState.ENDTURN;
-					m_GUIActionPressed = false;
-				}
+					//find out what mapEvent Occured
 
-				//if Mapevent occurs
-				if ( Input.GetKeyDown( KeyCode.Alpha2 ) )
-				{
 					m_gamePlayState = GamePlayState.DOACTION;
-					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
+					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ALLY", null );
 					//TODO: after testing, delete command above and use this one below
 					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString );
 				}
+
 				break;
 
 			case GamePlayState.DOACTION:
-				state.text = "Do Action/MapEvent";
+				//state.text = "Do Action/MapEvent";
+				state.text = "";
 
 				//map events
-				if( !(m_GUIMapEventsScript.isActionRunning()) )
+				if( m_GUIMapEventsScript.isActionRunning() == false )
 				{
 					//TODO: After Testing, uncomment the following
 					//m_MapEventString = "NOTHING"
 					//m_MapEventResourceString = NULL;
 
-					//send back to previous state
-					m_gamePlayState = GamePlayState.SELECTPATHTOTAKE;
+					m_gamePlayState = GamePlayState.ENDTURN;
+					m_GUIActionPressed = false;
 				}
 				//NextState()
 				break;
@@ -429,10 +426,11 @@ namespace GSP
 				
 				//next players turn
 				m_GUIPlayerTurn = m_GUIPlayerTurn +1;
+
 				//if exceeds the number of player playing, start back at player 1
 				if( m_GUIPlayerTurn >= m_GUINumOfPlayers )
 				{
-					m_GUIPlayerTurn = 1;
+					m_GUIPlayerTurn = 0;
 				}
 				
 				m_gamePlayState = GamePlayState.BEGINTURN;
@@ -517,17 +515,8 @@ namespace GSP
 		{
 			return	m_playerList[m_GUIPlayerTurn];
 		} //end public GameObject Get
+	
 
-		public void OnDrawGizmos()
-			//---------------------------------------------------------
-			//to draw on the scene.
-			//	-ORIGINALLY GOING TO BE USED FOR A DIFFERENT
-			//		TYPE OF UNITY GUI, BUT NO LONGER NEEDED
-			//---------------------------------------------------------
-		{
-			
-		} //end public void OnDrawGizmos()
-		
 	}	//end public class GameplayStateMachine : MonoBehaviour
 	
 }	//end namespace GSP
