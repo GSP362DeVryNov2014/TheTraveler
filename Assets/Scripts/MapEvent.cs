@@ -31,7 +31,7 @@ namespace GSP
 		public string DetermineEvent(GameObject player)
 		{
 			m_player = player;
-			m_playerCharScript = m_player.GetComponent<Character>;
+			m_playerCharScript = m_player.GetComponent<Character>();
 			//This will be replaced with the normal tile trigger
 			if (Input.GetKeyDown (KeyCode.N)) 
 			{
@@ -77,7 +77,7 @@ namespace GSP
 						if(Input.GetKeyDown(KeyCode.Y))
 						{
 							//Add to ally list
-							Ally m_playerAllyScript = m_player.GetComponent<Ally>;
+							Ally m_playerAllyScript = m_player.GetComponent<Ally>();
 							m_playerAllyScript.AddAlly(m_ally);
 							Loop = false;
 						}
@@ -143,6 +143,10 @@ namespace GSP
 						//Equip to player
 						m_playerCharScript.EquipItem(result);
 					} //end else if Weight
+					else
+					{
+						result = "non-existant item. Nothing given.";
+					} //end else
 
 					return "Map event was item and you got " + result;
 				} //end else if ITEM
@@ -165,8 +169,12 @@ namespace GSP
 				m_playerCharScript.PickupResource( temp, 1 );
 
 				//Declare what was landed on
-				print ("Map Event is " + temp.ResourceName);
+				return "Map Event is " + temp.ResourceName;
 			} //end else if RESOURCE TILE
+			else
+			{
+				return "No event.";
+			} //end else
 		} //end DetermineEvent()
 	} //end MapEvent class
 } //end namespace GSP

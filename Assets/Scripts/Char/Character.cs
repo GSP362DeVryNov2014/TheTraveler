@@ -390,7 +390,7 @@ namespace GSP.Char
 							//Clean up old armor, then apply new
 							DefencePower -= m_armor.GetComponent<Items>().DefenceValue;
 							DefencePower += m_itemScript.DefenceValue;
-							m_armor = m_itemScript;
+							m_armor = m_item;
 							m_itemScript = null;
 							Loop = false;
 						}
@@ -458,15 +458,15 @@ namespace GSP.Char
 			} //end else if armor
 			else if(item == "inventory")
 			{
-				Items m_itemScript = m_bonuses.Find(x => x.GetComponent<Items>().ItemType == "Inventory");
-				MaxInventory -= m_itemScript.InventoryValue;
-				m_bonuses.Remove(m_itemScript);
+				GameObject m_item = m_bonuses.Find(x => x.GetComponent<Items>().ItemType == "Inventory");
+				MaxInventory -= m_item.GetComponent<Items>().InventoryValue;
+				m_bonuses.Remove(m_item);
 			} //end else if inventory
 			else if(item == "weight")
 			{
-				Items m_itemScript = m_bonuses.Find(x => x.GetComponent<Items>().ItemType == "Weight");
-				MaxWeight -= m_itemScript.WeightValue;
-				m_bonuses.Remove(m_itemScript);
+				GameObject m_item = m_bonuses.Find(x => x.GetComponent<Items>().ItemType == "Weight");
+				MaxWeight -= m_item.GetComponent<Items>().WeightValue;
+				m_bonuses.Remove(m_item);
 			} //end else if weight
 			else
 			{

@@ -19,7 +19,7 @@ public class Movement : MonoBehaviour
 	{
 		if(position.x < 20)
 		{
-			return new Vector3(1, 0, 0);\
+			return new Vector3(1, 0, 0);
 		} //end if
 		else
 		{
