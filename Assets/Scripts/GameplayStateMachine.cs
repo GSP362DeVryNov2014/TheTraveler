@@ -26,7 +26,7 @@ namespace GSP
 		//
 		//====================================================================
 	{
-		public enum GamePlayState
+		private enum GamePlayState
 			//--------------------------------------------
 			// +enum will hold the values of gameplay states
 			//--------------------------------------------
@@ -42,7 +42,7 @@ namespace GSP
 		
 
 		//......Holds Current State......
-		public GamePlayState m_gamePlayState;
+		private GamePlayState m_gamePlayState;
 		
 		//......GUI Values......
 		string m_GUIActionString;	//Changes the String in the Action button According to State player is in
@@ -50,13 +50,15 @@ namespace GSP
 		string m_MapEventResourceString; 	//if mapEvent is Item, what Resource is picked up? Null if not a resource event
 		bool m_GUIRunMapEventOnce = false;
 		bool m_GUIActionPressed = false;	//determines if the Action Button has been pressed.
-		int m_GUIPlayerTurn = 1;	//whos turn is it
-		int m_GUIGoldVal = 0;
-		int m_GUIWeight = 0;		//Players actual weight
-		int m_GUIMaxWeight = 100;	//Players max weight
+		int m_GUIPlayerTurn = 0;	//whos turn is it
+		int m_GUIGoldVal = -1;		//Players Gold Value; if gui displays -1; value was not received from player
+		int m_GUIWeight = -1;		//Players actual weight; if gui displays -1; value was not received from player
+		int m_GUIMaxWeight = -1;	//Players max weight; //if gui displays -1; value was not received from player
 		bool m_GUIShowResources = false;	// GUI for Resources can be hidden at push of button
-		int m_GUIOre = 0;
-		int m_GUIWool = 0;
+		int m_GUIOre = -1;		//if gui displays -1; value was not received from player
+		int m_GUIWool = -1;		//if gui displays -1; value was not received from player
+		int m_GUIWood = -1;		//if gui displays -1; value was not received from player
+		int m_GUIFish = -1;		//if gui displays -1; value was not received from player 
 		int m_GUIDiceDistVal = 0;	//HOlds the dice value, then is converted into Distance Value
 		int m_GUINumOfPlayers = 2; 	// how many players playing
 		
@@ -140,7 +142,10 @@ namespace GSP
 			//
 			//-----------------------------------------------------------------------------
 		{
+			//Get Gold val
 			m_GUIGoldVal = m_playerScriptList [m_GUIPlayerTurn].Currency;
+
+			//Get Weight Values; Max and Actual weight
 			m_GUIMaxWeight = m_playerScriptList [m_GUIPlayerTurn].MaxWeight;
 			//TODO: does this weight need to be added with armor and weapon weight??? Ask
 			// 		Brent how to get Totale Weapon and armor weight Values for varible below.
@@ -149,7 +154,9 @@ namespace GSP
 			//get the resources for current player
 			m_GUIOre = m_PlayerResourceList[ m_GUIPlayerTurn ].GetResourcesByType( "ORE" ).Count;
 			m_GUIWool = m_PlayerResourceList[m_GUIPlayerTurn].GetResourcesByType("WOOL").Count;
-			
+			m_GUIWood = m_PlayerResourceList [m_GUIPlayerTurn].GetResourcesByType ("WOOD").Count;
+			m_GUIFish = m_PlayerResourceList [m_GUIPlayerTurn].GetResourcesByType ("FISH").Count;
+
 		}	//end private void GetPlayerValues()
 
 		
@@ -177,7 +184,8 @@ namespace GSP
 			//   ...PLAYER AND GOLD COLUMN...
 			//..................................
 			int col = 0;
-			GUI.Box (new Rect ((col*width)+(col+1)*gap, 2,width, height), "Player: "+m_GUIPlayerTurn.ToString());		//Whose Turn
+			int tmpPlayer = m_GUIPlayerTurn + 1;
+			GUI.Box (new Rect ((col*width)+(col+1)*gap, 2,width, height), "Player: "+tmpPlayer.ToString());		//Whose Turn
 			GUI.Box (new Rect ((col*width)+(col+1)*gap,32, width, height), "Gold: $"+m_GUIGoldVal.ToString());			//How Much Gold
 			
 			//..................................
@@ -214,7 +222,7 @@ namespace GSP
 			if (m_GUIShowResources) 
 			{
 				//Resrouces GUI Container attributes
-				const int NUMOFRSRCS = 2; //change this to meet our needs
+				const int NUMOFRSRCS = 4; //change this to meet our needs
 				int gap = 2;
 				int width = (Screen.width/NUMOFRSRCS)-2;
 				int height = 28;
@@ -230,8 +238,18 @@ namespace GSP
 				//...............
 				col = col +1;
 				GUI.Box(new Rect ((col*width)+(col+1)*gap,64,width, height), "Wool: "+m_GUIWool.ToString());
-				//GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight: "+m_GUIGoldVal.ToString());
-				//GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight: "+m_GUIGoldVal.ToString());
+
+				//..............
+				// ...Wood....
+				//..............
+				col = col +1;
+				GUI.Box(new Rect ((col*width)+(col+1)*gap,64,width, height), "Wood: "+m_GUIWood.ToString());
+
+				//.............
+				// ...Fish...
+				//.............
+				col = col +1;
+				GUI.Box(new Rect ((col*width)+(col+1)*gap, 64,width, height), "Fish: "+m_GUIFish.ToString());
 			}	//end if(m_GUIShowResources)
 			
 		} //end private void ShowResources()
@@ -322,19 +340,23 @@ namespace GSP
 
 			case GamePlayState.BEGINTURN:
 				//Get All the Players values
-				//				GetPlayerValues();
+				GetPlayerValues();
+
+				//tell the player to roll the dice
 				m_gamePlayState = GamePlayState.ROLLDICE;
 				break;
 
 			case GamePlayState.ROLLDICE:
-				
-				state.text = "Player " +m_GUIPlayerTurn.ToString() +" roll dice";
+				//list start at 0 but I need GUI to start Display with player "1"
+				int tmpPlayerTurn = m_GUIPlayerTurn +1;
+
+				state.text = "Player " +tmpPlayerTurn.ToString() +" roll dice";
 				//create a roll dice button
 				m_GUIActionString = "Action\nRoll Dice";
 				//if button is clicked, destroy button
 				if( m_GUIActionPressed )
 				{
-					m_GUIDiceDistVal = m_DieScript.Dice.Roll(1,6);
+					m_GUIDiceDistVal = m_DieScript.Dice.Roll(3,6);
 					//nextState()
 					m_gamePlayState = GamePlayState.CALCDISTANCE;
 				}					
@@ -344,7 +366,7 @@ namespace GSP
 				state.text = "Calculate Distance";
 
 				//get dice value /calculate m_allowedTravelDistance
-				m_GUIDiceDistVal = (m_GUIMaxWeight-m_GUIWeight)/m_GUIMaxWeight;
+				m_GUIDiceDistVal = m_GUIDiceDistVal*(m_GUIMaxWeight-m_GUIWeight)/m_GUIMaxWeight;
 
 				//nextState()
 				m_GUIActionPressed = false;
@@ -358,14 +380,16 @@ namespace GSP
 
 				//nextState()
 				m_gamePlayState = GamePlayState.SELECTPATHTOTAKE;
+				//display arrows
+				m_GUIMovementScript.InitThis( m_playerList[ m_GUIPlayerTurn ], m_GUIDiceDistVal );
 				break;
 
 			case GamePlayState.SELECTPATHTOTAKE:
 				state.text = "Select Path To Take\nPress 1 to EndTurn,\nPress 2 to Do Action";
 				m_GUIActionString = "End Turn";
 
-				//display arrows
-				m_GUIMovementScript.InitThis( m_GUIDiceDistVal );
+				//update new value of DiceDist if player pressed a move button
+				m_GUIDiceDistVal = m_GUIMovementScript.GetTravelDistanceLeft();
 
 				//if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
 				if ( m_GUIActionPressed )
@@ -406,7 +430,7 @@ namespace GSP
 				//next players turn
 				m_GUIPlayerTurn = m_GUIPlayerTurn +1;
 				//if exceeds the number of player playing, start back at player 1
-				if( m_GUIPlayerTurn > m_GUINumOfPlayers )
+				if( m_GUIPlayerTurn >= m_GUINumOfPlayers )
 				{
 					m_GUIPlayerTurn = 1;
 				}
