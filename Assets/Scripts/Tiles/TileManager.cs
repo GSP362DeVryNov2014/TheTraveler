@@ -30,7 +30,7 @@ namespace GSP.Tiles
 			get { return m_numTilesHigh; }
 		} // end NumTilesWide property
 
-		// Gets the max height you can place.
+		// Gets the max height you can place a tile.
 		public static int MaxHeight
 		{
 			get
@@ -44,7 +44,7 @@ namespace GSP.Tiles
 			} // end get accessor
 		} // end MaxHeight property
 
-		// Gets the max height you can place.
+		// Gets the max width you can place a tile.
 		public static int MaxWidth
 		{
 			get
@@ -55,7 +55,43 @@ namespace GSP.Tiles
 			} // end get accessor
 		} // end MaxHeight property
 
-		// Get the map size.
+		// Gets the min height you can place a tile.
+		public static int MinHeight
+		{
+			get { return ( TileSize / 2 ) * -1; }
+		} // end MinWidth property
+
+		// Gets the min width you can place a tile.
+		public static int MinWidth
+		{
+			get { return TileSize / 2; }
+		} // end MaxWidth property
+
+		// Gets the min height you can place a tile in units.
+		public static float MinHeightUnits
+		{
+			get { return ToUnits( new Vector3(MinHeight, 0, 0 ) ).x; }
+		} // end MinHeightUnits property
+
+		// Gets the min width you can place a tile in units.
+		public static float MinWidthUnits
+		{
+			get { return ToUnits( new Vector3(MinWidth, 0, 0 ) ).x; }
+		} // end MinWidthUnits property
+
+		// Gets the max height you can place a tile in units.
+		public static float MaxHeightUnits
+		{
+			get { return ToUnits( new Vector3(MaxHeight, 0, 0 ) ).x; }
+		} // end MaxHeightUnits property
+
+		// Gets the max width you can place a tile in units.
+		public static float MaxWidthUnits
+		{
+			get { return ToUnits( new Vector3(MaxWidth, 0, 0 ) ).x; }
+		} // end MaxWidthUnits property
+
+		// Gets the map size.
 		public static Vector2 MapSize
 		{
 			get
@@ -63,6 +99,17 @@ namespace GSP.Tiles
 				return new Vector2( NumTilesWide * TileSize, NumTilesHigh * TileSize );
 			} // end get accessor
 		} // end MapSize property
+
+		// Gets the standard move distance for a player.
+		public static float PlayerMoveDistance
+		{
+			get
+			{
+				// Originally ToUnits is a Vector3 operation. So we pass in zeroes for y and z here.
+				// All we care about is the x component.
+				return ToUnits( new Vector3(TileSize, 0, 0) ).x;
+			}
+		}
 
 		// Sets the dimensions of the Tiled map. This should only be called once when initialising the map.
 		// You shouldn't change these values unless you redo the map in Tiled.
