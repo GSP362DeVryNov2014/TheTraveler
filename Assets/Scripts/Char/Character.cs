@@ -15,9 +15,9 @@ namespace GSP.Char
 		int m_currency; 				// This is the amount of currency the character is holding.
 		int m_attackPower;				// Attack of the character (from weapons)
 		int m_defencePower;				// Defence of the character (from armor)
-		Items m_weapon;					// Weapon being wielded
-		Items m_armor;					// Armor being worn
-		List<Items> m_bonuses;			// Bonuses picked up (Inventory and Weight mods)
+		GameObject m_weapon;			// Weapon being wielded
+		GameObject m_armor;				// Armor being worn
+		List<GameObject> m_bonuses;		// Bonuses picked up (Inventory and Weight mods)
 
 		#region Resource
 		// Gets the current value of resources the character is holding.
@@ -137,7 +137,7 @@ namespace GSP.Char
 			m_currency = 0;
 			m_attackPower = 0;
 			m_defencePower = 0;
-			m_bonuses = new List<Items> ();
+			m_bonuses = new List<GameObject> ();
 			m_weapon = null;
 			m_armor = null;
 		} // end Start function
@@ -275,36 +275,40 @@ namespace GSP.Char
 		//a positive or negative value.
 		public void EquipItem(string item, int value = 0)
 		{
-			//Generic item holder
-			Items temp = new Items();
+			//Item object
+			GameObject m_item = Instantiate( PrefabReference.prefabCharacter,
+				this.transform.position, new Quaternion() ) as GameObject;
+			
+			//Generate script
+			Items m_itemScript = m_item.GetComponent<Items>();
 
 			//Assign values to a custom item
 			if(value != 0)
 			{
-				temp.ItemName = "CustomItem-" + item;
+				m_itemScript.ItemName = "CustomItem-" + item;
 				if(item == "attack")
 				{
-					temp.ItemType = "Weapon";
-					temp.AttackValue += value;
+					m_itemScript.ItemType = "Weapon";
+					m_itemScript.AttackValue += value;
 				} //end if attack
 				else if(item == "defence")
 				{
-					temp.ItemType = "Armor";
-					temp.DefenceValue += value;
+					m_itemScript.ItemType = "Armor";
+					m_itemScript.DefenceValue += value;
 				} //end else if defence
 				else if(item == "inventory")
 				{
-					temp.ItemType = "Inventory";
-					temp.InventoryValue += value;
+					m_itemScript.ItemType = "Inventory";
+					m_itemScript.InventoryValue += value;
 				} //end else if inventory
 				else if(item == "weight")
 				{
-					temp.ItemType = "Weight";
-					temp.WeightValue += value;
+					m_itemScript.ItemType = "Weight";
+					m_itemScript.WeightValue += value;
 				} //end else if weight
 				else
 				{
-					temp = null;
+					Destroy(m_item);
 					print ("No stat of " + item + " type found. Make sure you're" +
 					       " using lower case input. Valid types are attack, defence" +
 					       " inventory, and weight.");
@@ -313,14 +317,14 @@ namespace GSP.Char
 			//Assign values to a predefined item
 			else
 			{
-				if(temp.SetItem(item) != "NAN")
+				if(m_itemScript.SetItem(item) != "NAN")
 				{
-					item = temp.SetItem(item);
+					item = m_itemScript.SetItem(item);
 				} //end if found
 				else
 				{
 					print ("No item of " + item + " name found.");
-					temp = null;
+					Destroy(m_item);
 				} //end else NAN
 			} //end else predefined item
 
@@ -331,6 +335,14 @@ namespace GSP.Char
 				//NOTE: I left this here in case there is code we
 				//want to add for this condition, kind of a catch
 				//all for clean up after invalid input.
+				try
+				{
+					Destroy(m_item);
+				} //end try
+				catch(Exception)
+				{
+					return;
+				} //end catch
 				return;
 			} //end if NAN
 			else if(item == "attack")
@@ -344,24 +356,25 @@ namespace GSP.Char
 						if(Input.GetKeyDown(KeyCode.Y))
 						{
 							//Clean up old weapon, then apply new
-							AttackPower -= m_weapon.AttackValue;
-							AttackPower += temp.AttackValue;
-							m_weapon = temp;
-							temp = null;
+							AttackPower -= m_weapon.GetComponent<Items>().AttackValue;
+							AttackPower += m_itemScript.AttackValue;
+							m_weapon = m_item;
+							Destroy(m_item);
 							Loop = false;
 						}
 						else if(Input.GetKeyDown(KeyCode.N))
 						{
-							//Disable temp and end loop
-							temp = null;
+							//Destroy m_item and end loop
+							Destroy(m_item);
 							Loop = false;
 						} //end else if
 					} //end while
 				} //end if existing weapon
 				else
 				{
-					AttackPower += temp.AttackValue;
-					m_weapon = temp;
+					AttackPower += m_itemScript.AttackValue;
+					m_weapon = m_item;
+					Destroy(m_item);
 				} //end else no existing weapon
 			} //end else if attack
 			else if(item == "defence")
@@ -375,39 +388,40 @@ namespace GSP.Char
 						if(Input.GetKeyDown(KeyCode.Y))
 						{
 							//Clean up old armor, then apply new
-							DefencePower -= m_armor.DefenceValue;
-							DefencePower += temp.DefenceValue;
-							m_armor = temp;
-							temp = null;
+							DefencePower -= m_armor.GetComponent<Items>().DefenceValue;
+							DefencePower += m_itemScript.DefenceValue;
+							m_armor = m_itemScript;
+							m_itemScript = null;
 							Loop = false;
 						}
 						else if(Input.GetKeyDown(KeyCode.N))
 						{
-							//Disable temp and end loop
-							temp = null;
+							//Disable m_itemScript and end loop
+							Destroy(m_item);
 							Loop = false;
 						} //end else if
 					} //end while
 				} //end if existing armor
 				else
 				{
-					DefencePower += temp.DefenceValue;
-					m_armor = temp;
+					DefencePower += m_itemScript.DefenceValue;
+					m_armor = m_item;
+					Destroy(m_item);
 				} //end else no existing armor
 			} //end else if defence
 			else if(item == "inventory")
 			{
-				m_bonuses.Add(temp);
+				m_bonuses.Add(m_item);
 			} //end else if inventory
 			else if(item == "weight")
 			{
-				m_bonuses.Add(temp);
+				m_bonuses.Add(m_item);
 			} //end else if weight
 			else
 			{
-				//Explain error, disable temp, then return
+				//Explain error, disable m_itemScript, then return
 				print ("Stat value " + item + " does not exist.");
-				temp = null;
+				Destroy(m_item);
 				return;
 			} //end else
 		} //end EquipItem(string item, int value)
@@ -419,8 +433,8 @@ namespace GSP.Char
 				//Verify item exists
 				if(m_weapon != null)
 				{
-					print (m_weapon.ItemName + " removed.");
-					AttackPower -= m_weapon.AttackValue;
+					print (m_weapon.GetComponent<Items>().ItemName + " removed.");
+					AttackPower -= m_weapon.GetComponent<Items>().AttackValue;
 					m_weapon = null;
 				} //end if existing weapon
 				else
@@ -444,15 +458,15 @@ namespace GSP.Char
 			} //end else if armor
 			else if(item == "inventory")
 			{
-				Items temp = m_bonuses.Find(x => x.ItemType == "Inventory");
-				MaxInventory -= temp.InventoryValue;
-				m_bonuses.Remove(temp);
+				Items m_itemScript = m_bonuses.Find(x => x.ItemType == "Inventory");
+				MaxInventory -= m_itemScript.InventoryValue;
+				m_bonuses.Remove(m_itemScript);
 			} //end else if inventory
 			else if(item == "weight")
 			{
-				Items temp = m_bonuses.Find(x => x.ItemType == "Weight");
-				MaxWeight -= temp.WeightValue;
-				m_bonuses.Remove(temp);
+				Items m_itemScript = m_bonuses.Find(x => x.ItemType == "Weight");
+				MaxWeight -= m_itemScript.WeightValue;
+				m_bonuses.Remove(m_itemScript);
 			} //end else if weight
 			else
 			{
