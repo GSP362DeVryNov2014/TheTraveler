@@ -447,8 +447,8 @@ namespace GSP.Char
 				//Verify item exists
 				if(m_armor != null)
 				{
-					print (m_armor.ItemName + " removed.");
-					DefencePower -= m_armor.DefenceValue;
+					print (m_armor.GetComponent<Items>().ItemName + " removed.");
+					DefencePower -= m_armor.GetComponent<Items>().DefenceValue;
 					m_armor = null;
 				} //end if existing armor
 				else
@@ -458,13 +458,13 @@ namespace GSP.Char
 			} //end else if armor
 			else if(item == "inventory")
 			{
-				Items m_itemScript = m_bonuses.Find(x => x.ItemType == "Inventory");
+				Items m_itemScript = m_bonuses.Find(x => x.GetComponent<Items>().ItemType == "Inventory");
 				MaxInventory -= m_itemScript.InventoryValue;
 				m_bonuses.Remove(m_itemScript);
 			} //end else if inventory
 			else if(item == "weight")
 			{
-				Items m_itemScript = m_bonuses.Find(x => x.ItemType == "Weight");
+				Items m_itemScript = m_bonuses.Find(x => x.GetComponent<Items>().ItemType == "Weight");
 				MaxWeight -= m_itemScript.WeightValue;
 				m_bonuses.Remove(m_itemScript);
 			} //end else if weight
