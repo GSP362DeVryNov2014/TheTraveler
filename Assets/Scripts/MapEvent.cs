@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using GSP.Char;
+using GSP.Tiles;
 
 namespace GSP
 {
@@ -28,12 +29,16 @@ namespace GSP
 		enum resourceTile {WOOL, WOOD, FISH, ORE, SIZE};
 
 		//Calls map event and returns string
-		public string DetermineEvent(GameObject player)
+		public string DetermineEvent(GameObject player, Tile currentTile)
 		{
 			m_player = player;
 			m_playerCharScript = m_player.GetComponent<Character>();
 			//This will be replaced with the normal tile trigger
-			if (Input.GetKeyDown (KeyCode.N)) 
+			if(currentTile == null)
+			{
+				return "This is not a valid tile. No event occured.";
+			} //end if
+			else if (currentTile.ResourceType == ResourceType.NONE) 
 			{
 				int dieResult = m_die.Roll (1, 100);
 				if(dieResult < 21)
@@ -156,25 +161,20 @@ namespace GSP
 				} //end else if NOTHING
 			} //end if NORMAL TILE
 			//This will be replaced by the resource tile trigger
-			else if (Input.GetKeyDown (KeyCode.R)) 
+			else
 			{
-				//TODO: Figure out how to feed tile resource type into this.
 				//Create temp resource
 				Resource temp = new Resource();
 
-				// Turn the resource into an ore.
-				temp.SetResource(ResourceType.ORE.ToString());
+				// Turn temp into type of resource
+				temp.SetResource(currentTile.ResourceType.ToString());
 
-				//Pick up ore
+				//Pick up resource
 				m_playerCharScript.PickupResource( temp, 1 );
 
 				//Declare what was landed on
 				return "Map Event is " + temp.ResourceName;
 			} //end else if RESOURCE TILE
-			else
-			{
-				return "No event.";
-			} //end else
 		} //end DetermineEvent()
 	} //end MapEvent class
 } //end namespace GSP
