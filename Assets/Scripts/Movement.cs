@@ -5,9 +5,9 @@ public class Movement : MonoBehaviour
 {
 	public Vector3 MoveLeft(Vector3 position)
 	{
-		if(position.x > -20)
+		if(position.x > GSP.Tiles.TileManager.MinWidthUnits)
 		{
-			return new Vector3(-1, 0, 0);
+			return new Vector3(-GSP.Tiles.TileManager.PlayerMoveDistance, 0, 0);
 		} //end if
 		else
 		{
@@ -17,9 +17,9 @@ public class Movement : MonoBehaviour
 
 	public Vector3 MoveRight(Vector3 position)
 	{
-		if(position.x < 20)
+		if(position.x < GSP.Tiles.TileManager.MaxWidthUnits)
 		{
-			return new Vector3(1, 0, 0);
+			return new Vector3(GSP.Tiles.TileManager.PlayerMoveDistance, 0, 0);
 		} //end if
 		else
 		{
@@ -29,9 +29,9 @@ public class Movement : MonoBehaviour
 
 	public Vector3 MoveUp(Vector3 position)
 	{
-		if(position.y > -20)
+		if(position.y > GSP.Tiles.TileManager.MinHeightUnits)
 		{
-			return new Vector3(0, 1, 0);
+			return new Vector3(0, GSP.Tiles.TileManager.PlayerMoveDistance, 0);
 		} //end if
 		else
 		{
@@ -41,9 +41,9 @@ public class Movement : MonoBehaviour
 
 	public Vector3 MoveDown(Vector3 position)
 	{
-		if(position.y < 20)
+		if(position.y < GSP.Tiles.TileManager.MaxHeightUnits)
 		{
-			return new Vector3(0, -1, 0);
+			return new Vector3(0, -GSP.Tiles.TileManager.PlayerMoveDistance, 0);
 		} //end if
 		else
 		{
