@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using GSP.Char;
+using GSP.Tiles;
 
 namespace GSP
 {
@@ -13,10 +14,6 @@ namespace GSP
 		//Holds the objects for referencing the player and its script functions.
 		GameObject m_player;
 		Character m_playerCharScript;
-		Ally m_playerAllyScript;
-
-		//Holds the object for referencing the player's item script functions
-		Items m_playerItem;
 
 		//NOTE!!
 		//SIZE must be the last item in the enum so that anything based
@@ -31,60 +28,52 @@ namespace GSP
 		//Holds list of resource tile events
 		enum resourceTile {WOOL, WOOD, FISH, ORE, SIZE};
 
-		// Use this for initialization
-		void Start()
+		//Calls map event and returns string
+		public string DetermineEvent(GameObject player, Tile currentTile)
 		{
-			// Get the player, the character script, and ally script attached.
-			m_player = GameObject.FindGameObjectWithTag( "Player" );
+			m_player = player;
 			m_playerCharScript = m_player.GetComponent<Character>();
-			m_playerAllyScript = m_player.GetComponent<Ally>();
-		} //end Start()
-
-		//Calls map event, which needs to have access to player functions
-		void Update()
-		{
 			//This will be replaced with the normal tile trigger
-			if (Input.GetKeyDown (KeyCode.N)) 
+			if(currentTile == null)
+			{
+				return "This is not a valid tile. No event occured.";
+			} //end if
+			else if (currentTile.ResourceType == ResourceType.NONE) 
 			{
 				int dieResult = m_die.Roll (1, 100);
-				if(dieResult < 36)
+				if(dieResult < 21)
 				{
-					//Declare what was landed on
-					print("Map Event is ENEMY");
-
 					//Create the enemy
-					GameObject enemy = Instantiate( PrefabReference.prefabCharacter,
+					//TODO Replace prefabCharacter with prefabEnemy
+					GameObject m_enemy = Instantiate( PrefabReference.prefabCharacter,
 					  new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
-
-					//Name
-					enemy.name = "Enemy";
-
+					
 					//Get the character script attached to the enemy
-					Character m_enemyScript = enemy.GetComponent<Character>();
+					Character m_enemyScript = m_enemy.GetComponent<Character>();
 
 					//Set stats
 					m_enemyScript.AttackPower = m_die.Roll(1, 20);
 					m_enemyScript.DefencePower = m_die.Roll(1, 20);
 
-					//TODO: Make fight function and feed this enemy as the target
+					//TODO Add Battle Scene
+
+					//Battle characters
+					Fight fighter = new Fight();
+					string result = "Map event was enemy, and " + fighter.CharacterFight(m_enemy, m_player);
+					Destroy(m_enemy);
+					return result;
 				} //end if ENEMY
-				else if (dieResult < 51 && dieResult >= 36)
+				else if (dieResult < 46 && dieResult >= 21)
 				{
-					//Declare what was landed on
-					print("Map Event is ALLY");
+					//Create ally
+					GameObject m_ally = Instantiate( PrefabReference.prefabCharacter,
+						m_player.transform.position, new Quaternion() ) as GameObject;
 
-					//Instantiate the ally
-					GameObject newAlly = Instantiate( PrefabReference.prefabCharacter,
-					  new Vector3( -6.0f, 2.0f, 0.0f ), new Quaternion() ) as GameObject;
+					//Generate script
+					Character m_allyScript = m_ally.GetComponent<Character>();
 
-					//Name and tag ally
-					newAlly.name = "Ally" + m_playerCharScript.NumAllies;
-
-					//Get the character script attached to the ally
-					//Uncomment the following line once the weight bonus thing is implemented and the script is used.
-					//Ally m_allyScript = newAlly.GetComponent<Ally>();
-
-					//TODO: Have ally able to receive random weight bonus
+					//Set max weight
+					m_allyScript.MaxWeight = m_die.Roll(1, 20) * 6;
 
 					print ("Do you want this ally? Hit y for yes and n for no.");
 					bool Loop = true;
@@ -93,23 +82,23 @@ namespace GSP
 						if(Input.GetKeyDown(KeyCode.Y))
 						{
 							//Add to ally list
-							m_playerAllyScript.AddAlly( newAlly );
+							Ally m_playerAllyScript = m_player.GetComponent<Ally>();
+							m_playerAllyScript.AddAlly(m_ally);
 							Loop = false;
 						}
 						else if(Input.GetKeyDown(KeyCode.N))
 						{
 							//Disable newAlly and end loop
-							newAlly = null;
+							Destroy(m_ally);
 							Loop = false;
 						} //end else if
 					} //end while
+					return "Map event was ally.";
 				} //end else if ALLY
-				else if(dieResult < 66 && dieResult >= 51)
+				else if(dieResult < 66 && dieResult >= 46)
 				{
-					//Declare what was landed on
-					print ("Map Event is ITEM");
-
-					//TODO: Item graphics and code
+					//String to return for display
+					string result;
 
 					//Determine what item was found
 					int itemType = m_die.Roll(1, 4);
@@ -120,10 +109,10 @@ namespace GSP
 						int itemNumber = m_die.Roll(1, (int)Weapons.SIZE) - 1;
 
 						//Assign chosen number as the item
-						string itemName = Enum.GetName(typeof(Weapons), itemNumber);
+						result = Enum.GetName(typeof(Weapons), itemNumber);
 
 						//Equip to player
-						m_playerCharScript.EquipItem(itemName);
+						m_playerCharScript.EquipItem(result);
 
 					} //end if Weapon
 					else if(itemType == 2)
@@ -132,10 +121,10 @@ namespace GSP
 						int itemNumber = m_die.Roll(1, (int)Armor.SIZE) - 1;
 						
 						//Assign chosen number as the item
-						string itemName = Enum.GetName(typeof(Armor), itemNumber);
-						
+						result = Enum.GetName(typeof(Armor), itemNumber);
+
 						//Equip to player
-						m_playerCharScript.EquipItem(itemName);
+						m_playerCharScript.EquipItem(result);
 					} //end else if Armor
 					else if(itemType == 3)
 					{
@@ -143,10 +132,10 @@ namespace GSP
 						int itemNumber = m_die.Roll(1, (int)Inventory.SIZE) - 1;
 						
 						//Assign chosen number as the item
-						string itemName = Enum.GetName(typeof(Inventory), itemNumber);
-						
+						result = Enum.GetName(typeof(Inventory), itemNumber);
+
 						//Equip to player
-						m_playerCharScript.EquipItem(itemName);
+						m_playerCharScript.EquipItem(result);
 					} //end else if Inventory
 					else if(itemType == 4)
 					{
@@ -154,33 +143,38 @@ namespace GSP
 						int itemNumber = m_die.Roll(1, (int)Weight.SIZE) - 1;
 
 						//Assign chosen number as the item
-						string itemName = Enum.GetName(typeof(Weight), itemNumber);
-						
+						result = Enum.GetName(typeof(Weight), itemNumber);
+
 						//Equip to player
-						m_playerCharScript.EquipItem(itemName);
+						m_playerCharScript.EquipItem(result);
 					} //end else if Weight
+					else
+					{
+						result = "non-existant item. Nothing given.";
+					} //end else
+
+					return "Map event was item and you got " + result;
 				} //end else if ITEM
 				else
 				{
-					print("Map Event is NOTHING ");
+					return "No map event occured.";
 				} //end else if NOTHING
 			} //end if NORMAL TILE
 			//This will be replaced by the resource tile trigger
-			else if (Input.GetKeyDown (KeyCode.R)) 
+			else
 			{
-				//TODO: Figure out how to feed tile resource type into this.
 				//Create temp resource
 				Resource temp = new Resource();
 
-				// Turn the resource into an ore.
-				temp.SetResource(ResourceType.ORE.ToString());
+				// Turn temp into type of resource
+				temp.SetResource(currentTile.ResourceType.ToString());
 
-				//Pick up ore
+				//Pick up resource
 				m_playerCharScript.PickupResource( temp, 1 );
 
 				//Declare what was landed on
-				print ("Map Event is " + temp.ResourceName);
+				return "Map Event is " + temp.ResourceName;
 			} //end else if RESOURCE TILE
-		} //end Update()
+		} //end DetermineEvent()
 	} //end MapEvent class
 } //end namespace GSP

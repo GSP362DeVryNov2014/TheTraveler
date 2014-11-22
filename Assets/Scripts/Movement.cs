@@ -1,40 +1,53 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/*
- * Note:
- * Currently returns a value to move by.
- * Change "Vector3" function type to "void"
- * and delete active line and uncomment
- * the line above it to directly move
- * the player object. Uncomment the
- * GameObject m_player line too.
- */ 
-
 public class Movement : MonoBehaviour 
 {
-	//GameObject m_player = GameObject.FindGameObjectWithTag( "Player" );
-	public Vector3 MoveLeft()
+	public Vector3 MoveLeft(Vector3 position)
 	{
-		//m_player.transform.position = Vector3 (-1, 0, 0);
-		return new Vector3(-1, 0, 0);
-	} //end MoveLeft()
+		if(position.x > GSP.Tiles.TileManager.MinWidthUnits)
+		{
+			return new Vector3(-GSP.Tiles.TileManager.PlayerMoveDistance, 0, 0);
+		} //end if
+		else
+		{
+			return new Vector3(0, 0, 0);
+		} //end else
+	} //end MoveLeft(Vector3 position)
 
-	public Vector3 MoveRight()
+	public Vector3 MoveRight(Vector3 position)
 	{
-		//m_player.transform.positon = Vector3 (1, 0, 0);
-		return new Vector3(1, 0, 0);
-	} //end MoveRight()
+		if(position.x < GSP.Tiles.TileManager.MaxWidthUnits)
+		{
+			return new Vector3(GSP.Tiles.TileManager.PlayerMoveDistance, 0, 0);
+		} //end if
+		else
+		{
+			return new Vector3(0, 0, 0);
+		} //end else
+	} //end MoveRight(Vector3 position)
 
-	public Vector3 MoveUp()
+	public Vector3 MoveUp(Vector3 position)
 	{
-		//m_player.transform.position = Vector3 (0, -1, 0);
-		return new Vector3(0, -1, 0);
-	} //end MoveUp()
+		if(position.y > GSP.Tiles.TileManager.MinHeightUnits)
+		{
+			return new Vector3(0, GSP.Tiles.TileManager.PlayerMoveDistance, 0);
+		} //end if
+		else
+		{
+			return new Vector3(0, 0, 0);
+		} //end else
+	} //end MoveUp(Vector3 position)
 
-	public Vector3 MoveDown()
+	public Vector3 MoveDown(Vector3 position)
 	{
-		//m_player.transform.position = Vector3 (0, 1, 0);
-		return new Vector3(0, 1, 0);
-	} //end MoveDown()
+		if(position.y < GSP.Tiles.TileManager.MaxHeightUnits)
+		{
+			return new Vector3(0, -GSP.Tiles.TileManager.PlayerMoveDistance, 0);
+		} //end if
+		else
+		{
+			return new Vector3(0, 0, 0);
+		} //end else
+	} //end MoveDown(Vector3 position)
 }
