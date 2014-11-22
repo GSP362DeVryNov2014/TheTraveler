@@ -9,32 +9,17 @@ namespace GSP.JAVIERGUI
 		//		on Start()		
 		//			+gets information from Char
 		//			+ask to add Ally
-		//				yes: addAlly, then checkAllies()
-		//				no: skip to checkAllies()
-		//
-		//		on CheckAllies()
-		//			if Allies Exist
-		//				+would you like to transfer weight?
-		//					yes: display Allies one at a time, add/remove weight to
-		//						currAlly, display DoneButton()
-		//					no: exit()
-		//			else
-		//				+tell Players no allies exist
-		//				+display DoneButton()
-		//				exit()
+		//				yes: addAlly, then displayResults and doneButton
+		//				no: display results and doneButton
 		//
 		//		//on DoneButton()
-		//			exit()
-		//
-		//		on Exit() 
-		///			+adds values back into the Char
-		//			+Prompt Results with a ok button that returns false
-		//				
+		//			exit()	
 		//
 		//	Steps:
-		//		1. Would you like to add Ally?
-		//		2. Would you like to take Some Weight off your shoulder?
-		//		3. Are you sure thats it?
+		//		1. GetPlayer Values
+		//		2. Would you like to add Ally?
+		//		3. Yes, increase player's MAXWEIGHT
+		//		4. Show results and display done button
 		////////////////////////////////////////////////////////////////////////
 	{
 		GameObject m_PlayerEntity; //will initialize to the actual player in InitThis.
@@ -104,7 +89,6 @@ namespace GSP.JAVIERGUI
 				else
 				{
 					ConfigHeader();
-					ConfigAllySelectionResults();
 					ConfigDoneButton();
 				}
 			}
@@ -158,11 +142,7 @@ namespace GSP.JAVIERGUI
 				m_selectionMadeAddRemove = true;
 			}
 		}	//end 	private void ConfigCancelButton()
-
-		private void ConfigAllySelectionResults()
-		{
-
-		}	//end private void ConfigAllySelectionResults
+		
 
 		private void ConfigDoneButton()
 		{
