@@ -116,7 +116,7 @@ namespace GSP
 		
 		private void AddPlayers( int p_numOfPlayers )
 		{
-			Vector3 startingPos = new Vector3 (.32f, -(Screen.height/2.0f), -1.6f); //first tile
+			Vector3 startingPos = new Vector3 (.32f, -(GSP.Tiles.TileManager.MaxHeight/2.0f), -1.6f); //first tile
 			float tmpTransY = 0.0f; 
 			
 			for (int count = 0; count < p_numOfPlayers; count++) 
@@ -334,6 +334,11 @@ namespace GSP
 			//
 			//---------------------------------------------------------------------
 		{
+			if( Input.GetKeyDown(KeyCode.Q) )
+			{
+				Application.LoadLevel(0);
+			}
+
 			var state = GameObject.FindGameObjectWithTag("GUITextTag").GetComponent<GUIText>();
 			switch (m_gamePlayState) 
 			{
@@ -397,7 +402,7 @@ namespace GSP
 					//find out what mapEvent Occured
 
 					m_gamePlayState = GamePlayState.DOACTION;
-					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ALLY", null );
+					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
 					//TODO: after testing, delete command above and use this one below
 					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString );
 				}
