@@ -33,13 +33,17 @@ namespace GSP
 		{
 			m_player = player;
 			m_playerCharScript = m_player.GetComponent<Character>();
-			////////////////////////////
+
+			//////////////////////////////////////////////////////////
+			// 		...Javier's Modified Fix to Null Tile Return...
 			Vector3 tmp = m_player.transform.localPosition;
 			tmp.z = 0.0f;
 			Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (tmp));
-			////////////////////////////
-
+			//////////////////////////////////////////////////////////
+			// 		...Brent's Original...
 			//Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (m_player.transform.localPosition));
+			//////////////////////////////////////////////////////////
+
 			//If no tile found
 			if(currentTile == null)
 			{
