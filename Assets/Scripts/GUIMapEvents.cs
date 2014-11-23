@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System; //needed for Exception
 using System.Collections;
+using GSP.JAVIERGUI;
 
 namespace GSP
 {
@@ -42,9 +43,18 @@ namespace GSP
 		private GameObject m_PlayerEntity;
 		
 		//scripts
+		bool m_initScript = false; //this makes sure each script is initialized once per state
 		GSP.Char.Ally m_AllyScripts;
 		GSP.Char.ResourceList m_ResourceListScript;
 		GSP.Char.Items m_ItemScript;
+		GSP.JAVIERGUI.GUIEnemy m_GUIEnemyScript;
+		GSP.JAVIERGUI.GUIAlly m_GUIAllyScript;
+
+		//main container values
+		int m_mainStartX = 0;
+		int m_mainStartY = 65 + 32; //65 is just below the main GUI, and I added a gap of 32 from the end of that
+		int m_mainWidth = Screen.width / 3;
+		int m_mainHeight = Screen.height / 2;
 		
 		//==========================================================
 		//--------------------Functions-----------------------------
@@ -53,6 +63,8 @@ namespace GSP
 		// Use this for initialization
 		void Start () {
 			m_currEnumMpEvent = m_EnumMapEvent.NOTHING;
+			m_GUIEnemyScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIEnemy>();
+			m_GUIAllyScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIAlly>();
 		}
 		
 		public void InitThis(GameObject p_PlayerEntity, string p_mapEventType, string p_resourceType )
@@ -230,10 +242,19 @@ namespace GSP
 			switch (m_currEnumMpEvent) 
 			{
 			case m_EnumMapEvent.ENEMY:
-				
+				if( m_initScript == false )
+				{
+					m_GUIEnemyScript.InitThis( m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight );
+					m_initScript = true;
+				}
 				break;
 				
 			case m_EnumMapEvent.ALLY:
+				if( m_initScript == false )
+				{
+					m_GUIAllyScript.InitGUIAlly( m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight );
+					m_initScript = true;
+				}
 				break;
 				
 			case m_EnumMapEvent.ITEM:
@@ -244,10 +265,14 @@ namespace GSP
 				
 			case m_EnumMapEvent.NOTHING:
 				m_showHideGUI = false;
+				m_isActionRunning = false;
+				m_initScript = false;
 				break;
 				
 			case m_EnumMapEvent.SIZE:
 				m_showHideGUI = false;
+				m_isActionRunning = false;
+				m_initScript = false;
 				break;
 				
 			default:
@@ -287,12 +312,17 @@ namespace GSP
 		private void GUIContainer()
 		{
 			//main container
-			GUI.Box (new Rect(0,65 +32, Screen.width /3, Screen.height /2 ), m_currEnumMpEvent.ToString() );
-			
+			GUI.Box (new Rect(m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight ), m_currEnumMpEvent.ToString() );
+
 			//Check which GUI to Display
 			GUIMapEventsMachine(); //runs once every cycle; checks, what state we are in
 			
 		} //end private void GUIContainer()
+
+		public void MapeEventDone()
+		{
+			m_currEnumMpEvent = m_EnumMapEvent.NOTHING;
+		}
 		
 	} //class GUIMapEvents{}
 	

@@ -66,6 +66,7 @@ namespace GSP
 		private GSP.DieInput m_DieScript;	//Access the sigleton Die and its functions
 		private GSP.GUIMapEvents m_GUIMapEventsScript; //Access the sigleton Die and its functions
 		private GSP.GUIMovement m_GUIMovementScript;
+		private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;
 		
 		//players list
 		private GameObject m_playerEntity; //player!
@@ -105,6 +106,7 @@ namespace GSP
 			m_DieScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<DieInput>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
 			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
+			m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();
 
 			//text for the action button
 			m_GUIActionString = "Action\nButton";
@@ -116,7 +118,7 @@ namespace GSP
 		
 		private void AddPlayers( int p_numOfPlayers )
 		{
-			Vector3 startingPos = new Vector3 (.32f, -(Screen.height/2.0f), -1.6f); //first tile
+			Vector3 startingPos = new Vector3 (.32f, -(GSP.Tiles.TileManager.MaxHeight/2.0f), -1.6f); //first tile
 			float tmpTransY = 0.0f; 
 			
 			for (int count = 0; count < p_numOfPlayers; count++) 
@@ -167,6 +169,8 @@ namespace GSP
 			//	-Uses some config functions for Cleaning up GUI look and special occasions
 			//--------------------------------------------------------------------
 		{
+			IsItEndOfGame();
+
 			StateMachine();	//update any values that affect GUI before creating GUI
 			
 			//Buttons will be red
@@ -184,35 +188,64 @@ namespace GSP
 			//   ...PLAYER AND GOLD COLUMN...
 			//..................................
 			int col = 0;
-			int tmpPlayer = m_GUIPlayerTurn + 1;
-			GUI.Box (new Rect ((col*width)+(col+1)*gap, 2,width, height), "Player: "+tmpPlayer.ToString());		//Whose Turn
-			GUI.Box (new Rect ((col*width)+(col+1)*gap,32, width, height), "Gold: $"+m_GUIGoldVal.ToString());			//How Much Gold
+			GUIFirstColumn(col, gap, width, height);
 			
 			//..................................
 			// ...WEIGHT AND RESOURCE COLUMN...
 			//..................................
 			col = col+1;
-			//TODO: Instead of displaying "Weight: " Maybe better info will be given
-			//if GUI dispay "Weight/MaxWeight\n" + 
-			GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight:"+m_GUIWeight.ToString() +"/"+ m_GUIMaxWeight.ToString() );	//weight container
-			ResourceButtonConfig (gap, col, width, height);
-			//Show/hides Resources
-			ShowResources();
+			GUISecondColumn (col, gap , width, height);
+
 			
 			//..................................
 			//      ...DICE ROLL COLUMN...
 			//..................................
 			col = col+1;
-			DiceBoxConfig(gap, col, width, height);
+			GUIThirdColumn (col, gap, width, height);
+
 			
 			//..................................
 			//      ...ACTION COLUMN...
 			//..................................
 			col = col + 1;
-			ActionButtonConfig (gap, col, width, height);
+			GUIFourthColumn (col, gap, width, height);
 			
 		}	//end OnGUI()
+
+		private void GUIFirstColumn (int col, int gap, int width, int height)
+		{
+			int tmpPlayer = m_GUIPlayerTurn + 1;
+
+			//player container
+			GUI.Box (new Rect ((col*width)+(col+1)*gap, 2,width, height), "Player: "+tmpPlayer.ToString());		//Whose Turn
+
+			//Gold Container
+			GUI.Box (new Rect ((col*width)+(col+1)*gap,32, width, height), "Gold: $"+m_GUIGoldVal.ToString());			//How Much Gold
 		
+		}	//end private void GUIPlayerGoldColumn(int col)
+
+		private void GUISecondColumn (int col, int gap, int width, int height)
+		{
+			//weight container
+			GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight:"+m_GUIWeight.ToString() +"/"+ m_GUIMaxWeight.ToString() );	//weight container
+
+			//resource button
+			ResourceButtonConfig (gap, col, width, height);
+
+			//Show/hides Resources
+			ShowResources();
+		}	//end private void GUIPlayerGoldColumn(int col)
+
+		private void GUIThirdColumn (int col, int gap, int width, int height)
+		{
+			DiceBoxConfig(gap, col, width, height);	
+		}	//end private void GUIPlayerGoldColumn(int col)
+
+		private void GUIFourthColumn (int col, int gap, int width, int height)
+		{
+			ActionButtonConfig (gap, col, width, height);
+		}	//end private void GUIPlayerGoldColumn(int col)
+
 		private void ShowResources()
 			//----------------------------------------------------
 			//	Hides and shows the Resources
@@ -320,12 +353,15 @@ namespace GSP
 	
 		} //end private void ActionButtonConfig(int gap, int col, int width, int height)
 
-		private void MovementButtonConfig()
+
+		private void IsItEndOfGame()
 		{
+			if( Input.GetKeyDown(KeyCode.Q) )
+			{
+				Application.LoadLevel(0);
+			}
+		}	//end IsItEndOfGame()
 
-		} //end private void MovementButtonConfig()
-
-		
 		private void StateMachine()
 			//---------------------------------------------------------------------
 			// +StateMachine in charge of displaying GUI that describes
@@ -351,8 +387,10 @@ namespace GSP
 				int tmpPlayerTurn = m_GUIPlayerTurn +1;
 
 				state.text = "Player " +tmpPlayerTurn.ToString() +" roll dice";
+
 				//create a roll dice button
 				m_GUIActionString = "Action\nRoll Dice";
+
 				//if button is clicked, destroy button
 				if( m_GUIActionPressed )
 				{
@@ -385,7 +423,7 @@ namespace GSP
 				break;
 
 			case GamePlayState.SELECTPATHTOTAKE:
-				state.text = "Select Path To Take\nPress 1 to EndTurn,\nPress 2 to Do Action";
+				state.text = "Select Path To Take\nPress Action butotn to End Turn\nor X to start over.";
 				m_GUIActionString = "End Turn";
 
 				//update new value of DiceDist if player pressed a move button
@@ -394,34 +432,38 @@ namespace GSP
 				//if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
 				if ( m_GUIActionPressed )
 				{
-					m_gamePlayState = GamePlayState.ENDTURN;
-					m_GUIActionPressed = false;
+					//find out what mapEvent Occured
+
+					m_gamePlayState = GamePlayState.DOACTION;
+
+					m_NEWGUIMapEventScript.InitThis( m_playerList[m_GUIPlayerTurn] );
+
+					//update gui by getting new values
+					GetPlayerValues();
+					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
+					//TODO: after testing, delete command above and use this one below
+					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString, "Resource" );
 				}
 
-				//if Mapevent occurs
-				if ( Input.GetKeyDown( KeyCode.Alpha2 ) )
-				{
-					m_gamePlayState = GamePlayState.DOACTION;
-					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
-					//TODO: after testing, delete command above and use this one below
-					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString );
-				}
 				break;
 
 			case GamePlayState.DOACTION:
-				state.text = "Do Action/MapEvent";
+				//state.text = "Do Action/MapEvent";
+				state.text = "";
 
 				//map events
-				if( !(m_GUIMapEventsScript.isActionRunning()) )
+				//if( m_GUIMapEventsScript.isActionRunning() == false )
+				if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
 				{
 					//TODO: After Testing, uncomment the following
 					//m_MapEventString = "NOTHING"
 					//m_MapEventResourceString = NULL;
 
-					//send back to previous state
-					m_gamePlayState = GamePlayState.SELECTPATHTOTAKE;
+					//NextState()
+					m_gamePlayState = GamePlayState.ENDTURN;
+					m_GUIActionPressed = false;
 				}
-				//NextState()
+
 				break;
 
 			case GamePlayState.ENDTURN:
@@ -429,13 +471,16 @@ namespace GSP
 				
 				//next players turn
 				m_GUIPlayerTurn = m_GUIPlayerTurn +1;
+
 				//if exceeds the number of player playing, start back at player 1
 				if( m_GUIPlayerTurn >= m_GUINumOfPlayers )
 				{
-					m_GUIPlayerTurn = 1;
+					m_GUIPlayerTurn = 0;
 				}
-				
+
+				//new player gets new turn
 				m_gamePlayState = GamePlayState.BEGINTURN;
+
 				break;
 				
 			default:
@@ -517,17 +562,8 @@ namespace GSP
 		{
 			return	m_playerList[m_GUIPlayerTurn];
 		} //end public GameObject Get
+	
 
-		public void OnDrawGizmos()
-			//---------------------------------------------------------
-			//to draw on the scene.
-			//	-ORIGINALLY GOING TO BE USED FOR A DIFFERENT
-			//		TYPE OF UNITY GUI, BUT NO LONGER NEEDED
-			//---------------------------------------------------------
-		{
-			
-		} //end public void OnDrawGizmos()
-		
 	}	//end public class GameplayStateMachine : MonoBehaviour
 	
 }	//end namespace GSP

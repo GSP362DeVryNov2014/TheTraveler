@@ -1,42 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GSP.Tiles;
 
 namespace GSP.JAVIERGUI
 {
-
-	public class GUIEnemy : MonoBehaviour 
+	public class NewGUIMapEvent : MonoBehaviour 
 	{
-		GSP.GUIMapEvents m_GUIMapEventsScript;
+		GSP.MapEvent m_MapEventsScript;
 		GameObject m_PlayerEntity;
 
 		//main container values
-		int m_mainWidth = -1;
-		int	m_mainHeight = -1;
-		int m_mainStartX = -1;
-		int m_mainStartY = -1;
-
+		int m_mainStartX = 0;
+		int m_mainStartY = 65 + 32; //65 is just below the main GUI, and I added a gap of 32 from the end of that
+		int m_mainWidth = Screen.width / 3;
+		int m_mainHeight = Screen.height / 2;
+		
 		bool m_isActionRunning = false;
 		string m_headerString;
-
+		
 		// Use this for initialization
-		void Start () {
-			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.GUIMapEvents> ();
-		}
-
-		public void InitThis( GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWdth, int p_startHght)
+		void Start () 
 		{
-			m_mainStartX = p_startX;
-			m_mainStartY = p_startY;
-			m_mainWidth = p_startWdth;
-			m_mainHeight = p_startHght;
+			m_MapEventsScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.MapEvent> ();
+		}
+		
+		public void InitThis( GameObject p_PlayerEntity )
+		{
 
 			m_PlayerEntity = p_PlayerEntity;
-
+			
 			m_isActionRunning = true;
 
-			m_headerString = "Needs to call a\nfunction in Fight!\nThat returns a string.";
-		}
-
+			m_headerString = m_MapEventsScript.DetermineEvent (m_PlayerEntity);
+		}	//end init this()
+		
 		// Update is called once per frame
 		void OnGUI () 
 		{
@@ -48,13 +45,13 @@ namespace GSP.JAVIERGUI
 				int doneStartX = m_mainStartX +(m_mainWidth -doneWidth) /2;
 				int doneStartY = m_mainStartY +(doneHeight *7);
 				GUI.backgroundColor = Color.red;
-
+				
 				ConfigHeader();
 				ConfigDoneButton();
 			}
 		}	//end void OnGUI()
-
-
+		
+		
 		private void ConfigHeader ()
 		{
 			int headWdth = m_mainWidth - 2;
@@ -64,7 +61,7 @@ namespace GSP.JAVIERGUI
 			
 			GUI.Box(new Rect(headX, headY, headWdth, headHght*2), m_headerString);
 		}	//end private void ConfigHeader()
-
+		
 		private void ConfigDoneButton()
 		{
 			//done button
@@ -77,11 +74,13 @@ namespace GSP.JAVIERGUI
 			if ( GUI.Button (new Rect( doneStartX, doneStartY, doneWidth, doneHeight), "DONE") )
 			{
 				m_isActionRunning = false;
-				//once nothing is happening, program returns to Controller's End Turn State
-				m_GUIMapEventsScript.MapeEventDone();
 			}
+		} //end private void ConfigDoneButton()
+
+		public bool GetIsActionRunning()
+		{
+			return m_isActionRunning;
 		}
-
+		
 	}	//END public class GUIEnemy
-
-}	//end namepsace GSP.JAVIERGUI
+} //end namespace GSP.JAVIERGUI

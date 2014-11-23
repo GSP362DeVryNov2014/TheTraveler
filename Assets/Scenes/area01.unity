@@ -287,6 +287,9 @@ GameObject:
   - 4: {fileID: 257484361}
   - 212: {fileID: 257484360}
   - 114: {fileID: 257484362}
+  - 114: {fileID: 257484364}
+  - 114: {fileID: 257484363}
+  - 114: {fileID: 257484365}
   m_Layer: 0
   m_Name: GUIMapEventSprite
   m_TagString: GUIMapEventSpriteTag
@@ -337,6 +340,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21d3760fc3e0af64d9ad436a5cf872a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &257484363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 257484359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e8715a81fc76004fa2b7a39e61ea9c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &257484364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 257484359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c153f34d19bba1408e38542f83eb0bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &257484365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 257484359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1de61161720b4e343bac2f5af6d559d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &280916939
