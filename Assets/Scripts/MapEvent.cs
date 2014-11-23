@@ -33,11 +33,17 @@ namespace GSP
 		{
 			m_player = player;
 			m_playerCharScript = m_player.GetComponent<Character>();
-			Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (m_player.transform.position));
+			////////////////////////////
+			Vector3 tmp = m_player.transform.localPosition;
+			tmp.z = 0.0f;
+			Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (tmp));
+			////////////////////////////
+
+			//Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (m_player.transform.localPosition));
 			//If no tile found
 			if(currentTile == null)
 			{
-				return "This is not a valid tile. No event occured.";
+				return "This is not a valid \ntile. No event occured.";
 			} //end if
 			//If no resource at tile
 			else if (currentTile.ResourceType == ResourceType.NONE) 
@@ -61,7 +67,7 @@ namespace GSP
 
 					//Battle characters
 					Fight fighter = new Fight();
-					string result = "Map event was enemy, and " + fighter.CharacterFight(m_enemy, m_player);
+					string result = "Map event was enemy, \nand " + fighter.CharacterFight(m_enemy, m_player);
 					Destroy(m_enemy);
 					return result;
 				} //end if ENEMY
@@ -77,7 +83,7 @@ namespace GSP
 					//Set max weight
 					m_allyScript.MaxWeight = m_die.Roll(1, 20) * 6;
 
-					print ("Do you want this ally? Hit y for yes and n for no.");
+					print ("Do you want this ally? \nHit y for yes \nand n for no.");
 					bool Loop = true;
 					while(Loop)
 					{
@@ -155,7 +161,7 @@ namespace GSP
 						result = "non-existant item. Nothing given.";
 					} //end else
 
-					return "Map event was item and you got " + result;
+					return "Map event was item \nand you got " + result;
 				} //end else if ITEM
 				else
 				{

@@ -106,7 +106,7 @@ namespace GSP
 			m_DieScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<DieInput>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
 			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
-			m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();
+			m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();
 
 			//text for the action button
 			m_GUIActionString = "Action\nButton";
@@ -432,6 +432,9 @@ namespace GSP
 					m_gamePlayState = GamePlayState.DOACTION;
 
 					m_NEWGUIMapEventScript.InitThis( m_playerList[m_GUIPlayerTurn] );
+
+					//update gui by getting new values
+					GetPlayerValues();
 					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
 					//TODO: after testing, delete command above and use this one below
 					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString, "Resource" );
@@ -444,7 +447,8 @@ namespace GSP
 				state.text = "";
 
 				//map events
-				if( m_GUIMapEventsScript.isActionRunning() == false )
+				//if( m_GUIMapEventsScript.isActionRunning() == false )
+				if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
 				{
 					//TODO: After Testing, uncomment the following
 					//m_MapEventString = "NOTHING"

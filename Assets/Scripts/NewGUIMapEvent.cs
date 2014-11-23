@@ -31,8 +31,7 @@ namespace GSP.JAVIERGUI
 			
 			m_isActionRunning = true;
 
-			Vector3 tmpPos = TileManager.ToPixels (m_PlayerEntity.transform.position);
-			m_headerString = m_MapEventsScript.DetermineEvent (m_PlayerEntity, m_PlayerEntity.transform.position );
+			m_headerString = m_MapEventsScript.DetermineEvent (m_PlayerEntity);
 		}	//end init this()
 		
 		// Update is called once per frame
