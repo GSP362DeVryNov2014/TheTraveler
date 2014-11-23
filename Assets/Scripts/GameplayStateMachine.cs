@@ -169,6 +169,8 @@ namespace GSP
 			//	-Uses some config functions for Cleaning up GUI look and special occasions
 			//--------------------------------------------------------------------
 		{
+			IsItEndOfGame();
+
 			StateMachine();	//update any values that affect GUI before creating GUI
 			
 			//Buttons will be red
@@ -351,7 +353,15 @@ namespace GSP
 	
 		} //end private void ActionButtonConfig(int gap, int col, int width, int height)
 
-		
+
+		private void IsItEndOfGame()
+		{
+			if( Input.GetKeyDown(KeyCode.Q) )
+			{
+				Application.LoadLevel(0);
+			}
+		}	//end IsItEndOfGame()
+
 		private void StateMachine()
 			//---------------------------------------------------------------------
 			// +StateMachine in charge of displaying GUI that describes
@@ -360,11 +370,6 @@ namespace GSP
 			//
 			//---------------------------------------------------------------------
 		{
-			if( Input.GetKeyDown(KeyCode.Q) )
-			{
-				Application.LoadLevel(0);
-			}
-
 			var state = GameObject.FindGameObjectWithTag("GUITextTag").GetComponent<GUIText>();
 			switch (m_gamePlayState) 
 			{
