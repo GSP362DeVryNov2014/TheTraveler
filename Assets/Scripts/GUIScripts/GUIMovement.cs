@@ -119,7 +119,7 @@ namespace GSP
 				{
 					//TODO: MOVE DOWN FUNCTION FROM BRENTS MOVEMENT CLASS; MOVEMENT CLASS 
 					//NEEDS TO BE ABSTRACT IF POSSIBLE (IF NOT CREATE AN INSTANCE IN THE UNITY SCENE
-					m_displacementVector = new Vector3( 0.0f, -.32f, 0.0f ); //FOR TESTING
+					m_displacementVector = new Vector3( 0.0f, .32f, 0.0f ); //FOR TESTING
 					//m_displacementVector = m_MovementScript.MoveUp(); //uncomment this and comment above when Brents Movement class is ready
 					MovePlayer();
 				}
