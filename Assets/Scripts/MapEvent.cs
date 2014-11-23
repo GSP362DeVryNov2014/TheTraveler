@@ -29,15 +29,17 @@ namespace GSP
 		enum resourceTile {WOOL, WOOD, FISH, ORE, SIZE};
 
 		//Calls map event and returns string
-		public string DetermineEvent(GameObject player, Tile currentTile)
+		public string DetermineEvent(GameObject player)
 		{
 			m_player = player;
 			m_playerCharScript = m_player.GetComponent<Character>();
-			//This will be replaced with the normal tile trigger
+			Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (m_player.transform.position));
+			//If no tile found
 			if(currentTile == null)
 			{
 				return "This is not a valid tile. No event occured.";
 			} //end if
+			//If no resource at tile
 			else if (currentTile.ResourceType == ResourceType.NONE) 
 			{
 				int dieResult = m_die.Roll (1, 100);
@@ -160,7 +162,7 @@ namespace GSP
 					return "No map event occured.";
 				} //end else if NOTHING
 			} //end if NORMAL TILE
-			//This will be replaced by the resource tile trigger
+			//If resource at tile
 			else
 			{
 				//Create temp resource
