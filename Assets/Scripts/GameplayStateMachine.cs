@@ -66,6 +66,7 @@ namespace GSP
 		private GSP.DieInput m_DieScript;	//Access the sigleton Die and its functions
 		private GSP.GUIMapEvents m_GUIMapEventsScript; //Access the sigleton Die and its functions
 		private GSP.GUIMovement m_GUIMovementScript;
+		private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;
 		
 		//players list
 		private GameObject m_playerEntity; //player!
@@ -105,6 +106,7 @@ namespace GSP
 			m_DieScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<DieInput>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
 			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
+			m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();
 
 			//text for the action button
 			m_GUIActionString = "Action\nButton";
@@ -184,35 +186,64 @@ namespace GSP
 			//   ...PLAYER AND GOLD COLUMN...
 			//..................................
 			int col = 0;
-			int tmpPlayer = m_GUIPlayerTurn + 1;
-			GUI.Box (new Rect ((col*width)+(col+1)*gap, 2,width, height), "Player: "+tmpPlayer.ToString());		//Whose Turn
-			GUI.Box (new Rect ((col*width)+(col+1)*gap,32, width, height), "Gold: $"+m_GUIGoldVal.ToString());			//How Much Gold
+			GUIFirstColumn(col, gap, width, height);
 			
 			//..................................
 			// ...WEIGHT AND RESOURCE COLUMN...
 			//..................................
 			col = col+1;
-			//TODO: Instead of displaying "Weight: " Maybe better info will be given
-			//if GUI dispay "Weight/MaxWeight\n" + 
-			GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight:"+m_GUIWeight.ToString() +"/"+ m_GUIMaxWeight.ToString() );	//weight container
-			ResourceButtonConfig (gap, col, width, height);
-			//Show/hides Resources
-			ShowResources();
+			GUISecondColumn (col, gap , width, height);
+
 			
 			//..................................
 			//      ...DICE ROLL COLUMN...
 			//..................................
 			col = col+1;
-			DiceBoxConfig(gap, col, width, height);
+			GUIThirdColumn (col, gap, width, height);
+
 			
 			//..................................
 			//      ...ACTION COLUMN...
 			//..................................
 			col = col + 1;
-			ActionButtonConfig (gap, col, width, height);
+			GUIFourthColumn (col, gap, width, height);
 			
 		}	//end OnGUI()
+
+		private void GUIFirstColumn (int col, int gap, int width, int height)
+		{
+			int tmpPlayer = m_GUIPlayerTurn + 1;
+
+			//player container
+			GUI.Box (new Rect ((col*width)+(col+1)*gap, 2,width, height), "Player: "+tmpPlayer.ToString());		//Whose Turn
+
+			//Gold Container
+			GUI.Box (new Rect ((col*width)+(col+1)*gap,32, width, height), "Gold: $"+m_GUIGoldVal.ToString());			//How Much Gold
 		
+		}	//end private void GUIPlayerGoldColumn(int col)
+
+		private void GUISecondColumn (int col, int gap, int width, int height)
+		{
+			//weight container
+			GUI.Box(new Rect ((col*width)+(col+1)*gap,2,width, height), "Weight:"+m_GUIWeight.ToString() +"/"+ m_GUIMaxWeight.ToString() );	//weight container
+
+			//resource button
+			ResourceButtonConfig (gap, col, width, height);
+
+			//Show/hides Resources
+			ShowResources();
+		}	//end private void GUIPlayerGoldColumn(int col)
+
+		private void GUIThirdColumn (int col, int gap, int width, int height)
+		{
+			DiceBoxConfig(gap, col, width, height);	
+		}	//end private void GUIPlayerGoldColumn(int col)
+
+		private void GUIFourthColumn (int col, int gap, int width, int height)
+		{
+			ActionButtonConfig (gap, col, width, height);
+		}	//end private void GUIPlayerGoldColumn(int col)
+
 		private void ShowResources()
 			//----------------------------------------------------
 			//	Hides and shows the Resources
@@ -320,11 +351,6 @@ namespace GSP
 	
 		} //end private void ActionButtonConfig(int gap, int col, int width, int height)
 
-		private void MovementButtonConfig()
-		{
-
-		} //end private void MovementButtonConfig()
-
 		
 		private void StateMachine()
 			//---------------------------------------------------------------------
@@ -356,8 +382,10 @@ namespace GSP
 				int tmpPlayerTurn = m_GUIPlayerTurn +1;
 
 				state.text = "Player " +tmpPlayerTurn.ToString() +" roll dice";
+
 				//create a roll dice button
 				m_GUIActionString = "Action\nRoll Dice";
+
 				//if button is clicked, destroy button
 				if( m_GUIActionPressed )
 				{
@@ -402,9 +430,11 @@ namespace GSP
 					//find out what mapEvent Occured
 
 					m_gamePlayState = GamePlayState.DOACTION;
-					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
+
+					m_NEWGUIMapEventScript.InitThis( m_playerList[m_GUIPlayerTurn] );
+					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
 					//TODO: after testing, delete command above and use this one below
-					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString );
+					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString, "Resource" );
 				}
 
 				break;
@@ -420,10 +450,11 @@ namespace GSP
 					//m_MapEventString = "NOTHING"
 					//m_MapEventResourceString = NULL;
 
+					//NextState()
 					m_gamePlayState = GamePlayState.ENDTURN;
 					m_GUIActionPressed = false;
 				}
-				//NextState()
+
 				break;
 
 			case GamePlayState.ENDTURN:
@@ -437,8 +468,10 @@ namespace GSP
 				{
 					m_GUIPlayerTurn = 0;
 				}
-				
+
+				//new player gets new turn
 				m_gamePlayState = GamePlayState.BEGINTURN;
+
 				break;
 				
 			default:
