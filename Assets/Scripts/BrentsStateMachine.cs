@@ -178,6 +178,7 @@ namespace GSP
 					m_menuState = MENUSTATES.HOME;
 					m_programState = OVERALLSTATES.INTRO;
 					timeHolder = Time.time + 3.0f;
+					Application.Quit();
 				} //end wait if
 				break;
 			default:
