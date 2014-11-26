@@ -86,8 +86,12 @@ namespace GSP
 			//		-Values should be updated at EndTurn State of StateMachine()
 			//-------------------------------------------------------------------
 		{
-			TileManager.SetDimensions (64, 20, 16);
-			TileManager.GenerateAndAddTiles ();
+			// Clear the dictionary
+			TileDictionary.Clean();
+
+			// Set the dimensions and generate/add the tiles
+			TileManager.SetDimensions(64, 20, 16);
+			TileManager.GenerateAndAddTiles();
 
 			//initialize empty lists
 			m_playerList = new List<GameObject>();
