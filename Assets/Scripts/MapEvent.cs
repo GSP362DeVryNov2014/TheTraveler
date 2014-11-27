@@ -37,7 +37,9 @@ namespace GSP
 			//////////////////////////////////////////////////////////
 			// 		...Javier's Modified Fix to Null Tile Return...
 			Vector3 tmp = m_player.transform.localPosition;
-			tmp.z = 0.0f;
+			// Change by Damien to get tiles to work again.
+			tmp.z = -0.01f;
+			// Original: tmp.z = 0.0f;
 			Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (tmp));
 			//////////////////////////////////////////////////////////
 			// 		...Brent's Original...

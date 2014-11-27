@@ -134,7 +134,7 @@ namespace GSP.Tiles
 				for ( int height = 32; height < (int)MapSize.y; height += 64 )
 				{
 					// We are in the fourth quadrant so the y is negative.
-					Vector3 key = new Vector3( width, height * -1, 0.0f );
+					Vector3 key = new Vector3( width, height * -1, -1.0f );
 
 					// Create an empty tile at the given position.
 					Tile newTile = new Tile( key, ResourceType.NONE, null );
