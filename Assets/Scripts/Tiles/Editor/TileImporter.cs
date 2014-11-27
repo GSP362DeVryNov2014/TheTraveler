@@ -126,7 +126,7 @@ namespace GSP.Tiles
 
 			// Use the position of the game object we're attached to.
 			instance.transform.parent = gameObject.transform;
-			instance.transform.localPosition = Vector3.zero;
+			instance.transform.localPosition = new Vector3( 0.0f, 0.0f, -1.0f );
 
 			// Scale by a factor of 100. For some reason they're 1/100th the size and this make them big enought o be visible.
 			instance.transform.localScale = new Vector3(100.0f, 100.0f, 0.0f);
