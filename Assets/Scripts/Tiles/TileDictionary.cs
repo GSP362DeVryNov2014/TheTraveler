@@ -55,6 +55,7 @@ namespace GSP.Tiles
 		} // end AddEntry function
 
 		// Remove an entry from the dictionary.
+		// NOTE: This removes the entire tile from the dictionary.
 		public static void RemoveEntry( Vector3 key )
 		{
 			// As a precautionary measure, check if the key exists.
@@ -73,6 +74,26 @@ namespace GSP.Tiles
 			// Finally, remove the entry from the dictionary.
 			m_tileDictionary.Remove( key );
 		} // end RemoveEntry function
+
+		// Remove the resource from the tile. This leaves the tile intact.
+		public static void RemoveResource( Vector3 key )
+		{
+			// As a precautionary measure, check if the key exists.
+			if ( !EntryExists( key ) )
+			{
+				// The key doesn't exist so just return.
+				return;
+			} // end if statement
+
+			// First get the resource game object in the tile.
+			GameObject obj = m_tileDictionary[key].Resource;
+
+			// Now Destroy the game object.
+			MonoBehaviour.Destroy( obj );
+
+			// Finally, update the tile to be a normal tile.
+			UpdateTile( key, ResourceType.NONE, null );
+		} // end RemoveResource
 
 		// Cleans/Empties the tile dictionary.
 		public static void Clean()

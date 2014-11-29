@@ -49,5 +49,12 @@ namespace GSP
 			// Return the sum of the rolls to be dealt with later.
 			return dieSum;
 		} // end Roll integer function
+
+		// Reseeds the die's random number generator.
+		public void Reseed( int seed )
+		{
+			// Call the reseed funtion of the random generator.
+			m_rand.Reseed( seed );
+		} // end Reseed function
 	} // end Die class
 } // end namespace
