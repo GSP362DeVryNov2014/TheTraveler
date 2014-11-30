@@ -15,8 +15,8 @@ namespace GSP.Char
 		int m_currency; 				// This is the amount of currency the character is holding.
 		int m_attackPower;				// Attack of the character (from weapons)
 		int m_defencePower;				// Defence of the character (from armor)
-		GameObject m_weapon;			// Weapon being wielded
-		GameObject m_armor;				// Armor being worn
+		EquippedWeapon m_weapon;		// Script Component reference to the weapon being wielded.
+		EquippedArmor m_armor;				// Script Component reference to the armor being worn.
 		List<GameObject> m_bonuses;		// Bonuses picked up (Inventory and Weight mods)
 
 		#region Resource
@@ -138,8 +138,8 @@ namespace GSP.Char
 			m_attackPower = 0;
 			m_defencePower = 0;
 			m_bonuses = new List<GameObject> ();
-			m_weapon = null;
-			m_armor = null;
+			m_weapon = GetComponent<EquippedWeapon>();
+			m_armor = GetComponent<EquippedArmor>();
 		} // end Start function
 
 		// Update is called once per frame
@@ -276,15 +276,16 @@ namespace GSP.Char
 		public void EquipItem(string item, int value = 0)
 		{
 			//Item object
-			GameObject m_item = Instantiate( PrefabReference.prefabCharacter,
+			GameObject m_item = Instantiate( PrefabReference.prefabItem,
 				this.transform.position, new Quaternion() ) as GameObject;
 			
-			//Generate script
+			//Generate the script
 			Items m_itemScript = m_item.GetComponent<Items>();
 
 			//Assign values to a custom item
 			if(value != 0)
 			{
+				print ("Custom item detected.");
 				m_itemScript.ItemName = "CustomItem-" + item;
 				if(item == "attack")
 				{
@@ -317,6 +318,7 @@ namespace GSP.Char
 			//Assign values to a predefined item
 			else
 			{
+				print ("Predefined item detected.");
 				if(m_itemScript.SetItem(item) != "NAN")
 				{
 					item = m_itemScript.SetItem(item);
@@ -347,75 +349,77 @@ namespace GSP.Char
 			} //end if NAN
 			else if(item == "attack")
 			{
-				if(m_weapon != null)
+				print ("Attack item detected.");
+				//If a weapon already exists, let player decide to accept or refuse
+				// Instead of a null check, check if the attack value of the equipped weapon has been set.
+				if(m_weapon.AttackValue > 0)
 				{
 					print ("Do you want this weapon? Hit y for yes and n for no.");
-					bool Loop = true;
-					while(Loop)
+					if(Input.GetKeyDown(KeyCode.Y))
 					{
-						if(Input.GetKeyDown(KeyCode.Y))
-						{
-							//Clean up old weapon, then apply new
-							AttackPower -= m_weapon.GetComponent<Items>().AttackValue;
-							AttackPower += m_itemScript.AttackValue;
-							m_weapon = m_item;
-							Destroy(m_item);
-							Loop = false;
-						}
-						else if(Input.GetKeyDown(KeyCode.N))
-						{
-							//Destroy m_item and end loop
-							Destroy(m_item);
-							Loop = false;
-						} //end else if
-					} //end while
+						//Clean up old weapon, then apply new
+						AttackPower -= m_weapon.AttackValue;
+						AttackPower += m_itemScript.AttackValue;
+						// Copy the values of the item object into the equipped weapon script.
+						CopyItemToWeapon(m_item);
+					}
+					else if(Input.GetKeyDown(KeyCode.N))
+					{
+						//Destroy m_item and end loop
+						Destroy(m_item);
+					} //end else if
 				} //end if existing weapon
 				else
 				{
+					print ("Attack power before equip: " + AttackPower);
 					AttackPower += m_itemScript.AttackValue;
-					m_weapon = m_item;
-					Destroy(m_item);
+					// Copy the values of the item object into the equipped weapon script.
+					CopyItemToWeapon(m_item);
+					print ("Item is " + m_item.GetComponent<Items>().ItemType);
+					print ("Held weapon is " + m_weapon.ItemName);
+					print ("Attack power after equip: " + AttackPower);
 				} //end else no existing weapon
 			} //end else if attack
 			else if(item == "defence")
 			{
-				if(m_armor != null)
+				print ("Defence item detected.");
+				//If armour already exsist, allow player to accept or refuse
+				// Instead of a null check, check if the defence value of the equipped armor has been set.
+				if(m_armor.DefenceValue > 0)
 				{
 					print ("Do you want this armor? Hit y for yes and n for no.");
-					bool Loop = true;
-					while(Loop)
+					if(Input.GetKeyDown(KeyCode.Y))
 					{
-						if(Input.GetKeyDown(KeyCode.Y))
-						{
-							//Clean up old armor, then apply new
-							DefencePower -= m_armor.GetComponent<Items>().DefenceValue;
-							DefencePower += m_itemScript.DefenceValue;
-							m_armor = m_item;
-							m_itemScript = null;
-							Loop = false;
-						}
-						else if(Input.GetKeyDown(KeyCode.N))
-						{
-							//Disable m_itemScript and end loop
-							Destroy(m_item);
-							Loop = false;
-						} //end else if
-					} //end while
+						//Clean up old armor, then apply new
+						DefencePower -= m_armor.DefenceValue;
+						DefencePower += m_itemScript.DefenceValue;
+						// Copy the values of the item object into the equipped armor script.
+						CopyItemToArmor(m_item);
+					}
+					else if(Input.GetKeyDown(KeyCode.N))
+					{
+						//Disable m_itemScript and end loop
+						Destroy(m_item);
+					} //end else if
 				} //end if existing armor
 				else
 				{
 					DefencePower += m_itemScript.DefenceValue;
-					m_armor = m_item;
-					Destroy(m_item);
+					// Copy the values of the item object into the equipped armor script.
+					CopyItemToArmor(m_item);
 				} //end else no existing armor
 			} //end else if defence
 			else if(item == "inventory")
 			{
+				print ("Inventory item detected.");
 				m_bonuses.Add(m_item);
+				MaxInventory += m_itemScript.InventoryValue;
 			} //end else if inventory
 			else if(item == "weight")
 			{
+				print ("Weight item detected.");
 				m_bonuses.Add(m_item);
+				MaxWeight += m_itemScript.WeightValue;
 			} //end else if weight
 			else
 			{
@@ -430,30 +434,38 @@ namespace GSP.Char
 		{
 			if(item == "weapon")
 			{
-				//Verify item exists
-				if(m_weapon != null)
+				print("Attempting to remove weapon.");
+				//Verify weapon is equipped.
+				// This means instead of a null check, use the attack value.
+				if(m_weapon.AttackValue > 0)
 				{
-					print (m_weapon.GetComponent<Items>().ItemName + " removed.");
-					AttackPower -= m_weapon.GetComponent<Items>().AttackValue;
-					m_weapon = null;
+					print ("Attack power before unequip: " + AttackPower);
+					print (m_weapon.ItemName + " removed.");
+					AttackPower -= m_weapon.AttackValue;
+					// Unequipping the weapon effective resets the values of the script.
+					m_weapon.ResetWeapon();
+
+					print ("Attack power after unequip: " + AttackPower);
 				} //end if existing weapon
 				else
 				{
-					print ("No weapon found.");
+					print ("No weapon equipped.");
 				} //end else no existing weapon
 			} //end if weapon
 			else if(item == "armor")
 			{
-				//Verify item exists
-				if(m_armor != null)
+				//Verify armor is equipped.
+				// This means instead of a null check, use the defence value.
+				if(m_armor.DefenceValue > 0)
 				{
-					print (m_armor.GetComponent<Items>().ItemName + " removed.");
-					DefencePower -= m_armor.GetComponent<Items>().DefenceValue;
-					m_armor = null;
+					print (m_armor.ItemName + " removed.");
+					DefencePower -= m_armor.DefenceValue;
+					// Unequipping the weapon effective resets the values of the script.
+					m_armor.ResetArmor();
 				} //end if existing armor
 				else
 				{
-					print ("No armor found.");
+					print ("No armor equipped.");
 				} //end else no existing armor
 			} //end else if armor
 			else if(item == "inventory")
@@ -475,5 +487,39 @@ namespace GSP.Char
 				       " and weight.");
 			} //end else
 		} //end RemoveItem(string item)
+
+		// Copies information from the item game object to the weapon script.
+		// NOTE: The source is the item game object.
+		void CopyItemToWeapon(GameObject source)
+		{
+			// Get the item's script.
+			var sourceScript = source.GetComponent<Items>();
+
+			// Copy the values from the object to the weapon script.
+			m_weapon.ItemName = sourceScript.ItemName;
+			m_weapon.ItemType = sourceScript.ItemType;
+			m_weapon.AttackValue = sourceScript.AttackValue;
+			m_weapon.DefenceValue = sourceScript.DefenceValue;
+			m_weapon.InventoryValue = sourceScript.InventoryValue;
+			m_weapon.WeightValue = sourceScript.WeightValue;
+			m_weapon.CostValue = sourceScript.CostValue;
+		} // end CopyItemToWeapon function
+
+		// Copies information from the item game object to the armor script.
+		// NOTE: The source is the item game object.
+		void CopyItemToArmor(GameObject source)
+		{
+			// Get the item's script.
+			var sourceScript = source.GetComponent<Items>();
+			
+			// Copy the values from the object to the weapon script.
+			m_armor.ItemName = sourceScript.ItemName;
+			m_armor.ItemType = sourceScript.ItemType;
+			m_armor.AttackValue = sourceScript.AttackValue;
+			m_armor.DefenceValue = sourceScript.DefenceValue;
+			m_armor.InventoryValue = sourceScript.InventoryValue;
+			m_armor.WeightValue = sourceScript.WeightValue;
+			m_armor.CostValue = sourceScript.CostValue;
+		} // end CopyItemToArmor function
 	} // end Character class
 } // end namespace

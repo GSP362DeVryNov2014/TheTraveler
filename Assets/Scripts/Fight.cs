@@ -4,7 +4,7 @@ using GSP.Char;
 
 namespace GSP
 {
-	public class Fight : MonoBehaviour 
+	public class Fight
 	{
 		//Used when player/ally character fights an enemy
 		public string CharacterFight(GameObject enemy, GameObject player)
@@ -15,11 +15,13 @@ namespace GSP
 			int playerDamage = m_playerScript.AttackPower - m_enemyScript.DefencePower;
 			if(enemyDamage > playerDamage)
 			{
-				return "Enemy wins";
+				return "Player attack: " + m_playerScript.AttackPower + 
+					"\nPlayer defence: " + m_playerScript.DefencePower + "\nEnemy wins";
 			} //end if
 			else
 			{
-				return "Player wins";
+				return "Player attack: " + m_playerScript.AttackPower + 
+					"\nPlayer defence: " + m_playerScript.DefencePower + "\nPlayer wins";
 			} //end else
 		} //end CharacterFight
 	} //end Fight class
