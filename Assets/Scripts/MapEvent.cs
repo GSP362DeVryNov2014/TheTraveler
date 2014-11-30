@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using GSP.Char;
@@ -28,23 +28,27 @@ namespace GSP
 		//Holds list of resource tile events
 		enum resourceTile {WOOL, WOOD, FISH, ORE, SIZE};
 
+		//Event chances
+		//NOTE: These should add up to less than 100 so that 
+		//there is a chance nothing occurs. Minimum chance of
+		//one or else there will be problems
+		int m_enemyChance = 45;
+		int m_allyChance = 1;
+		int m_itemChance = 45;
+
 		//Calls map event and returns string
 		public string DetermineEvent(GameObject player)
 		{
+			//Set up player script
 			m_player = player;
 			m_playerCharScript = m_player.GetComponent<Character>();
 
-			//////////////////////////////////////////////////////////
-			// 		...Javier's Modified Fix to Null Tile Return...
+			//Gather tile
 			Vector3 tmp = m_player.transform.localPosition;
 			// Change by Damien to get tiles to work again.
 			tmp.z = -0.01f;
 			// Original: tmp.z = 0.0f;
 			Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (tmp));
-			//////////////////////////////////////////////////////////
-			// 		...Brent's Original...
-			//Tile currentTile = TileDictionary.GetTile (TileManager.ToPixels (m_player.transform.localPosition));
-			//////////////////////////////////////////////////////////
 
 			//If no tile found
 			if(currentTile == null)
@@ -55,7 +59,7 @@ namespace GSP
 			else if (currentTile.ResourceType == ResourceType.NONE) 
 			{
 				int dieResult = m_die.Roll (1, 100);
-				if(dieResult < 21)
+				if(dieResult < m_enemyChance)
 				{
 					//Create the enemy
 					//TODO Replace prefabCharacter with prefabEnemy
@@ -66,18 +70,22 @@ namespace GSP
 					Character m_enemyScript = m_enemy.GetComponent<Character>();
 
 					//Set stats
-					m_enemyScript.AttackPower = m_die.Roll(1, 20);
-					m_enemyScript.DefencePower = m_die.Roll(1, 20);
+					m_enemyScript.AttackPower = m_die.Roll(1, 10);
+					m_enemyScript.DefencePower = m_die.Roll(1, 10);
 
 					//TODO Add Battle Scene
 
 					//Battle characters
 					Fight fighter = new Fight();
-					string result = "Map event was enemy, \nand " + fighter.CharacterFight(m_enemy, m_player);
+					string result = "Die roll was " + dieResult + ".\nMap event was enemy, \nand " + fighter.CharacterFight(m_enemy, m_player);
 					Destroy(m_enemy);
+					if(result.Contains("Enemy wins"));
+					{
+						m_playerCharScript.RemoveItem("weapon");
+					}
 					return result;
 				} //end if ENEMY
-				else if (dieResult < 46 && dieResult >= 21)
+				else if (dieResult < m_allyChance + m_enemyChance && dieResult >= m_enemyChance)
 				{
 					//Create ally
 					GameObject m_ally = Instantiate( PrefabReference.prefabCharacter,
@@ -89,27 +97,23 @@ namespace GSP
 					//Set max weight
 					m_allyScript.MaxWeight = m_die.Roll(1, 20) * 6;
 
+					//Allow player to accept or decline ally
 					print ("Do you want this ally? \nHit y for yes \nand n for no.");
-					bool Loop = true;
-					while(Loop)
+					if(Input.GetKeyDown(KeyCode.Y))
 					{
-						if(Input.GetKeyDown(KeyCode.Y))
-						{
-							//Add to ally list
-							Ally m_playerAllyScript = m_player.GetComponent<Ally>();
-							m_playerAllyScript.AddAlly(m_ally);
-							Loop = false;
-						}
-						else if(Input.GetKeyDown(KeyCode.N))
-						{
-							//Disable newAlly and end loop
-							Destroy(m_ally);
-							Loop = false;
-						} //end else if
-					} //end while
-					return "Map event was ally.";
+						//Add to ally list
+						Ally m_playerAllyScript = m_player.GetComponent<Ally>();
+						m_playerAllyScript.AddAlly(m_ally);
+					}
+					else if(Input.GetKeyDown(KeyCode.N))
+					{
+						//Disable newAlly and end loop
+						Destroy(m_ally);
+					} //end else if
+					return "Die roll was " + dieResult + ".\nMap event was ally.";
 				} //end else if ALLY
-				else if(dieResult < 66 && dieResult >= 46)
+				else if(dieResult < m_itemChance + m_allyChance + m_enemyChance
+				        && dieResult >= m_allyChance + m_enemyChance)
 				{
 					//String to return for display
 					string result;
@@ -167,11 +171,11 @@ namespace GSP
 						result = "non-existant item. Nothing given.";
 					} //end else
 
-					return "Map event was item \nand you got " + result;
+					return "Die roll was " + dieResult + ".\nMap event was item \nand you got " + result;
 				} //end else if ITEM
 				else
 				{
-					return "No map event occured.";
+					return "Die roll was " + dieResult + ".\nNo map event occured.";
 				} //end else if NOTHING
 			} //end if NORMAL TILE
 			//If resource at tile

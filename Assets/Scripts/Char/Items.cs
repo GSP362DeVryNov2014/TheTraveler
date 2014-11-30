@@ -11,8 +11,8 @@ namespace GSP.Char
 	//item in the enum. For instance if the list was {SWORD, MACE, SIZE}
 	//you should enter the new item between MACE and SIZE. Create name
 	//here and then define it under "SetItem" function
-	enum Weapons {SWORD, SIZE};
-	enum Armor {PLATEBODY, SIZE};
+	enum Weapons {SWORD, BROADSWORD, MACE, SPEAR, SIZE};
+	enum Armor {PLATEBODY, CHAINMAIL, PLATELEGS, CHAINLEGS, FULLSUIT, SIZE};
 	enum Inventory {SACHEL, SIZE};
 	enum Weight {RUBBERBOOTS, SIZE};
 
@@ -117,6 +117,27 @@ namespace GSP.Char
 				m_attackValue = 5;
 				return "attack";
 			} //end if
+			else if (Item == "BROADSWORD")
+			{
+				m_itemName = "Broadsword";
+				m_itemType = "Weapon";
+				m_attackValue = 9;
+				return "attack";
+			} //end else if
+			else if (Item == "MACE")
+			{
+				m_itemName = "Mace";
+				m_itemType = "Weapon";
+				m_attackValue = 7;
+				return "attack";
+			} //end else if
+			else if (Item == "SPEAR")
+			{
+				m_itemName = "Spear";
+				m_itemType = "Weapon";
+				m_attackValue = 8;
+				return "attack";
+			} //end else if
 
 			//Armors
 			else if (Item == "PLATEBODY") 
@@ -124,6 +145,34 @@ namespace GSP.Char
 				m_itemName = "Platebody";
 				m_itemType = "Armor";
 				m_defenceValue = 8;
+				return "defence";
+			} //end else if
+			else if (Item == "CHAINBODY")
+			{
+				m_itemName = "Chainbody";
+				m_itemType = "Armor";
+				m_defenceValue = 5;
+				return "defence";
+			} //end else if
+			else if (Item == "PLATELEGS")
+			{
+				m_itemName = "Platelegs";
+				m_itemType = "Armor";
+				m_defenceValue = 3;
+				return "defence";
+			} //end else if
+			else if (Item == "CHAINLEGS")
+			{
+				m_itemName = "Chainlegs";
+				m_itemType = "Armor";
+				m_defenceValue = 2;
+				return "defence";
+			} //end else if
+			else if (Item == "FULLSUIT")
+			{
+				m_itemName = "Full Suit";
+				m_itemType = "Armor";
+				m_defenceValue = 11;
 				return "defence";
 			} //end else if
 
