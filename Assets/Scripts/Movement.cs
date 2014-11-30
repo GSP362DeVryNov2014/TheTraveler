@@ -29,7 +29,7 @@ public class Movement : MonoBehaviour
 
 	public Vector3 MoveUp(Vector3 position)
 	{
-		if(position.y > GSP.Tiles.TileManager.MinHeightUnits)
+		if(position.y < GSP.Tiles.TileManager.MinHeightUnits)
 		{
 			return new Vector3(0, GSP.Tiles.TileManager.PlayerMoveDistance, 0);
 		} //end if
@@ -41,7 +41,7 @@ public class Movement : MonoBehaviour
 
 	public Vector3 MoveDown(Vector3 position)
 	{
-		if(position.y < GSP.Tiles.TileManager.MaxHeightUnits)
+		if(position.y > GSP.Tiles.TileManager.MaxHeightUnits)
 		{
 			return new Vector3(0, -GSP.Tiles.TileManager.PlayerMoveDistance, 0);
 		} //end if

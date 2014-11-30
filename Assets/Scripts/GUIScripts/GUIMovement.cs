@@ -17,9 +17,6 @@ namespace GSP
 		int m_currTravelDist;	//dice roll left
 		bool m_isMoving = false; //if the player is moving, one dice roll value is taken off
 
-		//TODO: remove this variable when Brents functions are ready.
-		int m_testCount =0;
-
 		//+enum will hold the values of gameplay states
 		private enum GamePlayState
 		{
@@ -35,7 +32,8 @@ namespace GSP
 		// Use this for initialization
 		void Start () {
 			m_GameplayStateMachineScript = GameObject.FindGameObjectWithTag("GamePlayStateMachineTag").GetComponent<GameplayStateMachine>();
-	
+			m_MovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<Movement>();
+
 		}	//end void Start()
 
 		// custom overloaded constructor
@@ -57,6 +55,8 @@ namespace GSP
 			//resetDisplacement Value
 			m_displacementVector = new Vector3 (0.0f, 0.0f, 0.0f); 
 
+			//movement script
+
 		}	//end public void InitThis()
 		
 		void OnGUI()
@@ -71,10 +71,6 @@ namespace GSP
 			if (m_isInSelectPathToTakeState == true)
 			{
 				GUIMovementPads();
-				if(m_isMoving == true )
-				{
-					MovePlayer();
-				}
 			}
 
 		} //end OnGUI()
@@ -93,43 +89,31 @@ namespace GSP
 				//left
 				if ( GUI.Button (new Rect ((Screen.width - (3 * width) + gridXShift), (Screen.height - (2 * height) + gridYShift), width, height), "<")) 
 				{
-					//TODO: MOVE DOWN FUNCTION FROM BRENTS MOVEMENT CLASS; MOVEMENT CLASS 
-					//NEEDS TO BE ABSTRACT IF POSSIBLE (IF NOT CREATE AN INSTANCE IN THE UNITY SCENE
-					m_displacementVector = new Vector3( -.32f, 0.0f, 0.0f ); //FOR TESTING
-					//m_displacementVector = m_MovementScript.MoveLeft(); //uncomment this and comment above when Brents Movement class is ready
+					m_displacementVector = m_MovementScript.MoveLeft(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					MovePlayer();
 				}
 				//right
 				if( GUI.Button( new Rect( (Screen.width -(1*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), ">" ) )
 				{
-					//TODO: MOVE DOWN FUNCTION FROM BRENTS MOVEMENT CLASS; MOVEMENT CLASS 
-					//NEEDS TO BE ABSTRACT IF POSSIBLE (IF NOT CREATE AN INSTANCE IN THE UNITY SCENE
-					m_displacementVector = new Vector3(  .32f, 0.0f, 0.0f ); //FOR TESTING
-					//m_displacementVector = m_MovementScript.MoveRight(); //uncomment this and comment above when Brents Movement class is ready
+					m_displacementVector = m_MovementScript.MoveRight(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					MovePlayer();
 				}
 				//cancel
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), "X" ) )
 				{
-					//TODO: CANCEL MOVE, MOVE BACK TO ORIG POSITION
+					//MOVE BACK TO ORIG POSITION
 					CancelMove();
 				}
 				//up
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(3*height) +gridYShift), width, height ), "^" ) )
 				{
-					//TODO: MOVE DOWN FUNCTION FROM BRENTS MOVEMENT CLASS; MOVEMENT CLASS 
-					//NEEDS TO BE ABSTRACT IF POSSIBLE (IF NOT CREATE AN INSTANCE IN THE UNITY SCENE
-					m_displacementVector = new Vector3( 0.0f, .32f, 0.0f ); //FOR TESTING
-					//m_displacementVector = m_MovementScript.MoveUp(); //uncomment this and comment above when Brents Movement class is ready
+					m_displacementVector = m_MovementScript.MoveUp(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					MovePlayer();
 				}
 				//down
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(1*height) +gridYShift), width, height ), "v" ) )
 				{
-					//TODO: MOVE DOWN FUNCTION FROM BRENTS MOVEMENT CLASS; MOVEMENT CLASS 
-					//NEEDS TO BE ABSTRACT IF POSSIBLE (IF NOT CREATE AN INSTANCE IN THE UNITY SCENE
-					m_displacementVector = new Vector3( 0.0f, -.32f, 0.0f ); //FOR TESTING
-					//m_displacementVector = m_MovementScript.MoveDown(); //uncomment this and comment above when Brents Movement class is ready
+					m_displacementVector = m_MovementScript.MoveDown(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					MovePlayer();
 				}
 
@@ -141,7 +125,7 @@ namespace GSP
 					//TODO: CANCEL MOVE, MOVE BACK TO ORIG POSITION
 					CancelMove();
 				}
-				//up
+				//display travel distance is 0
 				GUI.Box( new Rect( (Screen.width -(3*width) +gridXShift), (Screen.height -(3*height) +gridYShift), 3*width, height ), "Out of Distance." );
 			
 			}
@@ -161,28 +145,13 @@ namespace GSP
 			{
 				m_isMoving = true;
 				m_currTravelDist = m_currTravelDist -1;
-				//TODO:remove this testcount when Brents functions are ready
-				m_testCount =0;	//reset test count
-			}
-			//........................................................
-			//.......TODO: this else statement is strictly for testing
-			//.....remove after Movement.cs is ready.......
-			//........................................................
-			else
-			{
-				//after 2 testcounts, player should reach new tile
-				//normally this is checked by the Movement.cs script
-				//and will return Vector3(0.0f,0.0f,0.0f)
-				m_testCount = m_testCount +1;
-				if(m_testCount >= 2)
-				{
-				 	m_displacementVector = new Vector3(0.0f,0.0f,0.0f);
-				}
 			}
 
 			//move player
 			m_PlayerEntity.transform.Translate (m_displacementVector, Space.World );
-			//reset 
+			//reset
+			m_displacementVector = new Vector3(0.0f,0.0f,0.0f);
+			m_isMoving = false;
 
 		} //end private void MovePlayer(Vector3 p_displacementVector )
 
