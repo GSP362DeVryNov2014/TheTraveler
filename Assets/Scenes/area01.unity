@@ -1071,6 +1071,7 @@ GameObject:
   - 4: {fileID: 757063206}
   - 212: {fileID: 757063205}
   - 114: {fileID: 757063207}
+  - 114: {fileID: 757063208}
   m_Layer: 0
   m_Name: GUIMovement
   m_TagString: GUIMovementTag
@@ -1121,6 +1122,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d13ba2912f0ca5346b09189badd8ed0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &757063208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 757063204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 754ac14d08c71a148adc2d0e5331ee87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &771737882
@@ -1628,7 +1640,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1042628252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 6, y: 0, z: -10}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
