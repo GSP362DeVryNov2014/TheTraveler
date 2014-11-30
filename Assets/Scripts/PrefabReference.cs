@@ -22,6 +22,9 @@ namespace GSP
 
 		// This is the reference to the fish resource prefab.
 		public static GameObject prefabResource_Fish = Resources.Load( "Resource_Fish" ) as GameObject;
+
+		// This is the reference to the item prefab.
+		public static GameObject prefabItem = Resources.Load( "Item" ) as GameObject;
 	} // end PrefabReference class
 } // end namespace
 
