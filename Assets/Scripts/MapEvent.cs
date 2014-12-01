@@ -9,7 +9,7 @@ namespace GSP
 	public class MapEvent : MonoBehaviour
 	{
 		//Holds object for refrencing die functions
-		private Die m_die = new Die();
+		private Die m_die;
 		
 		//Holds the objects for referencing the player and its script functions.
 		GameObject m_player;
@@ -35,7 +35,17 @@ namespace GSP
 		int m_enemyChance = 45;
 		int m_allyChance = 1;
 		int m_itemChance = 45;
-		
+
+		//Initialize die
+		void Start()
+		{
+			// Initialise the die here.
+			m_die = new Die();
+			
+			// Reseed the die.
+			m_die.Reseed(Environment.TickCount);
+		}
+
 		//Calls map event and returns string
 		public string DetermineEvent(GameObject player)
 		{
