@@ -105,12 +105,14 @@ namespace GSP
 
 			//Beginning State
 			m_gamePlayState = GamePlayState.BEGINTURN;
-			
+
 			//get scripts needed
 			m_DieScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<DieInput>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
 			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
 			m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();
+
+			m_DieScript.Dice.Reseed (System.Environment.TickCount);
 
 			//text for the action button
 			m_GUIActionString = "Action\nButton";
@@ -399,6 +401,7 @@ namespace GSP
 				if( m_GUIActionPressed )
 				{
 					m_GUIDiceDistVal = m_DieScript.Dice.Roll(3,6);
+
 					//nextState()
 					m_gamePlayState = GamePlayState.CALCDISTANCE;
 				}					
@@ -566,6 +569,11 @@ namespace GSP
 		{
 			return	m_playerList[m_GUIPlayerTurn];
 		} //end public GameObject Get
+
+		public int GetNumOfPlayers()
+		{
+			return m_GUINumOfPlayers;
+		}	//end public int GetNumOfPlayers()
 	
 
 	}	//end public class GameplayStateMachine : MonoBehaviour
