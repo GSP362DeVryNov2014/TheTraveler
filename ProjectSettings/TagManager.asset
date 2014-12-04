@@ -10,6 +10,7 @@ TagManager:
   - GamePlayStateMachineTag
   - GUIMovementTag
   - HighlightTag
+  - EndSceneCharDataTag
   - EndSceneDataTag
   - 
   Builtin Layer 0: Default

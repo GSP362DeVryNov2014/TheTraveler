@@ -67,6 +67,13 @@ namespace GSP
 		private GSP.GUIMapEvents m_GUIMapEventsScript; //Access the sigleton Die and its functions
 		private GSP.GUIMovement m_GUIMovementScript;
 		private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;
+
+		#region End Scene Declaration Stuff
+
+		// Holds the reference to the game object.
+		GameObject m_endSceneCharData;
+
+		#endregion
 		
 		//players list
 		private GameObject m_playerEntity; //player!
@@ -92,6 +99,22 @@ namespace GSP
 			// Set the dimensions and generate/add the tiles
 			TileManager.SetDimensions(64, 20, 16);
 			TileManager.GenerateAndAddTiles();
+
+			#region End Scene Initialisation stuff
+
+			// Create the empty game object.
+			m_endSceneCharData = new GameObject( "EndSceneCharData" );
+
+			// Tag it as end scene char data.
+			m_endSceneCharData.tag = "EndSceneCharDataTag";
+
+			// Add the end scene char data component.
+			m_endSceneCharData.AddComponent<EndSceneData>();
+
+			// Set it to not destroy on load.
+			DontDestroyOnLoad( m_endSceneCharData );
+
+			#endregion
 
 			//initialize empty lists
 			m_playerList = new List<GameObject>();
@@ -364,7 +387,32 @@ namespace GSP
 		{
 			if( Input.GetKeyDown(KeyCode.Q) )
 			{
-				Application.LoadLevel(0);
+				#region End Scene Quit Adding Stuff
+
+				// Get the number of players.
+				int numPlayers = m_playerList.Count;
+
+				// Get the end scene data object's script.
+				EndSceneData endSceneScript = m_endSceneCharData.GetComponent<EndSceneData>();
+
+				// Add the player stuff.
+				for (int index = 0; index < numPlayers; index++)
+				{
+					// Add the current player to the end scene data object.
+					// Note: Be sure to add 1 to index to get the player number correct.
+					int playerNum = index + 1;
+
+					// Check if the key doesn't exist. Only proceed if it doesn't.
+					if ( !endSceneScript.KeyExists( playerNum ) )
+					{
+						endSceneScript.AddData( playerNum, m_playerList[index] );
+					} // end if statement
+				} // end for loop
+
+				#endregion
+
+				// Next load the end scene
+				Application.LoadLevel( "EndScene" );
 			}
 		}	//end IsItEndOfGame()
 
