@@ -5,7 +5,7 @@ namespace GSP.Char
 {
 	public class CharDataEndScene : MonoBehaviour
 	{
-		// Use this for initialization
+		// Use this for initialisation.
 		void Start()
 		{
 			// Get the end scene data object.
