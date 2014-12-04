@@ -15,13 +15,13 @@ namespace GSP
 			int playerDamage = m_playerScript.AttackPower - m_enemyScript.DefencePower;
 			if(enemyDamage > playerDamage)
 			{
-				return "Player attack: " + m_playerScript.AttackPower + 
-					"\nPlayer defence: " + m_playerScript.DefencePower + "\nEnemy wins";
+				return "Player damage: " + playerDamage + 
+					"\nEnemy damage: " + enemyDamage + "\nEnemy wins";
 			} //end if
 			else
 			{
-				return "Player attack: " + m_playerScript.AttackPower + 
-					"\nPlayer defence: " + m_playerScript.DefencePower + "\nPlayer wins";
+				return "Player damage: " + playerDamage + 
+					"\nEnemy damage: " + enemyDamage + "\nPlayer wins";
 			} //end else
 		} //end CharacterFight
 	} //end Fight class
