@@ -147,9 +147,9 @@ namespace GSP.Char
 				m_defenceValue = 8;
 				return "defence";
 			} //end else if
-			else if (Item == "CHAINBODY")
+			else if (Item == "CHAINMAIL")
 			{
-				m_itemName = "Chainbody";
+				m_itemName = "Chainmail";
 				m_itemType = "Armor";
 				m_defenceValue = 5;
 				return "defence";
