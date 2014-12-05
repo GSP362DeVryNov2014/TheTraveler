@@ -35,7 +35,7 @@ namespace GSP.Char
 		// Gets the number of resources the character is holding.
 		public int NumResources
 		{
-			get { return m_resourceList.Count; }
+			get { if (m_resourceList == null) Debug.LogError("NULL"); return m_resourceList.Count; }
 		} // end NumResources property
 		
 		// Use this for initialisation.

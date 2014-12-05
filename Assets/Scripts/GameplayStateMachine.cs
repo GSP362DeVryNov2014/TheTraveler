@@ -69,6 +69,16 @@ namespace GSP
 		private GSP.GUIMovement m_GUIMovementScript;
 		private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;
 		private GSP.MapEvent m_MapEventScript;
+
+		#region End Scene Declaration Stuff
+
+		// Holds the reference to the game object.
+		GameObject m_endSceneCharData;
+
+		// Holds whether the end scene stuff should be ran during that state.
+		bool m_runEndStuff;
+
+		#endregion
 		
 		//players list
 		private GameObject m_playerEntity; //player!
@@ -94,6 +104,25 @@ namespace GSP
 			// Set the dimensions and generate/add the tiles
 			TileManager.SetDimensions(64, 20, 16);
 			TileManager.GenerateAndAddTiles();
+
+			#region End Scene Initialisation stuff
+
+			// Create the empty game object.
+			m_endSceneCharData = new GameObject( "EndSceneCharData" );
+
+			// Tag it as end scene char data.
+			m_endSceneCharData.tag = "EndSceneCharDataTag";
+
+			// Add the end scene char data component.
+			m_endSceneCharData.AddComponent<EndSceneData>();
+
+			// Set it to not destroy on load.
+			DontDestroyOnLoad( m_endSceneCharData );
+
+			// Defaults to true.
+			m_runEndStuff = true;
+
+			#endregion
 
 			//initialize empty lists
 			m_playerList = new List<GameObject>();
@@ -370,7 +399,8 @@ namespace GSP
 		{
 			if( Input.GetKeyDown(KeyCode.Q) )
 			{
-				Application.LoadLevel(0);
+				// Trigger the end of the game.
+				EndGame();
 			}
 		}	//end IsItEndOfGame()
 
@@ -510,11 +540,49 @@ namespace GSP
 
 			case GamePlayState.ENDGAME:
 				state.text = "Universe Ending";
-				if( m_GUIMapEventsScript.isActionRunning() == false )
-					//if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
+
+				if (m_runEndStuff)
 				{
+					#region Selling Character resource stuff
 					
-					Application.LoadLevel(0);
+					// Set it to not run this again.
+					m_runEndStuff = false;
+
+					// Get the number of players.
+					int numPlayers = m_playerList.Count;
+					
+					// Loop through and sell the character's resources and their ally's resources.
+					for ( int playerSellIndex = 0; playerSellIndex < numPlayers; playerSellIndex++ )
+					{
+						// We need to access the character script at the given index and sell the resources.
+						m_playerScriptList[playerSellIndex].SellResource();
+					} // end for loop
+					
+					#endregion
+					
+					#region End Scene Quit Adding Stuff
+					
+					// Get the end scene data object's script.
+					EndSceneData endSceneScript = m_endSceneCharData.GetComponent<EndSceneData>();
+					
+					// Add the player stuff.
+					for (int endSceneIndex = 0; endSceneIndex < numPlayers; endSceneIndex++)
+					{
+						// Add the current player to the end scene data object.
+						// Note: Be sure to add 1 to index to get the player number correct.
+						int playerNum = endSceneIndex + 1;
+						
+						// Check if the key doesn't exist. Only proceed if it doesn't.
+						if ( !endSceneScript.KeyExists( playerNum ) )
+						{
+							endSceneScript.AddData( playerNum, m_playerList[endSceneIndex] );
+						} // end if statement
+					} // end for loop
+					
+					#endregion
+					
+					// Next load the end scene
+					Application.LoadLevel( "EndScene" );
 				}
 				break;
 				
