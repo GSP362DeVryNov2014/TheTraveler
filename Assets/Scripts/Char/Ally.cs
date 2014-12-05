@@ -27,7 +27,7 @@ namespace GSP.Char
 		// Get the ally by its index. This should stay readonly (get only).
 		public GameObject this[int index]
 		{
-			get { return m_allyList [index]; }
+			get { Debug.LogError("Index: " + index); return m_allyList [index]; }
 		}
 
 		// Return ally object
@@ -65,7 +65,9 @@ namespace GSP.Char
 		{
 			if(NumAllies != maxAllies)
 			{
+				Debug.LogError("AddAlly-Pre: " + NumAllies);
 				m_allyList.Add( ally );
+				Debug.LogError("AddAlly-Post: " + NumAllies);
 			} //end if
 			else
 			{
