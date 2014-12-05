@@ -8,16 +8,6 @@ namespace GSP
 {
 	public class Test : MonoBehaviour
 	{
-		Dictionary<int, int> m_currencyDict;
-		
-		
-		// Use this for ininitialisation.
-		public void Start()
-		{
-			// Initialises the player currency dictionary to a new dictionary.
-			m_currencyDict = new Dictionary<int, int>();
-		}
-
 		// Update is called once per frame.
 		void Update()
 		{
@@ -49,7 +39,7 @@ namespace GSP
 				} // end for loop
 			} // end if statement
 
-			// Tests checking to player's currency.
+			// Tests checking to player's currency for a winner.
 			if ( Input.GetKeyDown( KeyCode.B ) )
 			{
 				// Get the game object with the end scene data tag.
@@ -58,42 +48,109 @@ namespace GSP
 				// Get its script.
 				EndSceneData endSceneScript = endSceneDataObject.GetComponent<EndSceneData>();
 
+				// Get its misc script.
+				Misc endSceneMisc = endSceneDataObject.GetComponent<Misc>();
+
+				// Get the winning player.
+				int playerWinner = endSceneMisc.DetermineWinner();
+
+				// Show it on the console.
+				Debug.Log( "Player #" + playerWinner + " is the winner!" );
+
+				// Get the winning players data.
+				EndSceneCharData playerWinnerData = endSceneScript.GetData( playerWinner );
+
+				// Show it on the console.
+				Debug.Log( playerWinnerData.PlayerName + " has won with " + playerWinnerData.PlayerCurrency + " currency!" );
+			} // end if statement
+
+			// Tests checks for a winner and grabs the sorted list. Then loops over it.
+			if ( Input.GetKeyDown( KeyCode.C ) )
+			{
+				// Get the game object with the end scene data tag.
+				GameObject endSceneDataObject = GameObject.FindGameObjectWithTag( "EndSceneDataTag" );
+				
+				// Get its script.
+				EndSceneData endSceneScript = endSceneDataObject.GetComponent<EndSceneData>();
+				
+				// Get its misc script.
+				Misc endSceneMisc = endSceneDataObject.GetComponent<Misc>();
+				
+				// Since we're getting the list, it doesn't matter if we assign the result to a variable here.
+				endSceneMisc.DetermineWinner();
+
+				// Get the list.
+				List<KeyValuePair<int, int>> playerList = endSceneMisc.GetList();
+
+				// Loop over the list.
+				foreach ( var pair in playerList )
+				{
+					// Get the player's data from the key in the pair.
+					EndSceneCharData charData = endSceneScript.GetData( pair.Key );
+
+					// Do stuff with it.
+					Debug.Log( "Player #" + charData.PlayerNumber + " has " + charData.PlayerCurrency + " currency!" );
+				} // end foreach
+			} // end if statement
+
+			// Tests checks for a winner and grabs the sorted list. Uses it by index.
+			if ( Input.GetKeyDown( KeyCode.D ) )
+			{
+				// Get the game object with the end scene data tag.
+				GameObject endSceneDataObject = GameObject.FindGameObjectWithTag( "EndSceneDataTag" );
+				
+				// Get its script.
+				EndSceneData endSceneScript = endSceneDataObject.GetComponent<EndSceneData>();
+				
+				// Get its misc script.
+				Misc endSceneMisc = endSceneDataObject.GetComponent<Misc>();
+				
+				// Since we're getting the list, it doesn't matter if we assign the result to a variable here.
+				endSceneMisc.DetermineWinner();
+				
+				// Get the list.
+				List<KeyValuePair<int, int>> playerList = endSceneMisc.GetList();
+
+				// Do stuff with the list by index.
+
+				// Get the char data for the 2nd place.
+				EndSceneCharData charData = endSceneScript.GetData( playerList[1].Key );
+
+				// Do something with it.
+				Debug.Log("Player #" + charData.PlayerNumber + " has placed second with " + charData.PlayerCurrency + " currency!");
+
+			} // end if statement
+
+			// Tests checks for a winner and grabs the sorted list. Uses it to grab the last player.
+			if ( Input.GetKeyDown( KeyCode.E ) )
+			{
+				// Get the game object with the end scene data tag.
+				GameObject endSceneDataObject = GameObject.FindGameObjectWithTag( "EndSceneDataTag" );
+				
+				// Get its script.
+				EndSceneData endSceneScript = endSceneDataObject.GetComponent<EndSceneData>();
+				
+				// Get its misc script.
+				Misc endSceneMisc = endSceneDataObject.GetComponent<Misc>();
+				
+				// Since we're getting the list, it doesn't matter if we assign the result to a variable here.
+				endSceneMisc.DetermineWinner();
+				
+				// Get the list.
+				List<KeyValuePair<int, int>> playerList = endSceneMisc.GetList();
+
 				// Get the number of players.
 				int numPlayers = endSceneScript.Count;
 
-				// Loop over the data in the end scene data script.
-				for ( int index = 0; index < numPlayers; index++ )
-				{
-					// Increase index by one to get the player number.
-					int playerNum = index + 1;
-
-					// Only proceed if the player's currency hasn't been added.
-					if ( !m_currencyDict.ContainsKey( playerNum ) )
-					{
-						// Get the player's char data.
-						EndSceneCharData endScenechardata = endSceneScript.GetData( playerNum );
-
-						// Add the player's number as the key and its currency as the value to the dictionary.
-						m_currencyDict.Add( playerNum, endScenechardata.PlayerCurrency );
-					} // end if statement
-				} // end for loop
-
-				// Now we sort the currency dictionary.
-				IEnumerable<KeyValuePair<int, int>> sortedCurrency = from entry in m_currencyDict orderby entry.Value descending select entry;
-
-				// Create a list from this ordering.
-				List<KeyValuePair<int, int>> currencyList = sortedCurrency.ToList();
-
-				// Loop through the list showing the key/value pairs in the console.
-				foreach ( var item in currencyList )
-				{
-					Debug.Log( "List Key: " + item.Key );
-					Debug.Log( "List Value: " + item.Value );
-				} // end foreach loop.
-
-				// Now get the player at the front of the list as the winner.
-				// This only happens because it was sorted to have the highest at the top.
-				Debug.Log( "Player #" + currencyList[0].Key + " is the winner!" );
+				// Get the last player. Its index is the number of players minus one.
+				int lastPlayerIndex = numPlayers - 1;
+				
+				// Get the char data for the last player.
+				EndSceneCharData charData = endSceneScript.GetData( playerList[lastPlayerIndex].Key );
+				
+				// Do something with it.
+				Debug.Log("Player #" + charData.PlayerNumber + " has placed last with " + charData.PlayerCurrency + " currency!");
+				
 			} // end if statement
 		} // end Update function
 	} // end Test class

@@ -575,6 +575,8 @@ namespace GSP
 						// Check if the key doesn't exist. Only proceed if it doesn't.
 						if ( !endSceneScript.KeyExists( playerNum ) )
 						{
+							// NOTE: Uncomment the below line for testing. Recomment it for the real game.
+							//m_playerScriptList[endSceneIndex].Currency += m_DieScript.Dice.Roll(1, 100);
 							endSceneScript.AddData( playerNum, m_playerList[endSceneIndex] );
 						} // end if statement
 					} // end for loop
