@@ -17,7 +17,6 @@ namespace GSP.JAVIERGUI
 		
 		bool m_isActionRunning = false;
 		string m_headerString;
-		string m_resultsString;
 		
 		// Use this for initialization
 		void Start () 
@@ -61,18 +60,6 @@ namespace GSP.JAVIERGUI
 			int headY = m_mainStartY + (headHght*2);
 			
 			GUI.Box(new Rect(headX, headY, headWdth, headHght*2), m_headerString);
-
-			GSP.GameplayStateMachine m_GameplayStateMachineScript;
-			m_GameplayStateMachineScript = GameObject.FindGameObjectWithTag("GamePlayStateMachineTag").GetComponent<GSP.GameplayStateMachine>();
-
-			GameObject PlayerEntity = GameObject.FindGameObjectWithTag("Player");
-			int tmpI = m_GameplayStateMachineScript.GetNumOfPlayers ();
-			for( int count =0; count < tmpI; count++)
-			{
-				//sort 1st place
-				PlayerEntity.GetComponent<>
-			}
-		
 		}	//end private void ConfigHeader()
 		
 		private void ConfigDoneButton()
@@ -94,6 +81,5 @@ namespace GSP.JAVIERGUI
 		{
 			return m_isActionRunning;
 		}
-*/		
-	}	//end GUIEndGame
+*/	}	//end GUIEndGame
 }	//end namespace GUI.JAVIERGUI

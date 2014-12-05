@@ -28,7 +28,7 @@ namespace GSP
 	{
 		private enum GamePlayState
 			//--------------------------------------------
-			// +enum will hold the values of gameplay states
+			// +enum will hold the values of gameplay statesm_MapEventResourceString
 			//--------------------------------------------
 		{
 			BEGINTURN,
@@ -37,7 +37,8 @@ namespace GSP
 			DISPLAYDISTANCE,
 			SELECTPATHTOTAKE,
 			DOACTION,
-			ENDTURN
+			ENDTURN,
+			ENDGAME
 		} //end public enum GamePlayState
 		
 
@@ -47,7 +48,7 @@ namespace GSP
 		//......GUI Values......
 		string m_GUIActionString;	//Changes the String in the Action button According to State player is in
 		string m_MapEventString; 	//holds what type of action event will occur
-		string m_MapEventResourceString; 	//if mapEvent is Item, what Resource is picked up? Null if not a resource event
+		string m_MapEventResultString; 	//if mapEvent is Item, what Resource is picked up? Null if not a resource event
 		bool m_GUIRunMapEventOnce = false;
 		bool m_GUIActionPressed = false;	//determines if the Action Button has been pressed.
 		int m_GUIPlayerTurn = 0;	//whos turn is it
@@ -67,6 +68,7 @@ namespace GSP
 		private GSP.GUIMapEvents m_GUIMapEventsScript; //Access the sigleton Die and its functions
 		private GSP.GUIMovement m_GUIMovementScript;
 		private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;
+		private GSP.MapEvent m_MapEventScript;
 		
 		//players list
 		private GameObject m_playerEntity; //player!
@@ -111,6 +113,8 @@ namespace GSP
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
 			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
 			m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();
+			m_MapEventScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<GSP.MapEvent>();
+
 
 			m_DieScript.Dice.Reseed (System.Environment.TickCount);
 
@@ -119,8 +123,8 @@ namespace GSP
 
 			//no map event at start;
 			m_MapEventString = "NOTHING";
-			m_MapEventResourceString = null;
-		}
+			m_MapEventResultString = null;
+		}	//END start()
 		
 		private void AddPlayers( int p_numOfPlayers )
 		{
@@ -138,7 +142,9 @@ namespace GSP
 				
 				m_playerScriptList.Add( m_playerEntity.GetComponent<GSP.Char.Character>() );
 				m_PlayerResourceList.Add( m_playerEntity.GetComponent<GSP.Char.ResourceList>() );
-				
+
+				//m_playerScriptList[count].EquipItem("SWORD", 0);
+				//m_playerScriptList[count].EquipItem("CHAINLEGS", 0);
 			} //end for loop
 			
 		} // end private void AddPlayers( int p_numOfPlayers )
@@ -368,6 +374,11 @@ namespace GSP
 			}
 		}	//end IsItEndOfGame()
 
+		public void EndGame()
+		{
+			m_gamePlayState = GamePlayState.ENDGAME;
+		}
+
 		private void StateMachine()
 			//---------------------------------------------------------------------
 			// +StateMachine in charge of displaying GUI that describes
@@ -443,13 +454,17 @@ namespace GSP
 
 					m_gamePlayState = GamePlayState.DOACTION;
 
-					m_NEWGUIMapEventScript.InitThis( m_playerList[m_GUIPlayerTurn] );
+					//TODO: REMOVE below line if test works.
+					//m_NEWGUIMapEventScript.InitThis( m_playerList[m_GUIPlayerTurn] );
 
 					//update gui by getting new values
-					GetPlayerValues();
-					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
+					//GetPlayerValues();
+
 					//TODO: after testing, delete command above and use this one below
-					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString, "Resource" );
+					m_MapEventString = m_MapEventScript.DetermineEvent( m_playerEntity );
+					m_MapEventResultString = m_MapEventScript.GetResultString();
+					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString, m_MapEventResultString );
+					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
 				}
 
 				break;
@@ -458,13 +473,16 @@ namespace GSP
 				//state.text = "Do Action/MapEvent";
 				state.text = "";
 
+				GetPlayerValues();
+
 				//map events
-				//if( m_GUIMapEventsScript.isActionRunning() == false )
-				if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
+				if( m_GUIMapEventsScript.isActionRunning() == false )
+				//if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
 				{
+
 					//TODO: After Testing, uncomment the following
-					//m_MapEventString = "NOTHING"
-					//m_MapEventResourceString = NULL;
+					m_MapEventString = "NOTHING";
+					m_MapEventResultString = null;
 
 					//NextState()
 					m_gamePlayState = GamePlayState.ENDTURN;
@@ -488,6 +506,16 @@ namespace GSP
 				//new player gets new turn
 				m_gamePlayState = GamePlayState.BEGINTURN;
 
+				break;
+
+			case GamePlayState.ENDGAME:
+				state.text = "Universe Ending";
+				if( m_GUIMapEventsScript.isActionRunning() == false )
+					//if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
+				{
+					
+					Application.LoadLevel(0);
+				}
 				break;
 				
 			default:
@@ -532,7 +560,7 @@ namespace GSP
 
 			//set map event typs and call the init
 			m_MapEventString = p_MapEventType;
-			m_MapEventResourceString = p_TypeOfResource;
+			m_MapEventResultString = p_TypeOfResource;
 		} // void 
 
 		public void EndTurn()

@@ -23,7 +23,7 @@ namespace GSP.JAVIERGUI
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.GUIMapEvents> ();
 		}
 
-		public void InitThis( GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWdth, int p_startHght)
+		public void InitThis( GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWdth, int p_startHght, string p_result)
 		{
 			m_mainStartX = p_startX;
 			m_mainStartY = p_startY;
@@ -34,7 +34,7 @@ namespace GSP.JAVIERGUI
 
 			m_isActionRunning = true;
 
-			m_headerString = "Needs to call a\nfunction in Fight!\nThat returns a string.";
+			m_headerString = p_result; //"Needs to call a\nfunction in Fight!\nThat returns a string.";
 		}
 
 		// Update is called once per frame
