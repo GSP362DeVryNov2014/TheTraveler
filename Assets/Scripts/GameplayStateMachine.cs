@@ -393,42 +393,8 @@ namespace GSP
 		{
 			if( Input.GetKeyDown(KeyCode.Q) )
 			{
-				#region Selling Character resource stuff
-
-				// Loop through and sell the character's resources and their ally's resources.
-
-				#endregion
-
-
-				#region End Scene Quit Adding Stuff
-
-				// Get the number of players.
-				int numPlayers = m_playerList.Count;
-
-				// Get the end scene data object's script.
-				EndSceneData endSceneScript = m_endSceneCharData.GetComponent<EndSceneData>();
-
-				// Add the player stuff.
-				for (int index = 0; index < numPlayers; index++)
-				{
-					// Add the current player to the end scene data object.
-					// Note: Be sure to add 1 to index to get the player number correct.
-					int playerNum = index + 1;
-
-					// Check if the key doesn't exist. Only proceed if it doesn't.
-					if ( !endSceneScript.KeyExists( playerNum ) )
-					{
-						// Give the player's a random amount of currency for testing.
-						m_playerList[index].GetComponent<GSP.Char.Character>().Currency += m_DieScript.Dice.Roll(1, 100);
-
-						endSceneScript.AddData( playerNum, m_playerList[index] );
-					} // end if statement
-				} // end for loop
-
-				#endregion
-
-				// Next load the end scene
-				Application.LoadLevel( "EndScene" );
+				// Trigger the end of the game.
+				EndGame();
 			}
 		}	//end IsItEndOfGame()
 
@@ -569,11 +535,45 @@ namespace GSP
 			case GamePlayState.ENDGAME:
 				state.text = "Universe Ending";
 				if( m_GUIMapEventsScript.isActionRunning() == false )
-					//if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
+				//if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
 				{
-					
-					Application.LoadLevel(0);
 				}
+				
+				#region Selling Character resource stuff
+				
+				// Loop through and sell the character's resources and their ally's resources.
+				
+				#endregion
+				
+				#region End Scene Quit Adding Stuff
+				
+				// Get the number of players.
+				int numPlayers = m_playerList.Count;
+				
+				// Get the end scene data object's script.
+				EndSceneData endSceneScript = m_endSceneCharData.GetComponent<EndSceneData>();
+				
+				// Add the player stuff.
+				for (int index = 0; index < numPlayers; index++)
+				{
+					// Add the current player to the end scene data object.
+					// Note: Be sure to add 1 to index to get the player number correct.
+					int playerNum = index + 1;
+					
+					// Check if the key doesn't exist. Only proceed if it doesn't.
+					if ( !endSceneScript.KeyExists( playerNum ) )
+					{
+						// Give the player's a random amount of currency for testing.
+						m_playerList[index].GetComponent<GSP.Char.Character>().Currency += m_DieScript.Dice.Roll(1, 100);
+						
+						endSceneScript.AddData( playerNum, m_playerList[index] );
+					} // end if statement
+				} // end for loop
+				
+				#endregion
+				
+				// Next load the end scene
+				Application.LoadLevel( "EndScene" );
 				break;
 				
 			default:
