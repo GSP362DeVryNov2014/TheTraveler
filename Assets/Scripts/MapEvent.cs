@@ -37,6 +37,11 @@ namespace GSP
 		int m_allyChance = 15;
 		int m_itemChance = 15;
 
+		/// <summary>
+		/// ADDED BY JAIVER
+		string m_GUIResult;
+		/// </summary>
+
 		//Initialize die
 		void Start()
 		{
@@ -64,7 +69,9 @@ namespace GSP
 			//If no tile found
 			if(currentTile == null)
 			{
-				return "This is not a valid \ntile. No event occured.";
+				//return "This is not a valid \ntile. No event occured.";
+				m_GUIResult = "This is not a valid \ntile. No event occured.";
+				return "NOTHING";
 			} //end if
 			//If no resource at tile
 			else if (currentTile.ResourceType == ResourceType.NONE) 
@@ -88,8 +95,11 @@ namespace GSP
 					
 					//Battle characters
 					Fight fighter = new Fight();
-					string result = "Die roll was " + dieResult + ".\nMap event was enemy, \nand " + 
-						fighter.CharacterFight(m_enemy, m_player);
+					///////////////////////////////////////
+					//string result = "Die roll was " + dieResult + ".\nMap event was enemy, \nand " + 
+					//	fighter.CharacterFight(m_enemy, m_player);
+					//////////////////////////////////////
+					string result = fighter.CharacterFight(m_enemy, m_player);
 
 					//Player lost fight, remove resources or weapon
 					if(result.Contains("Enemy wins"))
@@ -119,9 +129,10 @@ namespace GSP
 						} //end else
 					} //end if
 					Destroy(m_enemy);
-					return result;
-					
-					//return "enemy";
+
+					//return result;
+					m_GUIResult = result;
+					return "ENEMY";
 				} //end if ENEMY
 				else if (dieResult < m_allyChance + m_enemyChance && dieResult >= m_enemyChance)
 				{
@@ -139,9 +150,9 @@ namespace GSP
 					Ally m_playerAllyScript = m_player.GetComponent<Ally>();
 					m_playerAllyScript.AddAlly(m_ally);
 					
-					return "Die roll was " + dieResult + ".\nMap event was ally.";
-					
-					//return "ally";
+					//return "Die roll was " + dieResult + ".\nMap event was ally.";
+					m_GUIResult = "Die roll was " + dieResult + ".\nMap event was ally.";
+					return "ALLY";
 				} //end else if ALLY
 				else if(dieResult < m_itemChance + m_allyChance + m_enemyChance
 				        && dieResult >= m_allyChance + m_enemyChance)
@@ -202,13 +213,15 @@ namespace GSP
 						result = "non-existant item. Nothing given.";
 					} //end else
 					
-					return "Die roll was " + dieResult + ".\nMap event was item \nand you got " + result;
-					//return "item";
+					//return "Die roll was " + dieResult + ".\nMap event was item \nand you got " + result;
+					m_GUIResult = "You got \n" + result;
+					return "ITEM";
 				} //end else if ITEM
 				else
 				{
-					return "Die roll was " + dieResult + ".\nNo map event occured.";
-					//return "nothing";
+					//return "Die roll was " + dieResult + ".\nNo map event occured.";
+					m_GUIResult = "No map event occured.";
+					return "NOTHING";
 				} //end else if NOTHING
 			} //end if NORMAL TILE
 			//If resource at tile
@@ -224,7 +237,9 @@ namespace GSP
 				m_playerCharScript.PickupResource( temp, 1 );
 				
 				//Declare what was landed on
-				return "Map Event is " + temp.ResourceName;
+				//return "Map Event is " + temp.ResourceName;
+				m_GUIResult = "Map Event is " + temp.ResourceName;
+				return "RESOURCE";
 			} //end else if RESOURCE TILE
 		} //end DetermineEvent(GameObject player)
 		
@@ -255,7 +270,7 @@ namespace GSP
 			return result;
 		} //end ResolveFight(GameObject player)
 		
-		public string ResolveAlly(GameObject player)
+		public string ResolveAlly(GameObject player, string p_GUIresult)
 		{
 			//Create ally
 			GameObject m_ally = Instantiate( PrefabReference.prefabCharacter,
@@ -269,18 +284,34 @@ namespace GSP
 			
 			//Allow player to accept or decline ally
 			print ("Do you want this ally? \nHit y for yes \nand n for no.");
-			if(Input.GetKeyDown(KeyCode.Y))
+			////////////////////////////////
+			if(p_GUIresult == "YES")
+			////////////////////////////////
+			//if(Input.GetKeyDown(KeyCode.Y))
+			/////////////////////////////////
 			{
 				//Add to ally list
 				Ally m_playerAllyScript = m_player.GetComponent<Ally>();
 				m_playerAllyScript.AddAlly(m_ally);
+				////////////
+				return "Ally Was Added.";
+				///////////
 			}
-			else if(Input.GetKeyDown(KeyCode.N))
+			////////////////////////////////////
+			else if(p_GUIresult == "NO")
+			///////////////////////////////////
+			//else if(Input.GetKeyDown(KeyCode.N))
+			///////////////////////////////////
 			{
 				//Disable newAlly and end loop
 				Destroy(m_ally);
+				return "No ally was added.";
 			} //end else if
-			return "Map event was ally.";	
+			/////////////////////////////
+			//return "Map event was ally.";	
+			/////////////////////////////
+			return "No choice was made.";
+			/////////////////////////////
 		} //end ResolveAlly(GameObject player)
 		
 		public string ResolveItem(GameObject player)
@@ -341,7 +372,13 @@ namespace GSP
 				result = "non-existant item. Nothing given.";
 			} //end else
 			
-			return "Map event was item \nand you got " + result;
+			return "You got \n" + result;
 		} //end ResolveItem(GameObject player)
+
+		public string GetResultString()
+		{
+			return m_GUIResult;
+		}
+
 	} //end MapEvent class
 } //end namespace GSP

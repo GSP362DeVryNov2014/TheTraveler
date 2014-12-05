@@ -49,12 +49,14 @@ namespace GSP
 		GSP.Char.Items m_ItemScript;
 		GSP.JAVIERGUI.GUIEnemy m_GUIEnemyScript;
 		GSP.JAVIERGUI.GUIAlly m_GUIAllyScript;
+		GSP.JAVIERGUI.GUIItem m_GUIItemScript;
 
 		//main container values
 		int m_mainStartX = 0;
 		int m_mainStartY = 65 + 32; //65 is just below the main GUI, and I added a gap of 32 from the end of that
 		int m_mainWidth = Screen.width / 3;
 		int m_mainHeight = Screen.height / 2;
+		string m_resultString;
 		
 		//==========================================================
 		//--------------------Functions-----------------------------
@@ -65,9 +67,10 @@ namespace GSP
 			m_currEnumMpEvent = m_EnumMapEvent.NOTHING;
 			m_GUIEnemyScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIEnemy>();
 			m_GUIAllyScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIAlly>();
+			m_GUIItemScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIItem>();
 		}
 		
-		public void InitThis(GameObject p_PlayerEntity, string p_mapEventType, string p_resourceType )
+		public void InitThis(GameObject p_PlayerEntity, string p_mapEventType, string p_result )
 			//----------------------------------------------------
 			//	own custome overloaded constructor
 			//
@@ -109,13 +112,13 @@ namespace GSP
 				m_isActionRunning = false;
 			}
 
-			//LOAD RESOURCE IF NECESSARY
-			if ( (p_resourceType != null) && (p_mapEventType == "ITEM") )
-			{
-				// NOTE: I don't know what is trying to be done here. This needs to be fixed. -- Damien
-				m_ResourceListScript.GetResourcesByType( p_resourceType );
-			}
-
+//			//LOAD RESOURCE IF NECESSARY
+//			if ( (p_resourceType != null) && (p_mapEventType == "ITEM") )
+//			{
+//				// NOTE: I don't know what is trying to be done here. This needs to be fixed. -- Damien
+//				m_ResourceListScript.GetResourcesByType( p_resourceType );
+//			}
+			m_resultString = p_result;
 			
 		} //end InitThis()
 		
@@ -244,7 +247,7 @@ namespace GSP
 			case m_EnumMapEvent.ENEMY:
 				if( m_initScript == false )
 				{
-					m_GUIEnemyScript.InitThis( m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight );
+					m_GUIEnemyScript.InitThis( m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
 					m_initScript = true;
 				}
 				break;
@@ -258,6 +261,11 @@ namespace GSP
 				break;
 				
 			case m_EnumMapEvent.ITEM:
+				if( m_initScript == false )
+				{
+					m_GUIItemScript.InitGUIItem(m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
+					m_initScript = true;
+				}
 				break;
 				
 			case m_EnumMapEvent.RESOURCES:

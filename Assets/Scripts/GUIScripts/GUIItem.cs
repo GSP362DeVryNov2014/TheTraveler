@@ -30,7 +30,7 @@ namespace GSP.JAVIERGUI
 			
 		}	//end Start()
 		
-		public void InitGUIItem(GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWidth, int p_startHeight, string p_itemStr, string p_resourceStr )
+		public void InitGUIItem(GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWidth, int p_startHeight, string p_resultMapEvent) //string p_itemStr, string p_resourceStr )
 		{
 			m_PlayerEntity = p_PlayerEntity;
 			m_PlayerCharacterScript = m_PlayerEntity.GetComponent<GSP.Char.Character>();
@@ -45,8 +45,12 @@ namespace GSP.JAVIERGUI
 			m_mainWidth = p_startWidth;
 			m_mainHeight = p_startHeight;
 
-			m_itemString = p_itemStr;
-			m_resourceString = p_resourceStr;
+			/////////////////////////////
+			m_headerString = p_resultMapEvent;
+			////////////////////////////
+			//m_itemString = p_itemStr;
+			//m_resourceString = p_resourceStr;
+			////////////////////////////
 		}
 		
 		private void getPlayerAllyValues()
@@ -81,7 +85,11 @@ namespace GSP.JAVIERGUI
 				{
 					m_resourceString = "";
 				}
-				m_headerString = "Would You Like\nto Add " +m_itemString +" " +m_resourceString +"?";
+				//////////////////
+				m_headerString = "You found an Item!\nAdd it?";
+				//////////////////
+				//m_headerString = "Would You Like\nto Add " + m_itemString + m_resourceString "?";
+				//////////////////
 			}
 			
 			int headWdth = m_mainWidth - 2;
@@ -103,9 +111,13 @@ namespace GSP.JAVIERGUI
 			{
 				//TODO:GET RESOURCE RESULT FROM MAPEVENT
 				//function() will get teh result of the map Event.
-				m_itemString = "BLANK"; //function here;
-				m_headerString = "Item Added.\n" +m_itemString;
-				
+				////////////////////////////////////
+				//m_itemString = "BLANK"; //function here;
+				//m_headerString = "Item Added.\n" +m_itemString;
+				///////////////////////////////////
+				m_headerString = m_MapEventScript.ResolveItem(m_PlayerEntity);
+				///////////////////////////////////
+
 				m_selectionMadeAddRemove = true;
 			}
 		}	// end 	private void ConfigAddButton()
