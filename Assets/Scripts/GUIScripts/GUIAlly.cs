@@ -26,6 +26,7 @@ namespace GSP.JAVIERGUI
 		GSP.Char.Ally m_PlayerAllyScript;
 		GSP.Char.Character m_PlayerCharacterScript;
 		GSP.GUIMapEvents m_GUIMapEventsScript;
+		GSP.MapEvent m_MapEventScript;
 
 		
 		int m_numOfAllies =-1; //if gui displays -1, values were not received
@@ -55,6 +56,7 @@ namespace GSP.JAVIERGUI
 			m_PlayerAllyScript = m_PlayerEntity.GetComponent<GSP.Char.Ally>();
 			m_PlayerCharacterScript = m_PlayerEntity.GetComponent<GSP.Char.Character>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.GUIMapEvents>();
+			m_MapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.MapEvent>();
 
 			m_isActionRunning = true;
 
@@ -120,10 +122,10 @@ namespace GSP.JAVIERGUI
 			{
 				//TODO:ADD ALLY needs a GameObject, not sure what I am suppose to add
 				//		So I am adding the player for now so it wont crash
-				m_PlayerAllyScript.AddAlly( m_PlayerEntity );
-				m_playerMaxWeight = m_PlayerCharacterScript.MaxWeight +(  m_PlayerCharacterScript.NumAllies *m_AllyHelpMAXWEIGHTIncrease );
-				m_PlayerCharacterScript.MaxWeight = m_playerMaxWeight;
-				m_headerString = "New Ally Added.\nNew Max Weight is "+m_playerMaxWeight.ToString();
+				//m_PlayerAllyScript.AddAlly( m_PlayerEntity );
+				//m_playerMaxWeight = m_PlayerCharacterScript.MaxWeight +(  m_PlayerCharacterScript.NumAllies *m_AllyHelpMAXWEIGHTIncrease );
+				//m_PlayerCharacterScript.MaxWeight = m_playerMaxWeight;
+				m_headerString = m_MapEventScript.ResolveAlly(m_PlayerEntity, "YES");  //"New Ally Added.\nNew Max Weight is "+m_playerMaxWeight.ToString();
 
 				m_selectionMadeAddRemove = true;
 			}
@@ -138,7 +140,9 @@ namespace GSP.JAVIERGUI
 			
 			if( GUI.Button(new Rect(newX, newY, newWdth, newHght*2), "No") )
 			{
-				m_headerString = "Ally was not Added";
+				//m_headerString = "Ally was not Added";
+				m_headerString = m_MapEventScript.ResolveAlly(m_PlayerEntity, "NO");
+
 				m_selectionMadeAddRemove = true;
 			}
 		}	//end 	private void ConfigCancelButton()
