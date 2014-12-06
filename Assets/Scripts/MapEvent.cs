@@ -36,11 +36,9 @@ namespace GSP
 		int m_enemyChance = 30;
 		int m_allyChance = 15;
 		int m_itemChance = 15;
-
-		/// <summary>
-		/// ADDED BY JAIVER
+		
+		//Event Summary
 		string m_GUIResult;
-		/// </summary>
 
 		//Initialize die
 		void Start()
@@ -79,142 +77,15 @@ namespace GSP
 				int dieResult = m_die.Roll (1, 100);
 				if(dieResult < m_enemyChance)
 				{
-					//Create the enemy
-					//TODO Replace prefabCharacter with prefabEnemy
-					GameObject m_enemy = Instantiate( PrefabReference.prefabCharacter,
-					                                 new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
-					
-					//Get the character script attached to the enemy
-					Character m_enemyScript = m_enemy.GetComponent<Character>();
-					
-					//Set stats
-					m_enemyScript.AttackPower = m_die.Roll(1, 9);
-					m_enemyScript.DefencePower = m_die.Roll(1, 9);
-					
-					//TODO Add Battle Scene
-					
-					//Battle characters
-					Fight fighter = new Fight();
-					///////////////////////////////////////
-					//string result = "Die roll was " + dieResult + ".\nMap event was enemy, \nand " + 
-					//	fighter.CharacterFight(m_enemy, m_player);
-					//////////////////////////////////////
-					string result = fighter.CharacterFight(m_enemy, m_player);
-
-					//Player lost fight, remove resources or weapon
-					if(result.Contains("Enemy wins"))
-					{
-						//Player has no resources, remove weapon
-						if(m_playerCharScript.ResourceWeight <= 0)
-						{
-							m_playerCharScript.RemoveItem("weapon");
-						} //end if
-						//Player has resources, remove random resource
-						else
-						{
-							//Create list and resource
-							ResourceList tempList = m_player.GetComponent<ResourceList>();
-							Resource t_Resource = new Resource();
-
-							//Choose and set resource
-							int resourceNumber = m_die.Roll(1, (int)ResourceType.SIZE) - 1;
-							t_Resource.SetResource(Enum.GetName(typeof(ResourceType), resourceNumber));
-
-							//Remove resource
-							tempList.RemoveResource(t_Resource, 
-								tempList.GetResourcesByType( Enum.GetName(typeof(ResourceType), 
-							    resourceNumber) ).Count);
-							result += " As a result, you lost all your " + Enum.GetName(typeof(ResourceType), 
-							    resourceNumber);
-						} //end else
-					} //end if
-					Destroy(m_enemy);
-
-					//return result;
-					m_GUIResult = result;
 					return "ENEMY";
 				} //end if ENEMY
 				else if (dieResult < m_allyChance + m_enemyChance && dieResult >= m_enemyChance)
 				{
-					//Create ally
-					GameObject m_ally = Instantiate( PrefabReference.prefabCharacter,
-						m_player.transform.position, new Quaternion() ) as GameObject;
-					
-					//Generate script
-					Character m_allyScript = m_ally.GetComponent<Character>();
-					
-					//Set max weight
-					m_allyScript.MaxWeight = m_die.Roll(1, 20) * 6;
-					
-					//Add ally to list
-					Ally m_playerAllyScript = m_player.GetComponent<Ally>();
-					m_playerAllyScript.AddAlly(m_ally);
-					
-					//return "Die roll was " + dieResult + ".\nMap event was ally.";
-					m_GUIResult = "Die roll was " + dieResult + ".\nMap event was ally.";
 					return "ALLY";
 				} //end else if ALLY
 				else if(dieResult < m_itemChance + m_allyChance + m_enemyChance
 				        && dieResult >= m_allyChance + m_enemyChance)
 				{
-					//String to return for display
-					string result;
-					
-					//Determine what item was found
-					int itemType = m_die.Roll(1, 4);
-					
-					if(itemType == 1)
-					{
-						//Pick an item from the weapons enum
-						int itemNumber = m_die.Roll(1, (int)Weapons.SIZE) - 1;
-						
-						//Assign chosen number as the item
-						result = Enum.GetName(typeof(Weapons), itemNumber);
-						
-						//Equip to player
-						m_playerCharScript.EquipItem(result);
-						
-					} //end if Weapon
-					else if(itemType == 2)
-					{
-						//Pick an item from the armor enum
-						int itemNumber = m_die.Roll(1, (int)Armor.SIZE) - 1;
-						
-						//Assign chosen number as the item
-						result = Enum.GetName(typeof(Armor), itemNumber);
-						
-						//Equip to player
-						m_playerCharScript.EquipItem(result);
-					} //end else if Armor
-					else if(itemType == 3)
-					{
-						//Pick an item from the inventory enum
-						int itemNumber = m_die.Roll(1, (int)Inventory.SIZE) - 1;
-						
-						//Assign chosen number as the item
-						result = Enum.GetName(typeof(Inventory), itemNumber);
-						
-						//Equip to player
-						m_playerCharScript.EquipItem(result);
-					} //end else if Inventory
-					else if(itemType == 4)
-					{
-						//Pick an item from the weight enum
-						int itemNumber = m_die.Roll(1, (int)Weight.SIZE) - 1;
-						
-						//Assign chosen number as the item
-						result = Enum.GetName(typeof(Weight), itemNumber);
-						
-						//Equip to player
-						m_playerCharScript.EquipItem(result);
-					} //end else if Weight
-					else
-					{
-						result = "non-existant item. Nothing given.";
-					} //end else
-					
-					//return "Die roll was " + dieResult + ".\nMap event was item \nand you got " + result;
-					m_GUIResult = "You got \n" + result;
 					return "ITEM";
 				} //end else if ITEM
 				else
@@ -237,7 +108,6 @@ namespace GSP
 				m_playerCharScript.PickupResource( temp, 1 );
 				
 				//Declare what was landed on
-				//return "Map Event is " + temp.ResourceName;
 				m_GUIResult = "Map Event is " + temp.ResourceName;
 				return "RESOURCE";
 			} //end else if RESOURCE TILE
@@ -245,10 +115,10 @@ namespace GSP
 		
 		public string ResolveFight(GameObject player)
 		{
-			//Create the enemy
+			///Create the enemy
 			//TODO Replace prefabCharacter with prefabEnemy
 			GameObject m_enemy = Instantiate( PrefabReference.prefabCharacter,
-			                                 new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
+				new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
 			
 			//Get the character script attached to the enemy
 			Character m_enemyScript = m_enemy.GetComponent<Character>();
@@ -261,58 +131,85 @@ namespace GSP
 			
 			//Battle characters
 			Fight fighter = new Fight();
-			string result = "Map event was enemy, \nand " + fighter.CharacterFight(m_enemy, m_player);
-			Destroy(m_enemy);
+			///////////////////////////////////////
+			//string result = "Die roll was " + dieResult + ".\nMap event was enemy, \nand " + 
+			//	fighter.CharacterFight(m_enemy, m_player);
+			//////////////////////////////////////
+			string result = fighter.CharacterFight(m_enemy, m_player);
+			
+			//Player lost fight, remove resources or weapon
 			if(result.Contains("Enemy wins"))
 			{
-				m_playerCharScript.RemoveItem("weapon");
-			}
-			return result;
+				//Player has no resources, remove weapon
+				if(m_playerCharScript.ResourceWeight <= 0)
+				{
+					m_playerCharScript.RemoveItem("weapon");
+				} //end if
+				//Player has resources, remove random resource
+				else
+				{
+					//Create list and resource
+					ResourceList tempList = m_player.GetComponent<ResourceList>();
+					Resource t_Resource = new Resource();
+					
+					//Choose and set resource
+					int resourceNumber = m_die.Roll(1, (int)ResourceType.SIZE) - 1;
+					t_Resource.SetResource(Enum.GetName(typeof(ResourceType), resourceNumber));
+					
+					//Remove resource
+					tempList.RemoveResource(t_Resource, 
+						tempList.GetResourcesByType( Enum.GetName(typeof(ResourceType), 
+					    resourceNumber) ).Count);
+					result += " As a result, you lost all your " + Enum.GetName(typeof(ResourceType), 
+					    resourceNumber);
+				} //end else
+			} //end if
+
+			//Clear enemy
+			Destroy(m_enemy);
+
+			//Set Summary
+			m_GUIResult = result;
 		} //end ResolveFight(GameObject player)
 		
 		public string ResolveAlly(GameObject player, string p_GUIresult)
 		{
 			//Create ally
 			GameObject m_ally = Instantiate( PrefabReference.prefabCharacter,
-			                                m_player.transform.position, new Quaternion() ) as GameObject;
+				m_player.transform.position, new Quaternion() ) as GameObject;
 			
 			//Generate script
 			Character m_allyScript = m_ally.GetComponent<Character>();
 			
 			//Set max weight
 			m_allyScript.MaxWeight = m_die.Roll(1, 20) * 6;
-			
-			//Allow player to accept or decline ally
-			print ("Do you want this ally? \nHit y for yes \nand n for no.");
-			////////////////////////////////
+
+			//Player accepts ally
 			if(p_GUIresult == "YES")
-			////////////////////////////////
-			//if(Input.GetKeyDown(KeyCode.Y))
-			/////////////////////////////////
 			{
 				//Add to ally list
 				Ally m_playerAllyScript = m_player.GetComponent<Ally>();
 				m_playerAllyScript.AddAlly(m_ally);
-				////////////
+
+				//Return accepted
+				m_GUIResult = "Ally was added.";
 				return "Ally Was Added.";
-				///////////
 			}
-			////////////////////////////////////
+
+			//Player declines ally
 			else if(p_GUIresult == "NO")
-			///////////////////////////////////
-			//else if(Input.GetKeyDown(KeyCode.N))
-			///////////////////////////////////
 			{
-				//Disable newAlly and end loop
+				//Destroy newAlly
 				Destroy(m_ally);
+
+				//Return decline
+				m_GUIResult = "Ally was declined.";
 				return "No ally was added.";
 			} //end else if
-			/////////////////////////////
-			//return "Map event was ally.";	
-			/////////////////////////////
+
+			//Otherwise wait for answer
 			return "No choice was made.";
-			/////////////////////////////
-		} //end ResolveAlly(GameObject player)
+		} //end ResolveAlly(GameObject player, string p_GUIresult)
 		
 		public string ResolveItem(GameObject player)
 		{
@@ -371,6 +268,8 @@ namespace GSP
 			{
 				result = "non-existant item. Nothing given.";
 			} //end else
+
+			m_GUIResult = "You got \n" + result;
 			
 			return "You got \n" + result;
 		} //end ResolveItem(GameObject player)
