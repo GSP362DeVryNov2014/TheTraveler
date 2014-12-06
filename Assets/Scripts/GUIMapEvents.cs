@@ -152,86 +152,7 @@ namespace GSP
 			
 		} //end void OnGUI()
 
-/*		//Replaced this GetMapEvent Function in GameplayStateMachine.cs with DoAction() function
- * 		//which calls InitThis( GameObject playerEntity, string MapEventType, string ResourceType );
-		private m_EnumMapEvent GetMapEvent()
-			//----------------------------------------------------------
-			//	Gets (enum) MapEvent.normalTile{ ENEMY, ALLY, ITEM, 
-			//									WEATHER, NOTHING, SIZE };
-			//
-			//----------------------------------------------------------
-		{
-			if( Input.GetKeyDown(KeyCode.Alpha1) )
-			{
-				m_showHideGUI = true;
-				m_currEnumMpEvent = m_EnumMapEvent.ENEMY;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha2) )
-			{
-				m_showHideGUI = true;
-				m_currEnumMpEvent = m_EnumMapEvent.ALLY;
-				
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha3) )
-			{
-				m_showHideGUI = true;
-				m_currEnumMpEvent = m_EnumMapEvent.ITEM;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha4) )
-			{
-				m_showHideGUI = true;
-				m_currEnumMpEvent = m_EnumMapEvent.WEATHER;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha5) )
-			{
-				m_showHideGUI = true;
-				m_currEnumMpEvent = m_EnumMapEvent.NOTHING;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha6) )
-			{
-				m_showHideGUI = true;
-				m_currEnumMpEvent = m_EnumMapEvent.SIZE;
-			}
-			
-			return m_currEnumMpEvent;
-		}
-*/
-		private m_EnumResourceType GetResourceEnum()
-			//----------------------------------------------------------
-			//	Gets (enum) MapEvent.normalTile{ WOOL, WOOD, FISH, ORE,
-			//									SIZE };
-			//
-			//----------------------------------------------------------
-		{
-			if( Input.GetKeyDown(KeyCode.Alpha1) )
-			{
-				m_showHideGUI = true;
-				m_currRsrcType = m_EnumResourceType.WOOL;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha2) )
-			{
-				m_showHideGUI = true;
-				m_currRsrcType = m_EnumResourceType.WOOD;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha3) )
-			{
-				m_showHideGUI = true;
-				m_currRsrcType = m_EnumResourceType.FISH;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha4) )
-			{
-				m_showHideGUI = true;
-				m_currRsrcType = m_EnumResourceType.ORE;
-			}
-			else if( Input.GetKeyDown(KeyCode.Alpha5) )
-			{
-				m_showHideGUI = true;
-				m_currRsrcType = m_EnumResourceType.SIZE;
-			}
-			
-			return m_currRsrcType;
-		}
-		
+
 		private void GUIMapEventsMachine()
 			//----------------------------------------------------------
 			//	Switch that displays the current MapEvent
@@ -241,10 +162,10 @@ namespace GSP
 			//----------------------------------------------------------
 		{
 			//GUI parameters
-			int gap =2;
-			int numOfContainers =2;
-			int guiWidth = Screen.width /3;
-			int guiHeight = Screen.height /numOfContainers;
+	//		int gap =2;
+	//		int numOfContainers =2;
+	//		int guiWidth = Screen.width /3;
+	//		int guiHeight = Screen.height /numOfContainers;
 			
 			switch (m_currEnumMpEvent) 
 			{

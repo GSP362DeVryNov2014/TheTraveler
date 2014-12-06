@@ -491,7 +491,7 @@ namespace GSP
 					//GetPlayerValues();
 
 					//TODO: after testing, delete command above and use this one below
-					m_MapEventString = m_MapEventScript.DetermineEvent( m_playerEntity );
+					m_MapEventString = m_MapEventScript.DetermineEvent( m_playerList[m_GUIPlayerTurn] );
 					m_MapEventResultString = m_MapEventScript.GetResultString();
 					m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], m_MapEventString, m_MapEventResultString );
 					//m_GUIMapEventsScript.InitThis( m_playerList[m_GUIPlayerTurn], "ENEMY", null );
