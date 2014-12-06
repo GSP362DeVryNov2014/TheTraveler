@@ -108,7 +108,7 @@ namespace GSP
 				m_playerCharScript.PickupResource( temp, 1 );
 				
 				//Declare what was landed on
-				m_GUIResult = "You got " + temp.ResourceName;
+				m_GUIResult = "You got a resource:\n" + temp.ResourceName;
 				return "RESOURCE";
 			} //end else if RESOURCE TILE
 		} //end DetermineEvent(GameObject player)
