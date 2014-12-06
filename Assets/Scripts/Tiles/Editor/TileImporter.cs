@@ -149,7 +149,7 @@ namespace GSP.Tiles
 			obj.transform.parent = prefab.transform;
 
 			// Set the object at 640, -512.
-			obj.transform.localPosition = new Vector3(640.0f, -512.0f, 0.0f);
+			obj.transform.localPosition = new Vector3(640.0f, -512.0f, 1.0f);
 
 			// Set the object's scale to 100.
 			obj.transform.localScale = new Vector3(100.0f, 100.0f, 0.0f);

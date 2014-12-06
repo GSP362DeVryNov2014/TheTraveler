@@ -119,6 +119,9 @@ namespace GSP
 			//TODO Replace prefabCharacter with prefabEnemy
 			GameObject m_enemy = Instantiate( PrefabReference.prefabCharacter,
 				new Vector3( 0.7f, 0.5f, 0.0f ), new Quaternion() ) as GameObject;
+
+			// Remove the sprite renderer component. This makes the ally not shown on the map.
+			Destroy( m_enemy.GetComponent<SpriteRenderer>() );
 			
 			//Get the character script attached to the enemy
 			Character m_enemyScript = m_enemy.GetComponent<Character>();
@@ -178,6 +181,9 @@ namespace GSP
 			//Create ally
 			GameObject m_ally = Instantiate( PrefabReference.prefabCharacter,
 				m_player.transform.position, new Quaternion() ) as GameObject;
+
+			// Remove the sprite renderer component. This makes the ally not shown on the map.
+			Destroy( m_ally.GetComponent<SpriteRenderer>() );
 			
 			//Generate script
 			Character m_allyScript = m_ally.GetComponent<Character>();
