@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GSP.Tiles;
 
 namespace GSP.Char
 {
@@ -159,6 +160,12 @@ namespace GSP.Char
 				{
 					// Add the resource.
 					m_resourceList.AddResource( resource, amount );
+
+					// Get the resource's position.
+					Vector3 tmp = transform.localPosition;
+					// Change the z to make tiles work.
+					tmp.z = -0.01f;
+					TileDictionary.RemoveResource( TileManager.ToPixels( tmp ) );
 				} // end if size
 				else
 				{
