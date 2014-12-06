@@ -151,7 +151,7 @@ namespace GSP.Char
 			} // end else statement
 			
 			// Check if the operation will bring the weight value to zero or less.
-			if ( ( m_totalValue - resource.WeightValue ) <= 0 )
+			if ( ( m_totalWeight - resource.WeightValue ) <= 0 )
 			{
 				// Clamp to zero.
 				m_totalWeight = 0;
@@ -197,7 +197,7 @@ namespace GSP.Char
 				} // end else statement
 				
 				// Check if the operation will bring the weight value to zero or less.
-				if ( ( m_totalValue - item.WeightValue ) <= 0 )
+				if ( ( m_totalWeight - item.WeightValue ) <= 0 )
 				{
 					// Clamp to zero.
 					m_totalWeight = 0;
