@@ -68,6 +68,8 @@ namespace GSP
 		private GSP.GUIMovement m_GUIMovementScript;
 		//private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;	//used during testing
 		private GSP.MapEvent m_MapEventScript;
+		private GSP.JAVIERGUI.GUIBottomBar m_GUIBottomBarScript;
+
 
 		#region End Scene Declaration Stuff
 
@@ -142,7 +144,7 @@ namespace GSP
 			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
 			//m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();	//used during testing
 			m_MapEventScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<GSP.MapEvent>();
-
+			m_GUIBottomBarScript = this.GetComponent<GSP.JAVIERGUI.GUIBottomBar>();
 
 			m_DieScript.Dice.Reseed (System.Environment.TickCount);
 
@@ -422,6 +424,7 @@ namespace GSP
 			case GamePlayState.BEGINTURN:
 				//Get All the Players values
 				GetPlayerValues();
+				m_GUIBottomBarScript.RefreshBottomBarGUI(m_playerList[m_GUIPlayerTurn]);
 
 				//tell the player to roll the dice
 				m_gamePlayState = GamePlayState.ROLLDICE;
