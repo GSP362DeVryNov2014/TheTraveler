@@ -33,9 +33,9 @@ namespace GSP
 		//NOTE: These should add up to less than 100 so that 
 		//there is a chance nothing occurs. Minimum chance of
 		//one or else there will be problems
-		int m_enemyChance = 30;
-		int m_allyChance = 15;
-		int m_itemChance = 15;
+		int m_enemyChance = 97;
+		int m_allyChance = 1;
+		int m_itemChance = 1;
 		
 		//Event Summary
 		string m_GUIResult;
@@ -151,18 +151,18 @@ namespace GSP
 				//Player has resources, remove random resource
 				else
 				{
-					//Create list and resource
+					// Get the player's resource list script.
 					ResourceList tempList = m_player.GetComponent<ResourceList>();
-					Resource t_Resource = new Resource();
 					
-					//Choose and set resource
-					int resourceNumber = m_die.Roll(1, (int)ResourceType.SIZE) - 1;
-					t_Resource.SetResource(Enum.GetName(typeof(ResourceType), resourceNumber));
+					// Choose a resource.
+					int resourceNumber = m_die.Roll( 1, (int)ResourceType.SIZE ) - 1;
 					
-					//Remove resource
-					tempList.RemoveResource(t_Resource, 
-						tempList.GetResourcesByType( Enum.GetName(typeof(ResourceType), 
-					    resourceNumber) ).Count);
+					// Get the list of resources of that type.
+					List<Resource> resList = tempList.GetResourcesByType( 
+						Enum.GetName( typeof( ResourceType ), resourceNumber ) );
+					
+					// Remove the resources by list.
+					tempList.RemoveResources( resList );
 					result += " As a result, you lost all your " + Enum.GetName(typeof(ResourceType), 
 					    resourceNumber);
 				} //end else
