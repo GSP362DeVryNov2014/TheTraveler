@@ -170,8 +170,8 @@ namespace GSP
 				m_playerScriptList.Add( m_playerEntity.GetComponent<GSP.Char.Character>() );
 				m_PlayerResourceList.Add( m_playerEntity.GetComponent<GSP.Char.ResourceList>() );
 
-				//m_playerScriptList[count].EquipItem("SWORD", 0);
-				//m_playerScriptList[count].EquipItem("CHAINLEGS", 0);
+				m_playerScriptList[count].EquipItem("SWORD", 0);
+				m_playerScriptList[count].EquipItem("CHAINLEGS", 0);
 			} //end for loop
 			
 		} // end private void AddPlayers( int p_numOfPlayers )
