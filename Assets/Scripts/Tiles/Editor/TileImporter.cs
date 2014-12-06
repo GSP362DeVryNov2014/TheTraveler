@@ -153,6 +153,12 @@ namespace GSP.Tiles
 
 			// Set the object's scale to 100.
 			obj.transform.localScale = new Vector3(100.0f, 100.0f, 0.0f);
+
+			var collisionTransform = prefab.transform.FindChild( "Foreground_00/Collision" );
+
+			collisionTransform.gameObject.layer = 8;
+
+
 		} // end CustomizePrefab function
 	} // end TileImporter class
 } // end namespace

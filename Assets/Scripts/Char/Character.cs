@@ -534,5 +534,22 @@ namespace GSP.Char
 			m_armor.WeightValue = sourceScript.WeightValue;
 			m_armor.CostValue = sourceScript.CostValue;
 		} // end CopyItemToArmor function
+
+		void OnCollisionEnter2D(Collision2D coll)
+		{
+			Debug.LogError( "CALLED!" );
+			// Layer 8 is "Market"
+			if ( coll.gameObject.layer == 8 )
+			{
+				// Get the game object with the game state machine tag.
+				GameObject obj = GameObject.FindGameObjectWithTag( "GamePlayStateMachineTag" );
+
+				// Now get the state machine script.
+				var stateMachineScript = obj.GetComponent<GameplayStateMachine>();
+
+				// Finally end the game by calling the end game function.
+				stateMachineScript.EndGame();
+			}
+		}
 	} // end Character class
 } // end namespace
