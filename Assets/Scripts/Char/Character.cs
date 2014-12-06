@@ -264,7 +264,7 @@ namespace GSP.Char
 					otherResourceScript.AddResource(resource, 1);
 
 					// Remove the resource from the character this is attached to.
-					charResourceScript.RemoveResource(resource, 1);
+					charResourceScript.RemoveResource(resource);
 				} // end if size
 				else
 				{

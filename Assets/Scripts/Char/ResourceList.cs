@@ -80,20 +80,112 @@ namespace GSP.Char
 		
 		// Removes a resource.
 		// This is called upon transferring a resource to another character.
-		public void RemoveResource( Resource resource, int amount )
-		{
-			// Check if the ammount is zero or less.
-			if ( amount <= 0)
-			{
-				// Simply return.
-				return;
-			} // end if statement
+		// NOTE: Don't use the below code.
+//		public void RemoveResource( Resource resource, int amount )
+//		{
+//			// Check if the ammount is zero or less.
+//			if ( amount <= 0)
+//			{
+//				// Simply return.
+//				return;
+//			} // end if statement
+//
+//			// Remove the number of resources.
+//			for (int index = 0; index < amount; index++)
+//			{
+//				// Check if the operation will bring the total value to zero or less.
+//				if ((m_totalValue - resource.SellValue) <= 0)
+//				{
+//					// Clamp to zero.
+//					m_totalValue = 0;
+//				} // end if statement
+//				else
+//				{
+//					// Otherwise subtract the given value.
+//					m_totalValue -= resource.SellValue;
+//				} // end else statement
+//				
+//				// Check if the operation will bring the weight value to zero or less.
+//				if ((m_totalValue - resource.WeightValue) <= 0)
+//				{
+//					// Clamp to zero.
+//					m_totalWeight = 0;
+//				} // end if statement
+//				else
+//				{
+//					// Otherwise subtract the given value.
+//					m_totalWeight -= resource.WeightValue;
+//				} // end else statement
+//
+//				// Check if the operation will bring the weight value to zero or less.
+//				if ((m_totalSize - resource.SizeValue) <= 0)
+//				{
+//					// Clamp to zero.
+//					m_totalSize = 0;
+//				} // end if statement
+//				else
+//				{
+//					// Otherwise subtract the given value.
+//					m_totalSize -= resource.SizeValue;
+//				} // end else statement
+//
+//				// Remove the resource from the list.
+//				m_resourceList.Remove( resource );
+//			} // end for loop
+//		} // end RemoveResource function
 
-			// Remove the number of resources.
-			for (int index = 0; index < amount; index++)
+		// Removes a resource.
+		// This removes a single resource.
+		public void RemoveResource( Resource resource )
+		{
+			// Check if the operation will bring the total value to zero or less.
+			if ( ( m_totalValue - resource.SellValue ) <= 0 )
+			{
+				// Clamp to zero.
+				m_totalValue = 0;
+			} // end if statement
+			else
+			{
+				// Otherwise subtract the given value.
+				m_totalValue -= resource.SellValue;
+			} // end else statement
+			
+			// Check if the operation will bring the weight value to zero or less.
+			if ( ( m_totalWeight - resource.WeightValue ) <= 0 )
+			{
+				// Clamp to zero.
+				m_totalWeight = 0;
+			} // end if statement
+			else
+			{
+				// Otherwise subtract the given value.
+				m_totalWeight -= resource.WeightValue;
+			} // end else statement
+			
+			// Check if the operation will bring the weight value to zero or less.
+			if ( ( m_totalSize - resource.SizeValue ) <= 0 )
+			{
+				// Clamp to zero.
+				m_totalSize = 0;
+			} // end if statement
+			else
+			{
+				// Otherwise subtract the given value.
+				m_totalSize -= resource.SizeValue;
+			} // end else statement
+			
+			// Remove the resource from the list.
+			m_resourceList.Remove( resource );
+		} // end RemoveResource function
+
+		// Removes all resources in the given list.
+		public void RemoveResources( List<Resource> resourceList )
+		{
+			// Loop over the resource list.
+			foreach ( var item in resourceList )
 			{
 				// Check if the operation will bring the total value to zero or less.
-				if ((m_totalValue - resource.SellValue) <= 0)
+				if ( ( m_totalValue - item.SellValue ) <= 0 )
 				{
 					// Clamp to zero.
 					m_totalValue = 0;
@@ -101,11 +193,11 @@ namespace GSP.Char
 				else
 				{
 					// Otherwise subtract the given value.
-					m_totalValue -= resource.SellValue;
+					m_totalValue -= item.SellValue;
 				} // end else statement
 				
 				// Check if the operation will bring the weight value to zero or less.
-				if ((m_totalValue - resource.WeightValue) <= 0)
+				if ( ( m_totalWeight - item.WeightValue ) <= 0 )
 				{
 					// Clamp to zero.
 					m_totalWeight = 0;
@@ -113,11 +205,11 @@ namespace GSP.Char
 				else
 				{
 					// Otherwise subtract the given value.
-					m_totalWeight -= resource.WeightValue;
+					m_totalWeight -= item.WeightValue;
 				} // end else statement
-
+				
 				// Check if the operation will bring the weight value to zero or less.
-				if ((m_totalSize - resource.SizeValue) <= 0)
+				if ( ( m_totalSize - item.SizeValue ) <= 0 )
 				{
 					// Clamp to zero.
 					m_totalSize = 0;
@@ -125,13 +217,13 @@ namespace GSP.Char
 				else
 				{
 					// Otherwise subtract the given value.
-					m_totalSize -= resource.SizeValue;
+					m_totalSize -= item.SizeValue;
 				} // end else statement
 
 				// Remove the resource from the list.
-				m_resourceList.Remove( resource );
-			} // end for loop
-		} // end RemoveResource function
+				m_resourceList.Remove( item );
+			} // end foreach loop
+		} // end RemoveResources function
 		
 		// Clear the resources. This sets the values back to zero.
 		// This is called after selling.
