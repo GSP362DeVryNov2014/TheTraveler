@@ -164,6 +164,14 @@ namespace GSP
 				//create players
 				m_playerEntity = Instantiate( PrefabReference.prefabCharacter, startingPos, Quaternion.identity ) as GameObject;
 				m_playerEntity.transform.localScale = new Vector3 (1, 1, 1);
+
+				// Add a RigidBody2D component to the player.
+				var rigidBody2D = m_playerEntity.AddComponent<Rigidbody2D>();
+				// Turn off gravity.
+				rigidBody2D.gravityScale = 0.0f;
+
+				// Add a BoxCollider2D component to the player.
+				m_playerEntity.AddComponent<BoxCollider2D>();
 				
 				m_playerList.Add( m_playerEntity ); //add PlayerEntity to list
 				
