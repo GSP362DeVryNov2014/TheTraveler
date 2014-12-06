@@ -44,11 +44,7 @@ namespace GSP.JAVIERGUI
 		{
 			if ( m_isActionRunning )
 			{
-				//done button
-				int doneWidth = m_mainWidth/2;
-				int doneHeight = m_mainHeight / 8;
-				int doneStartX = m_mainStartX +(m_mainWidth -doneWidth) /2;
-				int doneStartY = m_mainStartY +(doneHeight *7);
+				//default button color
 				GUI.backgroundColor = Color.red;
 
 				ConfigHeader();

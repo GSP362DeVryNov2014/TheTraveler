@@ -33,8 +33,7 @@ namespace GSP
 		
 		//Enum holders
 		private m_EnumMapEvent m_currEnumMpEvent;
-		private m_EnumResourceType m_currRsrcType;
-		
+
 		//variables
 		bool m_showHideGUI = false;
 		bool m_isActionRunning = true;
@@ -44,9 +43,6 @@ namespace GSP
 		
 		//scripts
 		bool m_initScript = false; //this makes sure each script is initialized once per state
-		GSP.Char.Ally m_AllyScripts;
-		GSP.Char.ResourceList m_ResourceListScript;
-		GSP.Char.Items m_ItemScript;
 		GSP.JAVIERGUI.GUIEnemy m_GUIEnemyScript;
 		GSP.JAVIERGUI.GUIAlly m_GUIAllyScript;
 		GSP.JAVIERGUI.GUIItem m_GUIItemScript;
@@ -82,9 +78,6 @@ namespace GSP
 		{
 			//get player info
 			m_PlayerEntity = p_PlayerEntity;
-			m_AllyScripts = m_PlayerEntity.GetComponent<GSP.Char.Ally>();
-			m_ResourceListScript = m_PlayerEntity.GetComponent<GSP.Char.ResourceList>();
-			m_ItemScript = m_PlayerEntity.GetComponent<GSP.Char.Items>();
 
 			// Holds the results of parsing.
 			m_EnumMapEvent tmpEnumMapEvent = m_EnumMapEvent.NOTHING;
@@ -105,23 +98,9 @@ namespace GSP
 			m_currEnumMpEvent = tmpEnumMapEvent;
 
 			//tell StateMachin action is running
-/*			if (m_currEnumMpEvent != m_EnumMapEvent.NOTHING) 
-			{
-*/				m_isActionRunning = true;
-				m_showHideGUI = true;
-/*			} 
-			else 
-			{
-				m_showHideGUI = false;
-				m_isActionRunning = false;
-			}
-*/
-//			//LOAD RESOURCE IF NECESSARY
-//			if ( (p_resourceType != null) && (p_mapEventType == "ITEM") )
-//			{
-//				// NOTE: I don't know what is trying to be done here. This needs to be fixed. -- Damien
-//				m_ResourceListScript.GetResourcesByType( p_resourceType );
-//			}
+			m_isActionRunning = true;
+			m_showHideGUI = true;
+
 			m_resultString = p_result;
 			
 		} //end InitThis()
@@ -161,12 +140,6 @@ namespace GSP
 			//
 			//----------------------------------------------------------
 		{
-			//GUI parameters
-	//		int gap =2;
-	//		int numOfContainers =2;
-	//		int guiWidth = Screen.width /3;
-	//		int guiHeight = Screen.height /numOfContainers;
-			
 			switch (m_currEnumMpEvent) 
 			{
 			case m_EnumMapEvent.ENEMY:
@@ -196,7 +169,7 @@ namespace GSP
 			case m_EnumMapEvent.RESOURCE:
 				if(m_initScript == false)
 				{
-					m_GUIResourceScript.InitThis(m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
+					m_GUIResourceScript.InitThis( m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
 					m_initScript = true;
 				}
 				break;
@@ -204,7 +177,7 @@ namespace GSP
 			case m_EnumMapEvent.NOTHING:
 				if(m_initScript == false)
 				{
-					m_GUINothingScript.InitThis(m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
+					m_GUINothingScript.InitThis( m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
 					m_initScript = true;
 				}
 				break;
@@ -224,32 +197,6 @@ namespace GSP
 		} //end private void GUIMapEventsMachine()
 
 
-		private void GUIResourceTypeMachine()
-			//----------------------------------------------------------
-			//	Gets (enum) MapEvent.normalTile{ WOOL, WOOD, FISH, ORE,
-			//									SIZE };
-			//
-			//----------------------------------------------------------
-		{
-			switch(m_currRsrcType)
-			{
-			case m_EnumResourceType.WOOL:
-				break;
-			case m_EnumResourceType.WOOD:
-				break;
-			case m_EnumResourceType.FISH:
-				break;
-			case m_EnumResourceType.ORE:
-				break;
-			case m_EnumResourceType.SIZE:
-				break;
-			default:
-				print("GUIResourceTypeMachine is in Default");
-				break;
-			} //end switch m_currRsrcType
-			
-		} //end private void GUIResourceTypeMachine()
-		
 		private void GUIContainer()
 		{
 			//main container
