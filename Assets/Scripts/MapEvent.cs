@@ -156,14 +156,15 @@ namespace GSP
 					
 					// Choose a resource.
 					int resourceNumber = m_die.Roll( 1, (int)ResourceType.SIZE ) - 1;
-					
+					print ("Resource number is " + resourceNumber);
+
 					// Get the list of resources of that type.
 					List<Resource> resList = tempList.GetResourcesByType( 
 						Enum.GetName( typeof( ResourceType ), resourceNumber ) );
 					
 					// Remove the resources by list.
 					tempList.RemoveResources( resList );
-					result += " As a result, you lost all your " + Enum.GetName(typeof(ResourceType), 
+					result += " \nAs a result, you lost all your " + Enum.GetName(typeof(ResourceType), 
 					    resourceNumber);
 				} //end else
 			} //end if
