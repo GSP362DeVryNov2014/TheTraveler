@@ -127,6 +127,14 @@ namespace GSP.Char
 			} // end Set accessor
 		} // end DefencePower property
 
+		// Called before Start(). Fixes the starter item issues.
+		void Awake()
+		{
+			// Initialise the weapons and armour.
+			m_weapon = GetComponent<EquippedWeapon>();
+			m_armor = GetComponent<EquippedArmor>();
+		} // end Awake function
+
 		// Use this for initialisation
 		void Start()
 		{
@@ -139,8 +147,6 @@ namespace GSP.Char
 			m_attackPower = 0;
 			m_defencePower = 0;
 			m_bonuses = new List<GameObject> ();
-			m_weapon = GetComponent<EquippedWeapon>();
-			m_armor = GetComponent<EquippedArmor>();
 		} // end Start function
 
 		// Update is called once per frame
