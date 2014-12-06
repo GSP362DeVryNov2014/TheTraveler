@@ -138,7 +138,21 @@ namespace GSP.Tiles
 		// Customise the prefab, this is the last chance to do this in code.
 		public void CustomizePrefab (GameObject prefab)
 		{
-			// Do nothing.
+			// Add an empty game object to the prefab.
+			// This is to compensate for tiled2unity not supporting image layers.
+			GameObject obj = new GameObject( "MapBackgroundImage" );
+
+			// Add a sprite renderer component to the game object. This is for the background image of the map.
+			obj.AddComponent<SpriteRenderer>();
+
+			// Set the prefab as the game object's parent.
+			obj.transform.parent = prefab.transform;
+
+			// Set the object at 640, -512.
+			obj.transform.localPosition = new Vector3(640.0f, -512.0f, 0.0f);
+
+			// Set the object's scale to 100.
+			obj.transform.localScale = new Vector3(100.0f, 100.0f, 0.0f);
 		} // end CustomizePrefab function
 	} // end TileImporter class
 } // end namespace

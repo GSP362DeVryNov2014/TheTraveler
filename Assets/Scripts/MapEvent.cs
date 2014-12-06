@@ -170,6 +170,7 @@ namespace GSP
 
 			//Set Summary
 			m_GUIResult = result;
+			return m_GUIResult;
 		} //end ResolveFight(GameObject player)
 		
 		public string ResolveAlly(GameObject player, string p_GUIresult)
