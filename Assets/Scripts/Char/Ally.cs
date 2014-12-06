@@ -65,9 +65,7 @@ namespace GSP.Char
 		{
 			if(NumAllies != maxAllies)
 			{
-				Debug.LogError("AddAlly-Pre: " + NumAllies);
 				m_allyList.Add( ally );
-				Debug.LogError("AddAlly-Post: " + NumAllies);
 			} //end if
 			else
 			{

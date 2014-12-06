@@ -31,8 +31,6 @@ namespace GSP.Char
 
 				// Add it to this game object's script.
 				endSceneScript.AddData( endSceneCharData );
-
-				EndSceneCharData tmp = endSceneScript.GetData(playerNum);
 			} // end for loop
 
 			// Once we are done with the object, destroy it.
