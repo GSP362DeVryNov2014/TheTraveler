@@ -22,7 +22,7 @@ namespace GSP
 		//Will remove this when I integrate with class GSP.MapEvent
 		private enum m_EnumMapEvent
 		{
-			ENEMY, ALLY, RESOURCES, ITEM, WEATHER, NOTHING, SIZE
+			ENEMY, ALLY, RESOURCE, ITEM, WEATHER, NOTHING, DONE
 		};
 		
 		//Will remove this when I integrate with class GSP.MapEvent
@@ -50,6 +50,8 @@ namespace GSP
 		GSP.JAVIERGUI.GUIEnemy m_GUIEnemyScript;
 		GSP.JAVIERGUI.GUIAlly m_GUIAllyScript;
 		GSP.JAVIERGUI.GUIItem m_GUIItemScript;
+		GSP.JAVIERGUI.GUIResource m_GUIResourceScript;
+		GSP.JAVIERGUI.GUINothing m_GUINothingScript;
 
 		//main container values
 		int m_mainStartX = 0;
@@ -68,6 +70,8 @@ namespace GSP
 			m_GUIEnemyScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIEnemy>();
 			m_GUIAllyScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIAlly>();
 			m_GUIItemScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIItem>();
+			m_GUIResourceScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIResource>();
+			m_GUINothingScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUINothing>();
 		}
 		
 		public void InitThis(GameObject p_PlayerEntity, string p_mapEventType, string p_result )
@@ -101,17 +105,17 @@ namespace GSP
 			m_currEnumMpEvent = tmpEnumMapEvent;
 
 			//tell StateMachin action is running
-			if (m_currEnumMpEvent != m_EnumMapEvent.NOTHING) 
+/*			if (m_currEnumMpEvent != m_EnumMapEvent.NOTHING) 
 			{
-				m_isActionRunning = true;
+*/				m_isActionRunning = true;
 				m_showHideGUI = true;
-			} 
+/*			} 
 			else 
 			{
 				m_showHideGUI = false;
 				m_isActionRunning = false;
 			}
-
+*/
 //			//LOAD RESOURCE IF NECESSARY
 //			if ( (p_resourceType != null) && (p_mapEventType == "ITEM") )
 //			{
@@ -268,20 +272,28 @@ namespace GSP
 				}
 				break;
 				
-			case m_EnumMapEvent.RESOURCES:
+			case m_EnumMapEvent.RESOURCE:
+				if(m_initScript == false)
+				{
+					m_GUIResourceScript.InitThis(m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
+					m_initScript = true;
+				}
 				break;
 				
 			case m_EnumMapEvent.NOTHING:
-				m_showHideGUI = false;
-				m_isActionRunning = false;
-				m_initScript = false;
+				if(m_initScript == false)
+				{
+					m_GUINothingScript.InitThis(m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
+					m_initScript = true;
+				}
 				break;
 				
-			case m_EnumMapEvent.SIZE:
+			case m_EnumMapEvent.DONE:
 				m_showHideGUI = false;
 				m_isActionRunning = false;
 				m_initScript = false;
 				break;
+	
 				
 			default:
 				print ("GUIMapEventsMachine is in Default");
@@ -329,7 +341,7 @@ namespace GSP
 
 		public void MapeEventDone()
 		{
-			m_currEnumMpEvent = m_EnumMapEvent.NOTHING;
+			m_currEnumMpEvent = m_EnumMapEvent.DONE;
 		}
 		
 	} //class GUIMapEvents{}
