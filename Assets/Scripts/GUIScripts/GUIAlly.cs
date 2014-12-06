@@ -22,20 +22,18 @@ namespace GSP.JAVIERGUI
 		//		4. Show results and display done button
 		////////////////////////////////////////////////////////////////////////
 	{
-		GameObject m_PlayerEntity; //will initialize to the actual player in InitThis.
-		GSP.Char.Ally m_PlayerAllyScript;
-		GSP.Char.Character m_PlayerCharacterScript;
+		GameObject m_PlayerEntity; 							//will initialize to the actual player in InitThis.
+		//GSP.Char.Ally m_PlayerAllyScript;					//used during testing
+		//GSP.Char.Character m_PlayerCharacterScript;		//used during testing
 		GSP.GUIMapEvents m_GUIMapEventsScript;
 		GSP.MapEvent m_MapEventScript;
-
 		
-		int m_numOfAllies =-1; //if gui displays -1, values were not received
 		const int m_AllyHelpMAXWEIGHTIncrease =150;
 		string m_headerString;
 		string m_resultsString;
 
-		int m_playerWeight = -1;
-		int m_playerMaxWeight = -1;
+//		int m_playerWeight = -1;
+//		int m_playerMaxWeight = -1;
 
 		int m_mainStartX = -1;
 		int m_mainStartY = -1;
@@ -45,16 +43,18 @@ namespace GSP.JAVIERGUI
 		bool m_selectionMadeAddRemove = false;	//for internal use, determines if player w to add Ally or not
 		bool m_isActionRunning = false;
 
+
 		// Use this for initialization
 		void Start () {
 			
 		}	//end Start()
-		
+
+
 		public void InitGUIAlly(GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWidth, int p_startHeight)
 		{
 			m_PlayerEntity = p_PlayerEntity;
-			m_PlayerAllyScript = m_PlayerEntity.GetComponent<GSP.Char.Ally>();
-			m_PlayerCharacterScript = m_PlayerEntity.GetComponent<GSP.Char.Character>();
+//			m_PlayerAllyScript = m_PlayerEntity.GetComponent<GSP.Char.Ally>();	//-->			//used during testing
+			//m_PlayerCharacterScript = m_PlayerEntity.GetComponent<GSP.Char.Character>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.GUIMapEvents>();
 			m_MapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.MapEvent>();
 
@@ -66,16 +66,14 @@ namespace GSP.JAVIERGUI
 			m_mainWidth = p_startWidth;
 			m_mainHeight = p_startHeight;
 		}
-		
-		private void getPlayerAllyValues()
+
+
+		private void getPlayerAllyValues()		//TODO: if all the ally calculations get done in mapevent, this is no longer needed.
 		{
-			m_numOfAllies = m_PlayerCharacterScript.NumAllies;
-
-			m_playerMaxWeight = m_PlayerCharacterScript.MaxWeight;
-			m_playerWeight = m_PlayerCharacterScript.ResourceWeight;
-
-
+//			m_playerMaxWeight = m_PlayerCharacterScript.MaxWeight;
+//			m_playerWeight = m_PlayerCharacterScript.ResourceWeight;
 		}	//end private void getPlayerAllyValues()
+
 
 		void OnGUI()
 		{

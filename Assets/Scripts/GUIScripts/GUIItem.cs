@@ -6,16 +6,13 @@ namespace GSP.JAVIERGUI
 
 	public class GUIItem : MonoBehaviour {
 
-		GameObject m_PlayerEntity; //will initialize to the actual player in InitThis.
-		GSP.Char.Character m_PlayerCharacterScript;
+		GameObject m_PlayerEntity; 						//will initialize to the actual player in InitThis.
 		GSP.GUIMapEvents m_GUIMapEventsScript;
 		GSP.MapEvent m_MapEventScript;
 
 		string m_headerString;
 		string m_itemString;
 		string m_resourceString;
-		
-		int m_playerWeight = -1;
 		
 		int m_mainStartX = -1;
 		int m_mainStartY = -1;
@@ -33,7 +30,6 @@ namespace GSP.JAVIERGUI
 		public void InitGUIItem(GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWidth, int p_startHeight, string p_resultMapEvent) //string p_itemStr, string p_resourceStr )
 		{
 			m_PlayerEntity = p_PlayerEntity;
-			m_PlayerCharacterScript = m_PlayerEntity.GetComponent<GSP.Char.Character>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.GUIMapEvents>();
 			m_MapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.MapEvent>();
 
@@ -52,11 +48,6 @@ namespace GSP.JAVIERGUI
 			//m_resourceString = p_resourceStr;
 			////////////////////////////
 		}
-		
-		private void getPlayerAllyValues()
-		{
-			m_playerWeight = m_PlayerCharacterScript.ResourceWeight;
-		}	//end private void getPlayerAllyValues()
 		
 		void OnGUI()
 		{

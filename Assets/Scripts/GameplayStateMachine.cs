@@ -46,28 +46,27 @@ namespace GSP
 		private GamePlayState m_gamePlayState;
 		
 		//......GUI Values......
-		string m_GUIActionString;	//Changes the String in the Action button According to State player is in
-		string m_MapEventString; 	//holds what type of action event will occur
-		string m_MapEventResultString; 	//if mapEvent is Item, what Resource is picked up? Null if not a resource event
-		bool m_GUIRunMapEventOnce = false;
+		string m_GUIActionString;			//Changes the String in the Action button According to State player is in
+		string m_MapEventString; 			//holds what type of action event will occur
+		string m_MapEventResultString; 		//if mapEvent is Item, what Resource is picked up? Null if not a resource event
 		bool m_GUIActionPressed = false;	//determines if the Action Button has been pressed.
 		int m_GUIPlayerTurn = 0;	//whos turn is it
 		int m_GUIGoldVal = -1;		//Players Gold Value; if gui displays -1; value was not received from player
 		int m_GUIWeight = -1;		//Players actual weight; if gui displays -1; value was not received from player
 		int m_GUIMaxWeight = -1;	//Players max weight; //if gui displays -1; value was not received from player
 		bool m_GUIShowResources = false;	// GUI for Resources can be hidden at push of button
-		int m_GUIOre = -1;		//if gui displays -1; value was not received from player
-		int m_GUIWool = -1;		//if gui displays -1; value was not received from player
-		int m_GUIWood = -1;		//if gui displays -1; value was not received from player
-		int m_GUIFish = -1;		//if gui displays -1; value was not received from player 
+		int m_GUIOre = -1;			//if gui displays -1; value was not received from player
+		int m_GUIWool = -1;			//if gui displays -1; value was not received from player
+		int m_GUIWood = -1;			//if gui displays -1; value was not received from player
+		int m_GUIFish = -1;			//if gui displays -1; value was not received from player 
 		int m_GUIDiceDistVal = 0;	//HOlds the dice value, then is converted into Distance Value
 		int m_GUINumOfPlayers = 2; 	// how many players playing
 		
 		//...Script Instances...
-		private GSP.DieInput m_DieScript;	//Access the sigleton Die and its functions
-		private GSP.GUIMapEvents m_GUIMapEventsScript; //Access the sigleton Die and its functions
+		private GSP.DieInput m_DieScript;								//Access the sigleton Die and its functions
+		private GSP.GUIMapEvents m_GUIMapEventsScript; 					//Access the sigleton Die and its functions
 		private GSP.GUIMovement m_GUIMovementScript;
-		private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;
+		//private GSP.JAVIERGUI.NewGUIMapEvent m_NEWGUIMapEventScript;	//used during testing
 		private GSP.MapEvent m_MapEventScript;
 
 		#region End Scene Declaration Stuff
@@ -141,7 +140,7 @@ namespace GSP
 			m_DieScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<DieInput>();
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GUIMapEvents>();
 			m_GUIMovementScript = GameObject.FindGameObjectWithTag("GUIMovementTag").GetComponent<GSP.GUIMovement>();
-			m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();
+			//m_NEWGUIMapEventScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.NewGUIMapEvent>();	//used during testing
 			m_MapEventScript = GameObject.FindGameObjectWithTag("DieTag").GetComponent<GSP.MapEvent>();
 
 
@@ -158,8 +157,7 @@ namespace GSP
 		private void AddPlayers( int p_numOfPlayers )
 		{
 			Vector3 startingPos = new Vector3 (.32f, -(GSP.Tiles.TileManager.MaxHeight/2.0f), -1.6f); //first tile
-			float tmpTransY = 0.0f; 
-			
+
 			for (int count = 0; count < p_numOfPlayers; count++) 
 			{
 				startingPos.y = .32f -((count+1) *.64f); 
@@ -447,7 +445,7 @@ namespace GSP
 					m_gamePlayState = GamePlayState.CALCDISTANCE;
 				}					
 				break;
-
+//
 			case GamePlayState.CALCDISTANCE:
 				state.text = "Calculate Distance";
 
@@ -507,6 +505,7 @@ namespace GSP
 
 				//map events
 				if( m_GUIMapEventsScript.isActionRunning() == false )
+				//TODO: remove bottome line if above line works
 				//if( m_NEWGUIMapEventScript.GetIsActionRunning() == false )
 				{
 
@@ -659,8 +658,7 @@ namespace GSP
 			m_GUIOre = 0;
 			m_GUIWool = 0;
 			m_GUIDiceDistVal = 0;
-			m_GUIRunMapEventOnce = false;
-			
+
 		}	//end private void ResetValues();
 
 		public GameObject GetCurrentPlayer()

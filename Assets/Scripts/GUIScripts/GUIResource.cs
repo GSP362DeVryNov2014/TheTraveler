@@ -24,14 +24,12 @@ namespace GSP.JAVIERGUI
 			m_MapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.MapEvent> ();
 		}
 		
-		public void InitThis( GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWdth, int p_startHght, string p_result)
+		public void InitThis( int p_startX, int p_startY, int p_startWdth, int p_startHght, string p_result)
 		{
 			m_mainStartX = p_startX;
 			m_mainStartY = p_startY;
 			m_mainWidth = p_startWdth;
 			m_mainHeight = p_startHght;
-			
-			m_PlayerEntity = p_PlayerEntity;
 			
 			m_isActionRunning = true;
 			
@@ -43,11 +41,7 @@ namespace GSP.JAVIERGUI
 		{
 			if ( m_isActionRunning )
 			{
-				//done button
-				int doneWidth = m_mainWidth/2;
-				int doneHeight = m_mainHeight / 8;
-				int doneStartX = m_mainStartX +(m_mainWidth -doneWidth) /2;
-				int doneStartY = m_mainStartY +(doneHeight *7);
+				//Default color
 				GUI.backgroundColor = Color.red;
 				
 				ConfigHeader();
