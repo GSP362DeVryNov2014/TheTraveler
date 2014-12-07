@@ -11,6 +11,17 @@ namespace GSP
 		public int NumberPlayers
 		{
 			get { return m_numberPlayers; }
+			set
+			{
+				m_numberPlayers = value;
+				
+				// Check if the maximum inventory is less than zero.
+				if (m_numberPlayers < 0)
+				{
+					// Clamp the max inventory to zero.
+					m_numberPlayers = 0;
+				} // end if statement
+			} // end Set accessor
 		} // end NumberPlayers property
 		
 		// Use this for initialisation.
