@@ -201,15 +201,13 @@ namespace GSP
 
 		private void AddItems( int p_numOfPlayers )
 		{
-			Vector3 startingPos = new Vector3 (.32f, -(GSP.Tiles.TileManager.MaxHeight/2.0f), -1.6f); //first tile
-			
 			for (int count = 0; count < p_numOfPlayers; count++) 
 			{
 				m_playerScriptList[count].EquipItem("SWORD", 0);
 				m_playerScriptList[count].EquipItem("CHAINLEGS", 0);
 			} //end for loop
 			
-		} // end private void AddPlayers( int p_numOfPlayers )
+		} // end private void AddItems( int p_numOfPlayers )
 
 
 		private void GetPlayerValues()

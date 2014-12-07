@@ -124,6 +124,7 @@ GameObject:
   - 114: {fileID: 1464764043}
   - 114: {fileID: 1464764042}
   - 114: {fileID: 1464764044}
+  - 114: {fileID: 1464764045}
   m_Layer: 0
   m_Name: EndSceneData
   m_TagString: EndSceneDataTag
@@ -174,6 +175,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f67ad623844afe449f3ccb59def7a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1464764045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1464764040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b2765b7b8e4f1439f74d39e29799c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1979576416
