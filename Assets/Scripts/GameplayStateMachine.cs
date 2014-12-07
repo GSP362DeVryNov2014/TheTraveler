@@ -132,11 +132,15 @@ namespace GSP
 			// Get the game object with the menu data tag.
 			GameObject menuData = GameObject.FindGameObjectWithTag( "MenuDataTag" );
 
-			// Get its menu data script.
-			MenuData menuDataScript = menuData.GetComponent<MenuData>();
-
-			// Copy the value into the state machine.
-			m_GUINumOfPlayers = menuDataScript.NumberPlayers;
+			// Only proceed of the data object isn't null.
+			if ( menuData != null )
+			{
+				// Get its menu data script.
+				MenuData menuDataScript = menuData.GetComponent<MenuData>();
+				
+				// Copy the value into the state machine.
+				m_GUINumOfPlayers = menuDataScript.NumberPlayers;
+			}
 
 			// Finally, destroy the menu data object.
 			Destroy( menuData );
