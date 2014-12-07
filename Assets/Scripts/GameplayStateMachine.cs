@@ -44,7 +44,9 @@ namespace GSP
 
 		//......Holds Current State......
 		private GamePlayState m_gamePlayState;
-		
+
+		//.....InitializingValues.....
+		bool m_initAfterStart = false;
 		//......GUI Values......
 		string m_GUIActionString;			//Changes the String in the Action button According to State player is in
 		string m_MapEventString; 			//holds what type of action event will occur
@@ -154,8 +156,20 @@ namespace GSP
 			//no map event at start;
 			m_MapEventString = "NOTHING";
 			m_MapEventResultString = null;
+
+			//this initializes things after Start()
+			m_initAfterStart = true;
 		}	//END start()
-		
+
+		private void InitAfterStart()
+		{
+			//TODO: get num of players from BrentsStateMachine
+			
+			//Add Players Instances
+			AddPlayers (m_GUINumOfPlayers);
+
+		}	// end private void InitAfterStart()
+
 		private void AddPlayers( int p_numOfPlayers )
 		{
 			Vector3 startingPos = new Vector3 (.32f, -(GSP.Tiles.TileManager.MaxHeight/2.0f), -1.6f); //first tile
@@ -210,46 +224,55 @@ namespace GSP
 			//	-Uses some config functions for Cleaning up GUI look and special occasions
 			//--------------------------------------------------------------------
 		{
-			IsItEndOfGame();
+			if(m_initAfterStart == true)	//this is turned into true at teh end of Start()
+			{
+				InitAfterStart();
 
-			StateMachine();	//update any values that affect GUI before creating GUI
-			
-			//Buttons will be red
-			GUI.backgroundColor = Color.red;
-			
-			//This is the tool bar container
-			GUI.Box( new Rect(0,0,Screen.width,64)," ");
-			
-			//Scalable values for GUI miniContainers
-			int gap = 2;
-			int width = (Screen.width/4)-2;
-			int height = 28;
-			
-			//..................................
-			//   ...PLAYER AND GOLD COLUMN...
-			//..................................
-			int col = 0;
-			GUIFirstColumn(col, gap, width, height);
-			
-			//..................................
-			// ...WEIGHT AND RESOURCE COLUMN...
-			//..................................
-			col = col+1;
-			GUISecondColumn (col, gap , width, height);
+				m_initAfterStart = false;	//DON'T change this value to true. ever! this is meant to only run once.
+			}
+			else
+			{
+				IsItEndOfGame();
 
-			
-			//..................................
-			//      ...DICE ROLL COLUMN...
-			//..................................
-			col = col+1;
-			GUIThirdColumn (col, gap, width, height);
+				StateMachine();			//update any values that affect GUI before creating GUI
+				
+				//Buttons will be red
+				GUI.backgroundColor = Color.red;
+				
+				//This is the tool bar container
+				GUI.Box( new Rect(0,0,Screen.width,64)," ");
+				
+				//Scalable values for GUI miniContainers
+				int gap = 2;
+				int width = (Screen.width/4)-2;
+				int height = 28;
+				
+				//..................................
+				//   ...PLAYER AND GOLD COLUMN...
+				//..................................
+				int col = 0;
+				GUIFirstColumn(col, gap, width, height);
+				
+				//..................................
+				// ...WEIGHT AND RESOURCE COLUMN...
+				//..................................
+				col = col+1;
+				GUISecondColumn (col, gap , width, height);
 
-			
-			//..................................
-			//      ...ACTION COLUMN...
-			//..................................
-			col = col + 1;
-			GUIFourthColumn (col, gap, width, height);
+				
+				//..................................
+				//      ...DICE ROLL COLUMN...
+				//..................................
+				col = col+1;
+				GUIThirdColumn (col, gap, width, height);
+
+				
+				//..................................
+				//      ...ACTION COLUMN...
+				//..................................
+				col = col + 1;
+				GUIFourthColumn (col, gap, width, height);
+			}
 			
 		}	//end OnGUI()
 
