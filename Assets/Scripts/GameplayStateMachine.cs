@@ -62,7 +62,7 @@ namespace GSP
 		int m_GUIWood = -1;			//if gui displays -1; value was not received from player
 		int m_GUIFish = -1;			//if gui displays -1; value was not received from player 
 		int m_GUIDiceDistVal = 0;	//HOlds the dice value, then is converted into Distance Value
-		int m_GUINumOfPlayers = 2; 	// how many players playing
+		int m_GUINumOfPlayers = 0; 	// how many players playing
 		
 		//...Script Instances...
 		private GSP.DieInput m_DieScript;								//Access the sigleton Die and its functions
@@ -124,6 +124,22 @@ namespace GSP
 
 			// Defaults to true.
 			m_runEndStuff = true;
+
+			#endregion
+
+			#region Menu Data Initialisation Stuff
+
+			// Get the game object with the menu data tag.
+			GameObject menuData = GameObject.FindGameObjectWithTag( "MenuDataTag" );
+
+			// Get its menu data script.
+			MenuData menuDataScript = menuData.GetComponent<MenuData>();
+
+			// Copy the value into the state machine.
+			m_GUINumOfPlayers = menuDataScript.NumberPlayers;
+
+			// Finally, destroy the menu data object.
+			Destroy( menuData );
 
 			#endregion
 

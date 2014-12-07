@@ -15,6 +15,16 @@ namespace GSP
 		OVERALLSTATES m_programState;		//Current overall state
 		MENUSTATES m_menuState;				//Current menu state
 		float timeHolder;					//Holds waiting time
+
+		#region Menu Data Declaration Stuff
+
+		// Holds the reference to the game object.
+		GameObject m_menuData;
+
+		// Holds the reference to the menu data's script.
+		MenuData m_menuDataScript;
+
+		#endregion
 		
 		//Initialize variables
 		void Start()
@@ -22,6 +32,25 @@ namespace GSP
 			m_programState = OVERALLSTATES.INTRO;		//Initial beginning of game
 			m_menuState = MENUSTATES.HOME;				//Prevents triggers from occuring before called
 			timeHolder = Time.time + 3.0f;				//Initialize first wait period
+
+			#region Menu Data Initialisation Stuff
+			
+			// Create the empty game object.
+			m_menuData = new GameObject( "MenuData" );
+			
+			// Tag it as menu data.
+			m_menuData.tag = "MenuDataTag";
+			
+			// Add the menu data component.
+			m_menuData.AddComponent<MenuData>();
+			
+			// Set it to not destroy on load.
+			DontDestroyOnLoad( m_menuData );
+
+			// Get the menu data object's script.
+			m_menuDataScript = m_menuData.GetComponent<MenuData>();
+			
+			#endregion
 		} //end Start
 		
 		//Main function for controlling game
@@ -98,6 +127,14 @@ namespace GSP
 					{
 						print ("Setting up solo mode.");
 						state.text = "Setting up solo mode, one moment.";
+						
+						#region Menu Data Adding Stuff
+						
+						// Set the number of players to one for solo mode.
+						m_menuDataScript.NumberPlayers = 1;
+						
+						#endregion
+						
 						//Transition into game state
 						m_programState = OVERALLSTATES.GAME;
 						timeHolder = Time.time + 1.5f;
@@ -110,6 +147,16 @@ namespace GSP
 					{
 						print ("Setting up multiplayer mode.");
 						state.text = "Setting up multiplayer mode, one moment.";
+						
+						#region Menu Data Adding Stuff
+						
+						// Get the number of players some how.
+						
+						// Until then, set the number of players to two for multi-mode.
+						m_menuDataScript.NumberPlayers = 2;
+						
+						#endregion
+						
 						//Transition into game state
 						m_programState = OVERALLSTATES.GAME;
 						timeHolder = Time.time + 1.5f;
