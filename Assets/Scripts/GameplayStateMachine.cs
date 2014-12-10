@@ -62,7 +62,7 @@ namespace GSP
 		int m_GUIWood = -1;			//if gui displays -1; value was not received from player
 		int m_GUIFish = -1;			//if gui displays -1; value was not received from player 
 		int m_GUIDiceDistVal = 0;	//HOlds the dice value, then is converted into Distance Value
-		int m_GUINumOfPlayers = 0; 	// how many players playing
+		int m_GUINumOfPlayers = 2; 	// how many players playing
 		
 		//...Script Instances...
 		private GSP.DieInput m_DieScript;								//Access the sigleton Die and its functions
@@ -152,8 +152,6 @@ namespace GSP
 			m_playerScriptList = new List<GSP.Char.Character>();
 			m_PlayerResourceList = new List<GSP.Char.ResourceList>();
 			
-			//TODO: get num of players from BrentsStateMachine
-			
 			//Add Players Instances
 			AddPlayers (m_GUINumOfPlayers);
 
@@ -183,8 +181,6 @@ namespace GSP
 
 		private void InitAfterStart()
 		{
-			//TODO: get num of players from BrentsStateMachine
-			
 			//Add Players Instances
 			AddItems(m_GUINumOfPlayers);
 
@@ -216,6 +212,12 @@ namespace GSP
 				
 				m_playerScriptList.Add( m_playerEntity.GetComponent<GSP.Char.Character>() );
 				m_PlayerResourceList.Add( m_playerEntity.GetComponent<GSP.Char.ResourceList>() );
+
+				// Set the character's sprite sheet sprites.
+				m_playerScriptList[count].SetCharacterSprites( count + 1 );
+
+				// Set the character's facing.
+				m_playerScriptList[count].Face( GSP.Char.Character.FacingDirection.SOUTH );
 
 			} //end for loop
 			
