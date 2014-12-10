@@ -13,6 +13,7 @@ TagManager:
   - EndSceneCharDataTag
   - EndSceneDataTag
   - MenuDataTag
+  - AudioSourceTag
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
