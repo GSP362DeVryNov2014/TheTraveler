@@ -35,10 +35,10 @@ namespace GSP.JAVIERGUI
 //		int m_playerWeight = -1;
 //		int m_playerMaxWeight = -1;
 
-		int m_mainStartX = -1;
-		int m_mainStartY = -1;
-		int m_mainWidth = -1;
-		int m_mainHeight = -1;
+		int m_mainStartX 	= -1;
+		int m_mainStartY 	= -1;
+		int m_mainWidth 	= -1;
+		int m_mainHeight	= -1;
 
 		bool m_selectionMadeAddRemove = false;	//for internal use, determines if player w to add Ally or not
 		bool m_isActionRunning = false;
@@ -118,11 +118,10 @@ namespace GSP.JAVIERGUI
 			
 			if( GUI.Button(new Rect(newX, newY, newWdth, newHght*2), "Yes") )
 			{
-				//TODO:ADD ALLY needs a GameObject, not sure what I am suppose to add
-				//		So I am adding the player for now so it wont crash
-				//m_PlayerAllyScript.AddAlly( m_PlayerEntity );
-				//m_playerMaxWeight = m_PlayerCharacterScript.MaxWeight +(  m_PlayerCharacterScript.NumAllies *m_AllyHelpMAXWEIGHTIncrease );
-				//m_PlayerCharacterScript.MaxWeight = m_playerMaxWeight;
+				#region Add Ally Sound
+				//TODO:	Ally is added here
+				#endregion
+
 				m_headerString = m_MapEventScript.ResolveAlly(m_PlayerEntity, "YES");  //"New Ally Added.\nNew Max Weight is "+m_playerMaxWeight.ToString();
 
 				m_selectionMadeAddRemove = true;

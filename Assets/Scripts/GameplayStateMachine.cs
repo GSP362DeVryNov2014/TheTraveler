@@ -127,7 +127,7 @@ namespace GSP
 
 			#endregion
 
-			#region Menu Data Initialisation Stuff
+			//#region Menu Data Initialisation Stuff
 
 			// Get the game object with the menu data tag.
 			GameObject menuData = GameObject.FindGameObjectWithTag( "MenuDataTag" );
@@ -145,7 +145,7 @@ namespace GSP
 			// Finally, destroy the menu data object.
 			Destroy( menuData );
 
-			#endregion
+			//#endregion
 
 			//initialize empty lists
 			m_playerList = new List<GameObject>();
@@ -187,6 +187,9 @@ namespace GSP
 			
 			//Add Players Instances
 			AddItems(m_GUINumOfPlayers);
+
+			//#region TODO: PLAY STARTING SOUND
+			//#endregion
 
 		}	// end private void InitAfterStart()
 
