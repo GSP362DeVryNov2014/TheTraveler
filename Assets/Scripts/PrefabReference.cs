@@ -5,6 +5,10 @@ namespace GSP
 {
 	public static class PrefabReference
 	{
+		/*
+		 * Object Prefabs.
+		 */
+
 		// This is the reference to the character prefab.
 		public static GameObject prefabCharacter = Resources.Load( "Character" ) as GameObject;
 
@@ -24,7 +28,7 @@ namespace GSP
 		public static GameObject prefabResource_Fish = Resources.Load( "Resource_Fish" ) as GameObject;
 
 		// This is the reference to the item prefab.
-		public static GameObject prefabItem = Resources.Load( "Item" ) as GameObject;
+		public static GameObject prefabItem = Resources.Load ("Item") as GameObject;
 	} // end PrefabReference class
 } // end namespace
 
