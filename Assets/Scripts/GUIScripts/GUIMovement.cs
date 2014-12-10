@@ -10,6 +10,7 @@ namespace GSP
 		private int m_SelectState = (int)GamePlayState.SELECTPATHTOTAKE;	//this is the state we are concerned about
 		GSP.GameplayStateMachine m_GameplayStateMachineScript; //script to acces state machine 
 		Movement m_MovementScript;
+		GSP.Char.Character m_playerCharacterScript;	// This is the curreny player's character script.
 
 		Vector3 m_displacementVector;	//value player moves relative to Space.World
 		Vector3 m_origPlayerPosition;	//if player cancels movement, player resets to this original poisition
@@ -53,7 +54,10 @@ namespace GSP
 			m_currTravelDist = m_initialTravelDist;
 
 			//resetDisplacement Value
-			m_displacementVector = new Vector3 (0.0f, 0.0f, 0.0f); 
+			m_displacementVector = new Vector3 (0.0f, 0.0f, 0.0f);
+
+			// Player character script.
+			m_playerCharacterScript = m_PlayerEntity.GetComponent<GSP.Char.Character>();
 
 			//movement script
 
@@ -90,17 +94,20 @@ namespace GSP
 				if ( GUI.Button (new Rect ((Screen.width - (3 * width) + gridXShift), (Screen.height - (2 * height) + gridYShift), width, height), "<")) 
 				{
 					m_displacementVector = m_MovementScript.MoveLeft(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
+					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.WEST ); // Face the character to the west which is to the left.
 					MovePlayer();
 				}
 				//right
 				if( GUI.Button( new Rect( (Screen.width -(1*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), ">" ) )
 				{
 					m_displacementVector = m_MovementScript.MoveRight(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
+					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.EAST ); // Face the character to the east which is to the right.
 					MovePlayer();
 				}
 				//cancel
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), "X" ) )
 				{
+					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.SOUTH ); // Face the character to the south which is to the left. This is the default facing.
 					//MOVE BACK TO ORIG POSITION
 					CancelMove();
 				}
@@ -108,12 +115,14 @@ namespace GSP
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(3*height) +gridYShift), width, height ), "^" ) )
 				{
 					m_displacementVector = m_MovementScript.MoveUp(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
+					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.NORTH ); // Face the character to the north which is up.
 					MovePlayer();
 				}
 				//down
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(1*height) +gridYShift), width, height ), "v" ) )
 				{
 					m_displacementVector = m_MovementScript.MoveDown(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
+					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.SOUTH ); // Face the character to the south which is down.
 					MovePlayer();
 				}
 
@@ -122,6 +131,7 @@ namespace GSP
 			{
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), "X" ) )
 				{
+					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.SOUTH ); // Face the character to the south which is to the left. This is the default facing.
 					//TODO: CANCEL MOVE, MOVE BACK TO ORIG POSITION
 					CancelMove();
 				}

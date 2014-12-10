@@ -3,22 +3,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using GSP.Tiles;
+using System.Linq;
+using UnityEditor;
 
 namespace GSP.Char
 {
 	public class Character : MonoBehaviour
 	{
+		// The enumeration of the directions a character can be facing.
+		// This is used for displaying the correct sprite.
+		public enum FacingDirection { NORTH, EAST, SOUTH, WEST };
+
 		// Declare our private variables. The default scope is private.
-		ResourceList m_resourceList;	// This is the resource list script object.
-		Ally m_allyScript;				// This is the ally script object.
-		int m_maxWeight;				// This is the maximum weight the character can hold.
-		int m_maxInventory;				// Maximum inventory (max number player can hold)
-		int m_currency; 				// This is the amount of currency the character is holding.
-		int m_attackPower;				// Attack of the character (from weapons)
-		int m_defencePower;				// Defence of the character (from armor)
-		EquippedWeapon m_weapon;		// Script Component reference to the weapon being wielded.
+		ResourceList m_resourceList;		// This is the resource list script object.
+		Ally m_allyScript;					// This is the ally script object.
+		int m_maxWeight;					// This is the maximum weight the character can hold.
+		int m_maxInventory;					// Maximum inventory (max number player can hold)
+		int m_currency; 					// This is the amount of currency the character is holding.
+		int m_attackPower;					// Attack of the character (from weapons)
+		int m_defencePower;					// Defence of the character (from armor)
+		EquippedWeapon m_weapon;			// Script Component reference to the weapon being wielded.
 		EquippedArmor m_armor;				// Script Component reference to the armor being worn.
-		List<GameObject> m_bonuses;		// Bonuses picked up (Inventory and Weight mods)
+		List<GameObject> m_bonuses;			// Bonuses picked up (Inventory and Weight mods)
+		List<Sprite> m_CharSprites;			// Holds the sprites for the character.
+		SpriteRenderer m_spriteRenderer;	// SpriteRenderer component of the character.
 
 		#region Resource
 		// Gets the current value of resources the character is holding.
@@ -133,6 +141,8 @@ namespace GSP.Char
 			// Initialise the weapons and armour.
 			m_weapon = GetComponent<EquippedWeapon>();
 			m_armor = GetComponent<EquippedArmor>();
+			m_CharSprites = new List<Sprite>();
+			m_spriteRenderer = GetComponent<SpriteRenderer>();
 		} // end Awake function
 
 		// Use this for initialisation
@@ -146,7 +156,7 @@ namespace GSP.Char
 			m_currency = 0;
 			m_attackPower = 0;
 			m_defencePower = 0;
-			m_bonuses = new List<GameObject> ();
+			m_bonuses = new List<GameObject>();
 		} // end Start function
 
 		// Update is called once per frame
@@ -535,6 +545,7 @@ namespace GSP.Char
 			m_armor.CostValue = sourceScript.CostValue;
 		} // end CopyItemToArmor function
 
+		// Allows for collision on the market place to end the game.
 		void OnCollisionEnter2D(Collision2D coll)
 		{
 			Debug.LogError( "CALLED!" );
@@ -549,7 +560,69 @@ namespace GSP.Char
 
 				// Finally end the game by calling the end game function.
 				stateMachineScript.EndGame();
-			}
-		}
+			} // end if statement
+		} // end OnCollisionEnter2D function
+
+		// Setup the character's sprite set. This is an array of sprites that will be used for the character.
+		public void SetCharacterSprites( int playerNumber )
+		{
+			// A temporary sprite array.
+			Sprite[] tmp = AssetDatabase.LoadAllAssetsAtPath ("Assets/Sprites/player" + playerNumber + ".png").OfType<Sprite>().ToArray();
+
+			// Add the idle sprites for each direction.
+			m_CharSprites.Add(tmp[1]);
+			m_CharSprites.Add(tmp[4]);
+			m_CharSprites.Add(tmp[7]);
+			m_CharSprites.Add(tmp[10]);
+		} // end SetCharacterSprites function
+
+		// Sets the character's sprite to the given index.
+		void SetSprite( int index )
+		{
+			m_spriteRenderer.sprite = m_CharSprites[index];
+		} // end SetSprite function
+
+		// Faces a character in a given direction. This changes the character's sprite to match this.
+		public void Face( FacingDirection facingDirection )
+		{
+			// Get the box collider of the character.
+			var boxCollider = GetComponent<BoxCollider2D>();
+
+			// Set the box collider smaller to fix for the scaling fix.
+			boxCollider.size = new Vector2( 0.38f, 0.4f );
+
+			// Switch over the selection.
+			switch (facingDirection)
+			{
+				case FacingDirection.NORTH:
+					// Change the character's sprite to face the north direction.
+					SetSprite( 0 );
+
+					// Using the object's transform, scale to fix the small sprite issue.
+					transform.localScale = new Vector3( 1.66f, 1.56f, 1.0f );
+					break;
+				case FacingDirection.EAST:
+					// Change the character's sprite to face the east direction.
+					SetSprite( 1 );
+
+					// Using the object's transform, scale to fix the small sprite issue.
+					transform.localScale = new Vector3( 1.41f, 1.56f, 1.0f );
+					break;
+				case FacingDirection.SOUTH:
+					// Change the character's sprite to face the south direction.
+					SetSprite( 2 );
+
+					// Using the object's transform, scale to fix the small sprite issue.
+					transform.localScale = new Vector3( 1.66f, 1.56f, 1.0f );
+					break;
+				case FacingDirection.WEST:
+					// Change the character's sprite to face the west direction.
+					SetSprite( 3 );
+
+					// Using the object's transform, scale to fix the small sprite issue.
+					transform.localScale = new Vector3( 1.40f, 1.56f, 1.0f );
+					break;
+			} // end Switch statement
+		} // end Face function
 	} // end Character class
 } // end namespace
