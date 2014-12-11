@@ -15,6 +15,8 @@ namespace GSP
 		OVERALLSTATES m_programState;		//Current overall state
 		MENUSTATES m_menuState;				//Current menu state
 		float timeHolder;					//Holds waiting time
+		GameObject introBackground;			//Intro Background
+		GameObject menuBackground;			//Menu Background
 
 		#region Menu Data Declaration Stuff
 
@@ -51,6 +53,12 @@ namespace GSP
 			m_menuDataScript = m_menuData.GetComponent<MenuData>();
 			
 			#endregion
+			//Create Intro Background
+			GameObject introBackground = new GameObject("IntroBackground");
+			introBackground.tag = "IntroBackground";
+			var spriteRender = introBackground.AddComponent<SpriteRenderer>();
+			spriteRender.sprite = SpriteReference.spriteIntroBackground;
+			SpriteReference.ResizeSpriteToScreen(introBackground, Camera.main, 1, 1);
 		} //end Start
 		
 		//Main function for controlling game
@@ -64,11 +72,6 @@ namespace GSP
 				//INTRO
 			case OVERALLSTATES.INTRO:
 				//Create background
-				GameObject introBackground = new GameObject("IntroBackground");
-				introBackground.tag = "IntroBackground";
-				var spriteRender = introBackground.AddComponent<SpriteRenderer>();
-				spriteRender.sprite = SpriteReference.spriteIntroBackground;
-				SpriteReference.ResizeSpriteToScreen(introBackground, Camera.main, 1, 1);
 				print ("The intro is currently playing.");
 				state.text = "Welcome To The Traveler!";
 
@@ -76,13 +79,12 @@ namespace GSP
 				if(Time.time > timeHolder)
 				{
 					m_programState = OVERALLSTATES.MENU;
-					GameObject[] TBD;
-					TBD = GameObject.FindGameObjectsWithTag("IntroBackground");
-					print (TBD.Length);
-					foreach(GameObject IntroBackground in TBD)
-					{
-						Destroy (IntroBackground);
-					} //end foreach
+					Destroy (GameObject.FindGameObjectWithTag("IntroBackground"));
+					GameObject menuBackground = new GameObject("MenuBackground");
+					menuBackground.tag = "MenuBackground";
+					var spriteRender = menuBackground.AddComponent<SpriteRenderer>();
+					spriteRender.sprite = SpriteReference.spriteMenuBackground;
+					SpriteReference.ResizeSpriteToScreen(menuBackground, Camera.main, 1, 1);
 				} //end wait if
 				break;
 				//MENU
@@ -94,11 +96,6 @@ namespace GSP
 					//Button code goes here
 					//Placeholder for testing
 					//HOME - Menu hub, displays all buttons for menu
-					/*GameObject menuBackground = new GameObject("MenuBackground");
-					menuBackground.tag = "MenuBackground";
-					spriteRender = menuBackground.AddComponent<SpriteRenderer>();
-					spriteRender.sprite = SpriteReference.spriteIntroBackground;
-					SpriteReference.ResizeSpriteToScreen(menuBackground, Camera.main, 1, 1);*/
 					print ("S for Solo, M for Multi, C for Credits, O for Options, Q for Quit");
 					state.text = "Menu:\nS - Solo Player Mode\nM - Multiplayer Mode\n" +
 						"C - Credits\nO - Options\nQ - Quit";
@@ -227,6 +224,7 @@ namespace GSP
 				//GAME
 			case OVERALLSTATES.GAME:
 				//GAMEPLAY ENTRY POINT
+				Destroy (GameObject.FindGameObjectWithTag("MenuBackground"));
 				Application.LoadLevel("area01");
 				m_programState = OVERALLSTATES.MENU;
 				m_menuState = MENUSTATES.HOME;
