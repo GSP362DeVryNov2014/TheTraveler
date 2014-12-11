@@ -14,8 +14,8 @@ namespace GSP.Char
 		{
 			// Initialise our list here.
 			m_allyList = new List<GameObject>();
-			//TODO: Adjust this back to 1 when creating game for realistic play
-			maxAllies = 100;
+			// NOTE: Keep this at 1 when creating game for realistic play
+			maxAllies = 1;
 		}
 		
 		// Update is called once per frame
@@ -27,7 +27,7 @@ namespace GSP.Char
 		// Get the ally by its index. This should stay readonly (get only).
 		public GameObject this[int index]
 		{
-			get { Debug.LogError("Index: " + index); return m_allyList [index]; }
+			get { return m_allyList [index]; }
 		}
 
 		// Return ally object
@@ -65,7 +65,17 @@ namespace GSP.Char
 		{
 			if(NumAllies != maxAllies)
 			{
+				// Add the ally to the list.
 				m_allyList.Add( ally );
+
+				// Get the character script of the game object this is attached to.
+				var playerCharScript = GetComponent<Character>();
+				// Also get the character script for the ally.
+				var allyCharScript = ally.GetComponent<Character>();
+
+				// Add the ally's values to the player directly.
+				playerCharScript.MaxWeight += allyCharScript.MaxWeight;
+				playerCharScript.MaxInventory += allyCharScript.MaxInventory;
 			} //end if
 			else
 			{
@@ -76,6 +86,16 @@ namespace GSP.Char
 		// Removes an ally from the list by its object.
 		public void RemoveAlly( GameObject ally )
 		{
+			// Get the character script of the game object this is attached to.
+			var playerCharScript = GetComponent<Character>();
+			// Also get the character script for the ally.
+			var allyCharScript = ally.GetComponent<Character>();
+			
+			// Add the ally's values to the player directly.
+			playerCharScript.MaxWeight -= allyCharScript.MaxWeight;
+			playerCharScript.MaxInventory -= allyCharScript.MaxInventory;
+
+			// Remove the ally from the list.
 			m_allyList.Remove( ally );
 		} // end RemoveAlly function
 
@@ -83,7 +103,18 @@ namespace GSP.Char
 		// ISSUE: Doesn't seem to work all that well.
 		public void RemoveAlly( int index )
 		{
+			// Get the character script of the game object this is attached to.
+			var playerCharScript = GetComponent<Character>();
+			// Also get the character script for the ally.
+			var allyCharScript = this[index].GetComponent<Character>();
+			
+			// Add the ally's values to the player directly.
+			playerCharScript.MaxWeight -= allyCharScript.MaxWeight;
+			playerCharScript.MaxInventory -= allyCharScript.MaxInventory;
+
+			// Get the number of allies for later.
 			int temp = NumAllies;
+			// Remove the ally at the given index.
 			m_allyList.RemoveAt( index );
 			print ("Old count " + temp + " New count " + NumAllies);
 		} // end RemoveAlly function
@@ -91,6 +122,12 @@ namespace GSP.Char
 		// Clear the ally list of the character.
 		public void ClearAllyList()
 		{
+			// Loop through the ally list.
+			foreach ( var ally in m_allyList )
+			{
+				// Remove the current ally.
+				RemoveAlly( ally );
+			} // end foreach loop
 		} // end ClearAllyList function.
 	}
 }
