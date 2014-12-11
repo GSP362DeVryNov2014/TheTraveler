@@ -58,18 +58,31 @@ namespace GSP
 		{
 			//Will fill in later with game controls. Refer to UMLs for other details.
 			//PROGRAM ENTRY POINT
-			var state = GameObject.FindGameObjectWithTag("GUITextTag").GetComponent<GUIText>(); //GUI TEMP
+			var state = GameObject.FindGameObjectWithTag ("GUITextTag").GetComponent<GUIText> ();
 			switch(m_programState)
 			{
 				//INTRO
 			case OVERALLSTATES.INTRO:
-				//Play video or whatever. Wait for seconds is placeholder
+				//Create background
+				GameObject introBackground = new GameObject("IntroBackground");
+				introBackground.tag = "IntroBackground";
+				var spriteRender = introBackground.AddComponent<SpriteRenderer>();
+				spriteRender.sprite = SpriteReference.spriteIntroBackground;
+				SpriteReference.ResizeSpriteToScreen(introBackground, Camera.main, 1, 1);
 				print ("The intro is currently playing.");
 				state.text = "Welcome To The Traveler!";
+
 				//After intro finishes, move to menu
 				if(Time.time > timeHolder)
 				{
 					m_programState = OVERALLSTATES.MENU;
+					GameObject[] TBD;
+					TBD = GameObject.FindGameObjectsWithTag("IntroBackground");
+					print (TBD.Length);
+					foreach(GameObject IntroBackground in TBD)
+					{
+						Destroy (IntroBackground);
+					} //end foreach
 				} //end wait if
 				break;
 				//MENU
@@ -77,10 +90,15 @@ namespace GSP
 				//MENU ENTRY POINT
 				switch(m_menuState)
 				{
-					//HOME - Menu hub, displays all buttons for menu
 				case MENUSTATES.HOME:
 					//Button code goes here
 					//Placeholder for testing
+					//HOME - Menu hub, displays all buttons for menu
+					/*GameObject menuBackground = new GameObject("MenuBackground");
+					menuBackground.tag = "MenuBackground";
+					spriteRender = menuBackground.AddComponent<SpriteRenderer>();
+					spriteRender.sprite = SpriteReference.spriteIntroBackground;
+					SpriteReference.ResizeSpriteToScreen(menuBackground, Camera.main, 1, 1);*/
 					print ("S for Solo, M for Multi, C for Credits, O for Options, Q for Quit");
 					state.text = "Menu:\nS - Solo Player Mode\nM - Multiplayer Mode\n" +
 						"C - Credits\nO - Options\nQ - Quit";
@@ -233,7 +251,7 @@ namespace GSP
 				break;
 			} //end Program Switch
 		} //end Update
-		
+
 		//State machine functions
 		//Program state
 		public int GetState()

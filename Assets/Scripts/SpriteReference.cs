@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Linq;
 
 namespace GSP
 {
@@ -36,6 +37,40 @@ namespace GSP
 
 		// This is the reference to the credit button sprite.
 		public static Sprite spriteCredit = buttonSpritesheet[7];
+
+		//Resizes to fit screen
+		public static void ResizeSpriteToScreen(GameObject theSprite, Camera theCamera, int fitToScreenWidth, int fitToScreenHeight)
+		{
+			// Get the sprites sprite renderer component.
+			SpriteRenderer spriteRenderer = theSprite.GetComponent<SpriteRenderer>();
+			
+			// Set the scale to normal.
+			theSprite.transform.localScale = new Vector3(1,1,1);
+			
+			// Get the sprites width and height.
+			float spriteWidth = spriteRenderer.sprite.bounds.size.x;
+			float spriteHeight = spriteRenderer.sprite.bounds.size.y;
+			
+			// Get the world width and height.
+			float worldScreenHeight = (float)(theCamera.orthographicSize * 2.0);
+			float worldScreenWidth = (float)(worldScreenHeight / Screen.height * Screen.width);
+			
+			// Set the scale to fit the sprite to the screen.
+			if (fitToScreenWidth != 0)
+			{
+				// Get the width scale needed.
+				Vector2 sizeX = new Vector2(worldScreenWidth / spriteWidth / fitToScreenWidth, 
+					theSprite.transform.localScale.y);
+				theSprite.transform.localScale = sizeX;
+			} // end if statement
+			if (fitToScreenHeight != 0)
+			{
+				// Get the height scale needed.
+				Vector2 sizeY = new Vector2(theSprite.transform.localScale.x, 
+					worldScreenHeight / spriteHeight / fitToScreenHeight);
+				theSprite.transform.localScale = sizeY;
+			} // end if statement
+		} // end ResizeSpriteToScreen function
 	} // end PrefabReference class
 } // end namespace
 
