@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
-using System.Linq;
+using System;
 
 namespace GSP
 {
@@ -12,8 +11,8 @@ namespace GSP
 		 */
 
 		// This is the sprite sheet for the buttons.
-		public static Sprite[] buttonSpritesheet = AssetDatabase.LoadAllAssetsAtPath ("Assets/Sprites/buttons_sprite_sheet.png").OfType<Sprite>().ToArray();
-		
+		public static Sprite[] buttonSpritesheet = Resources.LoadAll<Sprite>("buttons_sprite_sheet");
+
 		// This is the reference to the menu backgrond sprite.
 		public static Sprite spriteMenuBackground = buttonSpritesheet[0];
 
