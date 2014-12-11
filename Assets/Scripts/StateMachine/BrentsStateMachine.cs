@@ -15,6 +15,8 @@ namespace GSP
 		OVERALLSTATES m_programState;		//Current overall state
 		MENUSTATES m_menuState;				//Current menu state
 		float timeHolder;					//Holds waiting time
+		GameObject introBackground;			//Intro Background
+		GameObject menuBackground;			//Menu Background
 
 		#region Menu Data Declaration Stuff
 
@@ -51,6 +53,12 @@ namespace GSP
 			m_menuDataScript = m_menuData.GetComponent<MenuData>();
 			
 			#endregion
+			//Create Intro Background
+			GameObject introBackground = new GameObject("IntroBackground");
+			introBackground.tag = "IntroBackground";
+			var spriteRender = introBackground.AddComponent<SpriteRenderer>();
+			spriteRender.sprite = SpriteReference.spriteIntroBackground;
+			SpriteReference.ResizeSpriteToScreen(introBackground, Camera.main, 1, 1);
 		} //end Start
 		
 		//Main function for controlling game
@@ -58,18 +66,25 @@ namespace GSP
 		{
 			//Will fill in later with game controls. Refer to UMLs for other details.
 			//PROGRAM ENTRY POINT
-			var state = GameObject.FindGameObjectWithTag("GUITextTag").GetComponent<GUIText>(); //GUI TEMP
+			var state = GameObject.FindGameObjectWithTag ("GUITextTag").GetComponent<GUIText> ();
 			switch(m_programState)
 			{
 				//INTRO
 			case OVERALLSTATES.INTRO:
-				//Play video or whatever. Wait for seconds is placeholder
+				//Create background
 				print ("The intro is currently playing.");
 				state.text = "Welcome To The Traveler!";
+
 				//After intro finishes, move to menu
 				if(Time.time > timeHolder)
 				{
 					m_programState = OVERALLSTATES.MENU;
+					Destroy (GameObject.FindGameObjectWithTag("IntroBackground"));
+					GameObject menuBackground = new GameObject("MenuBackground");
+					menuBackground.tag = "MenuBackground";
+					var spriteRender = menuBackground.AddComponent<SpriteRenderer>();
+					spriteRender.sprite = SpriteReference.spriteMenuBackground;
+					SpriteReference.ResizeSpriteToScreen(menuBackground, Camera.main, 1, 1);
 				} //end wait if
 				break;
 				//MENU
@@ -77,10 +92,10 @@ namespace GSP
 				//MENU ENTRY POINT
 				switch(m_menuState)
 				{
-					//HOME - Menu hub, displays all buttons for menu
 				case MENUSTATES.HOME:
 					//Button code goes here
 					//Placeholder for testing
+					//HOME - Menu hub, displays all buttons for menu
 					print ("S for Solo, M for Multi, C for Credits, O for Options, Q for Quit");
 					state.text = "Menu:\nS - Solo Player Mode\nM - Multiplayer Mode\n" +
 						"C - Credits\nO - Options\nQ - Quit";
@@ -209,6 +224,7 @@ namespace GSP
 				//GAME
 			case OVERALLSTATES.GAME:
 				//GAMEPLAY ENTRY POINT
+				Destroy (GameObject.FindGameObjectWithTag("MenuBackground"));
 				Application.LoadLevel("area01");
 				m_programState = OVERALLSTATES.MENU;
 				m_menuState = MENUSTATES.HOME;
@@ -233,7 +249,7 @@ namespace GSP
 				break;
 			} //end Program Switch
 		} //end Update
-		
+
 		//State machine functions
 		//Program state
 		public int GetState()
