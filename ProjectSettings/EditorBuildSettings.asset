@@ -10,4 +10,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/area01.unity
   - enabled: 1
+    path: Assets/Scenes/area02.unity
+  - enabled: 1
+    path: Assets/Scenes/area03.unity
+  - enabled: 1
+    path: Assets/Scenes/area04.unity
+  - enabled: 1
     path: Assets/Scenes/EndScene.unity
