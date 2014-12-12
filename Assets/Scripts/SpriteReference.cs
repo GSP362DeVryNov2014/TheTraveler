@@ -11,7 +11,7 @@ namespace GSP
 		 */
 
 		// This is the sprite sheet for the buttons.
-		public static Sprite[] buttonSpritesheet = Resources.LoadAll<Sprite>("buttons_sprite_sheet");
+		static Sprite[] buttonSpritesheet = Resources.LoadAll<Sprite>("buttons_sprite_sheet");
 
 		// This is the reference to the menu backgrond sprite.
 		public static Sprite spriteMenuBackground = buttonSpritesheet[0];
@@ -37,6 +37,15 @@ namespace GSP
 		// This is the reference to the credit button sprite.
 		public static Sprite spriteCredit = buttonSpritesheet[7];
 
+		// This is the reference to the credit button sprite.
+		public static Sprite spriteMulti = buttonSpritesheet[8];
+
+		// This is the reference to the credit button sprite.
+		public static Sprite spriteSolo = buttonSpritesheet[9];
+
+		// This is the reference to the credit button sprite.
+		public static Sprite spriteBack = buttonSpritesheet[10];
+		
 		//Resizes to fit screen
 		public static void ResizeSpriteToScreen(GameObject theSprite, Camera theCamera, int fitToScreenWidth, int fitToScreenHeight)
 		{
