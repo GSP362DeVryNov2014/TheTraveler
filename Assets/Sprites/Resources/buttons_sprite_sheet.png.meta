@@ -10,10 +10,13 @@ TextureImporter:
     21300010: buttons_sprite_sheet_5
     21300012: buttons_sprite_sheet_6
     21300014: buttons_sprite_sheet_7
+    21300016: buttons_sprite_sheet_8
+    21300018: buttons_sprite_sheet_9
+    21300020: buttons_sprite_sheet_10
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -33,7 +36,7 @@ TextureImporter:
   maxTextureSize: 4096
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: 1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -75,9 +78,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 39
-        y: 944
-        width: 274
-        height: 87
+        y: 946
+        width: 273
+        height: 84
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -85,19 +88,19 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 39
-        y: 838
-        width: 274
-        height: 82
+        y: 836
+        width: 277
+        height: 86
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: buttons_sprite_sheet_4
       rect:
         serializedVersion: 2
-        x: 41
-        y: 726
-        width: 270
-        height: 83
+        x: 39
+        y: 725
+        width: 277
+        height: 86
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -105,18 +108,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 39
-        y: 612
-        width: 272
-        height: 84
+        y: 611
+        width: 277
+        height: 86
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: buttons_sprite_sheet_6
       rect:
         serializedVersion: 2
-        x: 40
-        y: 502
-        width: 271
+        x: 39
+        y: 501
+        width: 277
         height: 86
       alignment: 0
       pivot: {x: .5, y: .5}
@@ -124,10 +127,40 @@ TextureImporter:
     - name: buttons_sprite_sheet_7
       rect:
         serializedVersion: 2
-        x: 37
-        y: 387
-        width: 272
-        height: 84
+        x: 36
+        y: 386
+        width: 277
+        height: 86
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: buttons_sprite_sheet_8
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 271
+        width: 277
+        height: 86
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: buttons_sprite_sheet_9
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 156
+        width: 277
+        height: 86
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: buttons_sprite_sheet_10
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 41
+        width: 277
+        height: 86
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
