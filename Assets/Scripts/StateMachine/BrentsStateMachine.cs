@@ -7,7 +7,7 @@ namespace GSP
 	public class BrentsStateMachine : MonoBehaviour
 	{
 		//Contains overall states of program
-		enum OVERALLSTATES {INTRO, MENU, GAME, END};
+		public enum OVERALLSTATES {INTRO, MENU, GAME, END};
 		//Contains states of menu
 		public enum MENUSTATES {HOME, SOLO, MULTI, CREDITS, OPTIONS, QUIT};
 		
@@ -15,17 +15,26 @@ namespace GSP
 		OVERALLSTATES m_programState;		//Current overall state
 		MENUSTATES m_menuState;				//Current menu state
 		float timeHolder;					//Holds waiting time
+
+		//Backgrounds
 		GameObject introBackground;			//Intro Background
 		GameObject menuBackground;			//Menu Background
+
+		//Buttons
 		GameObject soloButton;				//Solo play button
 		GameObject multiButton;				//Multiplayer button
 		GameObject creditsButton;			//Credits button
 		GameObject optionsButton;			//Options button
 		GameObject quitButton;				//Quit button
 		GameObject backButton;				//Back button
-		public string m_ButtonState;		//Holds what state the button is in
 		bool created;						//Determines if menu buttons were created
 
+		//Map and Player Selection
+		GameObject desertMap;				//Desert Map
+		GameObject snowMap;					//Snowy Map
+		GameObject cityMap;					//Metropolis Map
+		GameObject euroMap;					//European Map
+		public string m_mapSelection;		//Holds scene name of map
 		#region Menu Data Declaration Stuff
 
 		// Holds the reference to the game object.
@@ -42,7 +51,8 @@ namespace GSP
 			m_programState = OVERALLSTATES.INTRO;		//Initial beginning of game
 			m_menuState = MENUSTATES.HOME;				//Prevents triggers from occuring before called
 			timeHolder = Time.time + 3.0f;				//Initialize first wait period
-			created = false;
+			created = false;							//Menu has not been created yet
+			m_mapSelection = "nothing";					//Nothing has been chosen yet
 
 			#region Menu Data Initialisation Stuff
 			
@@ -60,7 +70,7 @@ namespace GSP
 
 			// Get the menu data object's script.
 			m_menuDataScript = m_menuData.GetComponent<MenuData>();
-			
+
 			#endregion
 
 			//Create Intro Background
@@ -125,20 +135,26 @@ namespace GSP
 					if(created)
 					{
 						DestroyButtons();
+						CreateMaps();
+						state.text = "Click which map you want to play.";
 					} //end if
 
 					//Apply any choices for Single Player here
-					state.text = "Setting up solo play mode, one moment.";
 
-					#region Menu Data Adding Stuff
+					//Only continue once a map has been chosen
+					if(m_mapSelection != "nothing")
+					{
+						//Pick player amount
+						#region Menu Data Adding Stuff
 
-					// Set the number of players to one for solo mode.
-					m_menuDataScript.NumberPlayers = 1;
+						// Set the number of players to one for solo mode.
+						m_menuDataScript.NumberPlayers = 1;
 
-					#endregion
+						#endregion
 
-					//Transition into game state
-					m_programState = OVERALLSTATES.GAME;
+						//Transition into game state
+						m_programState = OVERALLSTATES.GAME;
+					} //end if
 					break;
 					//MULTI - Multiplayer game
 				case MENUSTATES.MULTI:
@@ -210,11 +226,12 @@ namespace GSP
 				//GAME
 			case OVERALLSTATES.GAME:
 				//GAMEPLAY ENTRY POINT
-				//Destroy old background
+				//Destroy old background and back button
 				Destroy (GameObject.FindGameObjectWithTag("MenuBackground"));
+				Destroy (GameObject.FindGameObjectWithTag("BackButton"));
 
 				//Load selected level
-				Application.LoadLevel("area01");
+				Application.LoadLevel(m_mapSelection);
 
 				//Reset states
 				m_programState = OVERALLSTATES.MENU;
@@ -351,6 +368,19 @@ namespace GSP
 			backButton.transform.localPosition = new Vector3(0.0f, -3.0f, 0.0f);
 			backRender.sortingOrder = 2;
 		} //end DestroyButtons()
+
+		void CreateMaps()
+		{
+			//Desert Map
+			desertMap = new GameObject("Desert Button");
+			desertMap.tag = "SoloButton";
+			var desertRender = desertMap.AddComponent<SpriteRenderer>();
+			desertRender.sprite = SpriteReference.spriteStart;
+			desertMap.AddComponent<BoxCollider2D>();
+			desertMap.AddComponent<DesertMapCollision>();
+			desertMap.transform.localPosition = new Vector3(-2.0f, 3.0f, 0.0f);
+			desertRender.sortingOrder = 2;
+		} //end CreateMaps()
 
 		public void ChangeMenuState(MENUSTATES state)
 		{
