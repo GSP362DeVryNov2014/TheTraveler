@@ -16,6 +16,12 @@ TagManager:
   - AudioSourceTag
   - IntroBackground
   - MenuBackground
+  - SoloButton
+  - MultiButton
+  - CreditsButton
+  - OptionsButton
+  - QuitButton
+  - BackButton
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

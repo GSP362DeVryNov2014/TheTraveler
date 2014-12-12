@@ -17,6 +17,13 @@ namespace GSP
 		float timeHolder;					//Holds waiting time
 		GameObject introBackground;			//Intro Background
 		GameObject menuBackground;			//Menu Background
+		GameObject soloButton;				//Solo play button
+		GameObject multiButton;				//Multiplayer button
+		GameObject creditsButton;			//Credits button
+		GameObject optionsButton;			//Options button
+		GameObject quitButton;				//Quit button
+		GameObject backButton;				//Back button
+		public string m_ButtonState;		//Holds what state the button is in
 
 		#region Menu Data Declaration Stuff
 
@@ -53,8 +60,9 @@ namespace GSP
 			m_menuDataScript = m_menuData.GetComponent<MenuData>();
 			
 			#endregion
+
 			//Create Intro Background
-			GameObject introBackground = new GameObject("IntroBackground");
+			introBackground = new GameObject("IntroBackground");
 			introBackground.tag = "IntroBackground";
 			var spriteRender = introBackground.AddComponent<SpriteRenderer>();
 			spriteRender.sprite = SpriteReference.spriteIntroBackground;
@@ -74,33 +82,39 @@ namespace GSP
 				//Create background
 				print ("The intro is currently playing.");
 				state.text = "Welcome To The Traveler!";
-
 				//After intro finishes, move to menu
 				if(Time.time > timeHolder)
 				{
+					//Change state
 					m_programState = OVERALLSTATES.MENU;
+
+					//Destroy old background and text
 					Destroy (GameObject.FindGameObjectWithTag("IntroBackground"));
-					GameObject menuBackground = new GameObject("MenuBackground");
+					state.text = "";
+
+					//Create new background
+					menuBackground = new GameObject("MenuBackground");
 					menuBackground.tag = "MenuBackground";
 					var spriteRender = menuBackground.AddComponent<SpriteRenderer>();
 					spriteRender.sprite = SpriteReference.spriteMenuBackground;
 					SpriteReference.ResizeSpriteToScreen(menuBackground, Camera.main, 1, 1);
+
+					//Create menu buttons
+					CreateButtons();
 				} //end wait if
 				break;
 				//MENU
 			case OVERALLSTATES.MENU:
 				//MENU ENTRY POINT
+				state.transform.position = new Vector3(0.5f, 0.5f, 0.0f);
 				switch(m_menuState)
 				{
 				case MENUSTATES.HOME:
-					//Button code goes here
-					//Placeholder for testing
 					//HOME - Menu hub, displays all buttons for menu
-					print ("S for Solo, M for Multi, C for Credits, O for Options, Q for Quit");
-					state.text = "Menu:\nS - Solo Player Mode\nM - Multiplayer Mode\n" +
-						"C - Credits\nO - Options\nQ - Quit";
+
 					if(Input.GetKeyDown(KeyCode.S))
 					{
+						DestroyButtons();
 						print ("Solo mode chosen.");
 						state.text = "Solo mode chosen, please wait.";
 						timeHolder = Time.time + 1.5f;
@@ -108,6 +122,7 @@ namespace GSP
 					} //end Solo chosen if
 					else if(Input.GetKeyDown(KeyCode.M))
 					{
+						DestroyButtons();
 						print ("Multiplayer mode chosen.");
 						state.text = "Multiplayer mode chosen, please wait.";
 						timeHolder = Time.time + 1.5f;
@@ -115,6 +130,7 @@ namespace GSP
 					} //end Multiplayer chosen else if
 					else if(Input.GetKeyDown(KeyCode.C))
 					{
+						DestroyButtons();
 						print ("Credits chosen.");
 						state.text = "Loading credits, please wait.";
 						timeHolder = Time.time + 1.5f;
@@ -122,6 +138,7 @@ namespace GSP
 					} //end Credits chosen else if
 					else if(Input.GetKeyDown(KeyCode.O))
 					{
+						DestroyButtons();
 						print ("Options chosen.");
 						state.text = "Loading options, please wait.";
 						timeHolder = Time.time + 1.5f;
@@ -129,6 +146,7 @@ namespace GSP
 					} //end Options chosen else if
 					else if(Input.GetKeyDown(KeyCode.Q))
 					{
+						DestroyButtons();
 						print ("Quit chosen.");
 						state.text = "Closing game, please wait.";
 						timeHolder = Time.time + 1.5f;
@@ -138,6 +156,7 @@ namespace GSP
 					//SOLO - Single Player game
 				case MENUSTATES.SOLO:
 					//Apply any choices for Single Player here
+
 					if(Time.time > timeHolder)
 					{
 						print ("Setting up solo mode.");
@@ -190,6 +209,8 @@ namespace GSP
 						if(Input.GetKeyDown(KeyCode.Return))
 						{
 							m_menuState = MENUSTATES.HOME;
+							CreateButtons();
+							state.text = "";
 						} //end Back chosen if
 					} //end wait if
 					break;
@@ -205,6 +226,8 @@ namespace GSP
 						if(Input.GetKeyDown(KeyCode.Return))
 						{
 							m_menuState = MENUSTATES.HOME;
+							CreateButtons();
+							state.text = "";
 						} //end Back chosen if
 					} //end wait if
 					break;
@@ -262,5 +285,81 @@ namespace GSP
 		{
 			return (int)m_menuState;
 		} //end GetMenu()
+
+		void CreateButtons()
+		{
+			//Destroy Backbutton
+			if(GameObject.FindGameObjectWithTag("BackButton") != null)
+			{
+				Destroy (GameObject.FindGameObjectWithTag("BackButton"));
+			} //end if
+
+			#region CreateButtons
+			//Solo Button
+			soloButton = new GameObject("Solo Button");
+			soloButton.tag = "SoloButton";
+			var soloRender = soloButton.AddComponent<SpriteRenderer>();
+			soloRender.sprite = SpriteReference.spriteStart;
+			soloButton.AddComponent<BoxCollider2D>();
+			soloButton.transform.localPosition = new Vector3(0.0f, 3.0f, 0.0f);
+			soloRender.sortingOrder = 2;
+			
+			//Multi Button
+			multiButton = new GameObject("Multi Button");
+			multiButton.tag = "MultiButton";
+			var multiRender = multiButton.AddComponent<SpriteRenderer>();
+			multiRender.sprite = SpriteReference.spriteContinue;
+			multiButton.AddComponent<BoxCollider2D>();
+			multiButton.transform.localPosition = new Vector3(0.0f, 1.5f, 0.0f);
+			multiRender.sortingOrder = 2;
+			
+			//Credits Button
+			creditsButton = new GameObject("Credits Button");
+			creditsButton.tag = "CreditsButton";
+			var creditsRender = creditsButton.AddComponent<SpriteRenderer>();
+			creditsRender.sprite = SpriteReference.spriteCredit;
+			creditsButton.AddComponent<BoxCollider2D>();
+			creditsButton.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+			creditsRender.sortingOrder = 2;
+			
+			//Options Button
+			optionsButton = new GameObject("Options Button");
+			optionsButton.tag = "OptionsButton";
+			var optionsRender = optionsButton.AddComponent<SpriteRenderer>();
+			optionsRender.sprite = SpriteReference.spriteOptions;
+			optionsButton.AddComponent<BoxCollider2D>();
+			optionsButton.transform.localPosition = new Vector3(0.0f, -1.5f, 0.0f);
+			optionsRender.sortingOrder = 2;
+			
+			//Quit Button
+			quitButton = new GameObject("Quit Button");
+			quitButton.tag = "QuitButton";
+			var quitRender = quitButton.AddComponent<SpriteRenderer>();
+			quitRender.sprite = SpriteReference.spriteExit;
+			quitButton.AddComponent<BoxCollider2D>();
+			quitButton.transform.localPosition = new Vector3(0.0f, -3.0f, 0.0f);
+			quitRender.sortingOrder = 2;
+			#endregion
+		} //end CreateButtons()
+
+		void DestroyButtons()
+		{
+			//Destroy menu buttons
+			Destroy (GameObject.FindGameObjectWithTag("SoloButton"));
+			Destroy (GameObject.FindGameObjectWithTag("MultiButton"));
+			Destroy (GameObject.FindGameObjectWithTag("CreditsButton"));
+			Destroy (GameObject.FindGameObjectWithTag("OptionsButton"));
+			Destroy (GameObject.FindGameObjectWithTag("QuitButton"));
+
+			//Create Backbutton
+			//Back Button
+			backButton = new GameObject("Back Button");
+			backButton.tag = "BackButton";
+			var backRender = backButton.AddComponent<SpriteRenderer>();
+			backRender.sprite = SpriteReference.spriteExit;
+			backButton.AddComponent<BoxCollider2D>();
+			backButton.transform.localPosition = new Vector3(0.0f, -3.0f, 0.0f);
+			backRender.sortingOrder = 2;
+		} //end DestroyButtons()
 	} //end StateMachine class
 } //end namespace GSP
