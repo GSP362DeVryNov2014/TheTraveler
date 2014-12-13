@@ -41,12 +41,10 @@ namespace GSP.JAVIERGUI
 			m_mainWidth = p_startWidth;
 			m_mainHeight = p_startHeight;
 
-			/////////////////////////////
 			m_headerString = p_resultMapEvent;
-			////////////////////////////
-			//m_itemString = p_itemStr;
-			//m_resourceString = p_resourceStr;
-			////////////////////////////
+
+			//Glow effect on Item Button
+
 		}
 		
 		void OnGUI()
@@ -100,14 +98,9 @@ namespace GSP.JAVIERGUI
 			
 			if( GUI.Button(new Rect(newX, newY, newWdth, newHght*2), "Yes") )
 			{
-				//TODO:GET RESOURCE RESULT FROM MAPEVENT
+				//GET RESOURCE RESULT FROM MAPEVENT
 				//function() will get teh result of the map Event.
-				////////////////////////////////////
-				//m_itemString = "BLANK"; //function here;
-				//m_headerString = "Item Added.\n" +m_itemString;
-				///////////////////////////////////
 				m_headerString = m_MapEventScript.ResolveItem(m_PlayerEntity);
-				///////////////////////////////////
 
 				m_selectionMadeAddRemove = true;
 			}

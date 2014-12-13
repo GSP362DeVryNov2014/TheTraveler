@@ -48,6 +48,8 @@ namespace GSP
 		GSP.JAVIERGUI.GUIItem m_GUIItemScript;
 		GSP.JAVIERGUI.GUIResource m_GUIResourceScript;
 		GSP.JAVIERGUI.GUINothing m_GUINothingScript;
+		GSP.GameplayStateMachine m_GameplayStateMachineScript;
+		GSP.JAVIERGUI.GUIBottomBar m_GUIBottomBarScript;
 
 		//main container values
 		int m_mainStartX = 0;
@@ -68,8 +70,12 @@ namespace GSP
 			m_GUIItemScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIItem>();
 			m_GUIResourceScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUIResource>();
 			m_GUINothingScript = GameObject.FindGameObjectWithTag("GUIMapEventSpriteTag").GetComponent<GSP.JAVIERGUI.GUINothing>();
+			m_GameplayStateMachineScript = GameObject.FindGameObjectWithTag("GamePlayStateMachineTag").GetComponent<GSP.GameplayStateMachine>();
+			m_GUIBottomBarScript = GameObject.FindGameObjectWithTag("GamePlayStateMachineTag").GetComponent<GSP.JAVIERGUI.GUIBottomBar>();
+
 		}
-		
+
+
 		public void InitThis(GameObject p_PlayerEntity, string p_mapEventType, string p_result )
 			//----------------------------------------------------
 			//	own custome overloaded constructor
@@ -104,7 +110,8 @@ namespace GSP
 			m_resultString = p_result;
 			
 		} //end InitThis()
-		
+
+
 		public bool isActionRunning()
 			//-----------------------------------------------
 			// returs true if the map event is still running
@@ -153,6 +160,7 @@ namespace GSP
 			case m_EnumMapEvent.ALLY:
 				if( m_initScript == false )
 				{
+					m_GUIBottomBarScript.AnimateAllyButton();
 					m_GUIAllyScript.InitGUIAlly( m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight );
 					m_initScript = true;
 				}
@@ -161,6 +169,7 @@ namespace GSP
 			case m_EnumMapEvent.ITEM:
 				if( m_initScript == false )
 				{
+					m_GUIBottomBarScript.AnimateItemButton();
 					m_GUIItemScript.InitGUIItem(m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
 					m_initScript = true;
 				}
@@ -169,6 +178,7 @@ namespace GSP
 			case m_EnumMapEvent.RESOURCE:
 				if(m_initScript == false)
 				{
+					m_GameplayStateMachineScript.AnimateResourceButton(false);
 					m_GUIResourceScript.InitThis( m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
 					m_initScript = true;
 				}
@@ -187,8 +197,7 @@ namespace GSP
 				m_isActionRunning = false;
 				m_initScript = false;
 				break;
-	
-				
+
 			default:
 				print ("GUIMapEventsMachine is in Default");
 				break;
@@ -207,12 +216,12 @@ namespace GSP
 			
 		} //end private void GUIContainer()
 
+
 		public void MapeEventDone()
 		{
 			m_currEnumMpEvent = m_EnumMapEvent.DONE;
 		}
-		
-	} //class GUIMapEvents{}
-	
+
+	}	//end public class GUIMapEvents : Monobehavior
 } //end namespace GSP
 
