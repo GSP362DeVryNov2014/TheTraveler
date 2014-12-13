@@ -31,20 +31,23 @@ namespace GSP
 		// This is the reference to the continue button sprite.
 		public static Sprite spriteContinue = buttonSpritesheet[5];
 
-		// This is the reference to the mrnu button sprite.
+		// This is the reference to the menu button sprite.
 		public static Sprite spriteMenu = buttonSpritesheet[6];
 
 		// This is the reference to the credit button sprite.
 		public static Sprite spriteCredit = buttonSpritesheet[7];
 
-		// This is the reference to the credit button sprite.
+		// This is the reference to the multi button sprite.
 		public static Sprite spriteMulti = buttonSpritesheet[8];
 
-		// This is the reference to the credit button sprite.
+		// This is the reference to the solo button sprite.
 		public static Sprite spriteSolo = buttonSpritesheet[9];
 
-		// This is the reference to the credit button sprite.
+		// This is the reference to the back button sprite.
 		public static Sprite spriteBack = buttonSpritesheet[10];
+
+		// This is the reference to the help button sprite.
+		public static Sprite spriteHelp = buttonSpritesheet[11];
 
 		// This is the sprite sheet for the map thumbnails.
 		static Sprite[] mapThumbnails = Resources.LoadAll<Sprite>( "map_thumbnails" );
