@@ -11,7 +11,7 @@ namespace GSP
 		 */
 
 		// This is the sprite sheet for the buttons.
-		static Sprite[] buttonSpritesheet = Resources.LoadAll<Sprite>("buttons_sprite_sheet");
+		static Sprite[] buttonSpritesheet = Resources.LoadAll<Sprite>( "buttons_sprite_sheet" );
 
 		// This is the reference to the menu backgrond sprite.
 		public static Sprite spriteMenuBackground = buttonSpritesheet[0];
@@ -45,40 +45,55 @@ namespace GSP
 
 		// This is the reference to the credit button sprite.
 		public static Sprite spriteBack = buttonSpritesheet[10];
+
+		// This is the sprite sheet for the map thumbnails.
+		static Sprite[] mapThumbnails = Resources.LoadAll<Sprite>( "map_thumbnails" );
+
+		// This is the reference to the credit button sprite.
+		public static Sprite spriteMapDesert = mapThumbnails[0];
+
+		// This is the reference to the credit button sprite.
+		public static Sprite spriteMapSnowy = mapThumbnails[1];
+
+		// This is the reference to the credit button sprite.
+		public static Sprite spriteMapMetro = mapThumbnails[2];
+
+		// This is the reference to the credit button sprite.
+		public static Sprite spriteMapEuro = mapThumbnails[3];
 		
 		//Resizes to fit screen
-		public static void ResizeSpriteToScreen(GameObject theSprite, Camera theCamera, int fitToScreenWidth, int fitToScreenHeight)
+		public static void ResizeSpriteToScreen( GameObject theSprite, Camera theCamera, int fitToScreenWidth, int fitToScreenHeight )
 		{
 			// Get the sprites sprite renderer component.
 			SpriteRenderer spriteRenderer = theSprite.GetComponent<SpriteRenderer>();
 			
 			// Set the scale to normal.
-			theSprite.transform.localScale = new Vector3(1,1,1);
+			theSprite.transform.localScale = new Vector3( 1, 1, 1 );
 			
 			// Get the sprites width and height.
 			float spriteWidth = spriteRenderer.sprite.bounds.size.x;
 			float spriteHeight = spriteRenderer.sprite.bounds.size.y;
 			
 			// Get the world width and height.
-			float worldScreenHeight = (float)(theCamera.orthographicSize * 2.0);
-			float worldScreenWidth = (float)(worldScreenHeight / Screen.height * Screen.width);
+			float worldScreenHeight = (float)( theCamera.orthographicSize * 2.0 );
+			float worldScreenWidth = (float)( worldScreenHeight / Screen.height * Screen.width );
 			
 			// Set the scale to fit the sprite to the screen.
-			if (fitToScreenWidth != 0)
+			if ( fitToScreenWidth != 0 )
 			{
 				// Get the width scale needed.
-				Vector2 sizeX = new Vector2(worldScreenWidth / spriteWidth / fitToScreenWidth, 
-					theSprite.transform.localScale.y);
+				Vector2 sizeX = new Vector2( worldScreenWidth / spriteWidth / fitToScreenWidth, 
+					theSprite.transform.localScale.y );
 				theSprite.transform.localScale = sizeX;
 			} // end if statement
-			if (fitToScreenHeight != 0)
+			if ( fitToScreenHeight != 0 )
 			{
 				// Get the height scale needed.
-				Vector2 sizeY = new Vector2(theSprite.transform.localScale.x, 
-					worldScreenHeight / spriteHeight / fitToScreenHeight);
+				Vector2 sizeY = new Vector2( theSprite.transform.localScale.x, 
+					worldScreenHeight / spriteHeight / fitToScreenHeight );
 				theSprite.transform.localScale = sizeY;
 			} // end if statement
 		} // end ResizeSpriteToScreen function
-	} // end PrefabReference class
+	} // end SpriteReference class
 } // end namespace
 
