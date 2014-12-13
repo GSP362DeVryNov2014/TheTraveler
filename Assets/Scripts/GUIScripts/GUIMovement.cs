@@ -59,6 +59,9 @@ namespace GSP
 			// Player character script.
 			m_playerCharacterScript = m_PlayerEntity.GetComponent<GSP.Char.Character>();
 
+			// Generate the initial set of highlight objects.
+			Highlight.GenerateHighlight( m_origPlayerPosition, m_currTravelDist );
+
 			//movement script
 
 		}	//end public void InitThis()
@@ -96,6 +99,8 @@ namespace GSP
 					m_displacementVector = m_MovementScript.MoveLeft(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.WEST ); // Face the character to the west which is to the left.
 					MovePlayer();
+					Highlight.ClearHightlight(); // Clear the highlight objects.
+					Highlight.GenerateHighlight( m_PlayerEntity.transform.position, m_currTravelDist ); // Recreate the highlights with the new values.
 				}
 				//right
 				if( GUI.Button( new Rect( (Screen.width -(1*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), ">" ) )
@@ -103,6 +108,8 @@ namespace GSP
 					m_displacementVector = m_MovementScript.MoveRight(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.EAST ); // Face the character to the east which is to the right.
 					MovePlayer();
+					Highlight.ClearHightlight(); // Clear the highlight objects.
+					Highlight.GenerateHighlight( m_PlayerEntity.transform.position, m_currTravelDist ); // Recreate the highlights with the new values.
 				}
 				//cancel
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(2*height) +gridYShift), width, height ), "X" ) )
@@ -110,6 +117,8 @@ namespace GSP
 					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.SOUTH ); // Face the character to the south which is to the left. This is the default facing.
 					//MOVE BACK TO ORIG POSITION
 					CancelMove();
+					Highlight.ClearHightlight(); // Clear the highlight objects.
+					Highlight.GenerateHighlight( m_origPlayerPosition, m_currTravelDist ); // Recreate the highlights with the new values.
 				}
 				//up
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(3*height) +gridYShift), width, height ), "^" ) )
@@ -117,6 +126,8 @@ namespace GSP
 					m_displacementVector = m_MovementScript.MoveUp(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.NORTH ); // Face the character to the north which is up.
 					MovePlayer();
+					Highlight.ClearHightlight(); // Clear the highlight objects.
+					Highlight.GenerateHighlight( m_PlayerEntity.transform.position, m_currTravelDist ); // Recreate the highlights with the new values.
 				}
 				//down
 				if( GUI.Button( new Rect( (Screen.width -(2*width) +gridXShift), (Screen.height -(1*height) +gridYShift), width, height ), "v" ) )
@@ -124,6 +135,8 @@ namespace GSP
 					m_displacementVector = m_MovementScript.MoveDown(m_PlayerEntity.transform.position); //uncomment this and comment above when Brents Movement class is ready
 					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.SOUTH ); // Face the character to the south which is down.
 					MovePlayer();
+					Highlight.ClearHightlight(); // Clear the highlight objects.
+					Highlight.GenerateHighlight( m_PlayerEntity.transform.position, m_currTravelDist ); // Recreate the highlights with the new values.
 				}
 
 			} //end if( m_currDistTravel > 0 )
@@ -134,6 +147,8 @@ namespace GSP
 					m_playerCharacterScript.Face( GSP.Char.Character.FacingDirection.SOUTH ); // Face the character to the south which is to the left. This is the default facing.
 					//TODO: CANCEL MOVE, MOVE BACK TO ORIG POSITION
 					CancelMove();
+					Highlight.ClearHightlight(); // Clear the highlight objects.
+					Highlight.GenerateHighlight( m_origPlayerPosition, m_currTravelDist ); // Recreate the highlights with the new values.
 				}
 				//display travel distance is 0
 				GUI.Box( new Rect( (Screen.width -(3*width) +gridXShift), (Screen.height -(3*height) +gridYShift), 3*width, height ), "Out of Distance." );

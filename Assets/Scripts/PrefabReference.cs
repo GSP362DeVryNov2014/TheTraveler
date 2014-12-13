@@ -29,6 +29,9 @@ namespace GSP
 
 		// This is the reference to the item prefab.
 		public static GameObject prefabItem = Resources.Load ("Item") as GameObject;
+
+		// This is the reference to the item prefab.
+		public static GameObject prefabHighlight = Resources.Load ("Highlight") as GameObject;
 	} // end PrefabReference class
 } // end namespace
 

@@ -602,6 +602,9 @@ namespace GSP
 			case GamePlayState.ENDTURN:
 				state.text = "End Turn";
 				
+				// Clear the board of any highlight tiles.
+				Highlight.ClearHightlight();
+				
 				//next players turn
 				m_GUIPlayerTurn = m_GUIPlayerTurn +1;
 

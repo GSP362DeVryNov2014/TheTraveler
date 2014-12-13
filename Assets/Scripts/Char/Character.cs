@@ -3,8 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using GSP.Tiles;
-using System.Linq;
-using UnityEditor;
 
 namespace GSP.Char
 {
@@ -567,7 +565,7 @@ namespace GSP.Char
 		public void SetCharacterSprites( int playerNumber )
 		{
 			// A temporary sprite array.
-			Sprite[] tmp = AssetDatabase.LoadAllAssetsAtPath ("Assets/Sprites/player" + playerNumber + ".png").OfType<Sprite>().ToArray();
+			Sprite[] tmp = Resources.LoadAll<Sprite>("player" + playerNumber);
 
 			// Add the idle sprites for each direction.
 			m_CharSprites.Add(tmp[1]);

@@ -13,6 +13,19 @@ TagManager:
   - EndSceneCharDataTag
   - EndSceneDataTag
   - MenuDataTag
+  - AudioSourceTag
+  - IntroBackground
+  - MenuBackground
+  - SoloButton
+  - MultiButton
+  - CreditsButton
+  - OptionsButton
+  - QuitButton
+  - BackButton
+  - DesertMap
+  - SnowMap
+  - MetroMap
+  - EuroMap
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
