@@ -142,12 +142,14 @@ namespace GSP
 					{
 						DestroyButtons();
 					} //end if
+
+					//Display maps for selection
+					state.transform.position = new Vector3(0.5f, 0.4f, 0.0f);
 					if(!mapsCreated)
 					{
 						CreateMaps();
 						state.text = "Click which map you want to play.";
 					} //end if
-					//Apply any choices for Single Player here
 
 					//Only continue once a map has been chosen
 					if(m_mapSelection != "nothing")
@@ -171,22 +173,49 @@ namespace GSP
 					{
 						DestroyButtons();
 					} //end if
+					
+					//Display maps for selection
+					state.transform.position = new Vector3(0.5f, 0.4f, 0.0f);
+					if(!mapsCreated)
+					{
+						CreateMaps();
+						state.text = "Click which map you want to play.";
+					} //end if
+					
+					//Only continue once a map has been chosen
+					if(m_mapSelection != "nothing")
+					{
+						state.text = "Enter the number of players (1-4)";
+						//Pick player amount
+						#region Menu Data Adding Stuff
 
-					//Apply any choices for Multiplayer here
-					state.text = "Setting up multiplayer mode, one moment.";
-
-					#region Menu Data Adding Stuff
-						
-					// Get the number of players some how.
-						
-					// Until then, set the number of players to two for multi-mode.
-					m_menuDataScript.NumberPlayers = 2;
-						
-					#endregion
-						
-					//Transition into game state
-					m_programState = OVERALLSTATES.GAME;
-					timeHolder = Time.time + 1.5f;
+						//Set number of players
+						if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+						{
+							m_menuDataScript.NumberPlayers = 1;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						else if(Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+						{
+							m_menuDataScript.NumberPlayers = 2;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						else if(Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+						{
+							m_menuDataScript.NumberPlayers = 3;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						else if(Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+						{
+							m_menuDataScript.NumberPlayers = 4;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						#endregion
+					} //end if
 					break;
 					//CREDITS - Display names and instructions
 				case MENUSTATES.CREDITS:
@@ -379,14 +408,44 @@ namespace GSP
 		void CreateMaps()
 		{
 			//Desert Map
-			desertMap = new GameObject("Desert Button");
-			desertMap.tag = "SoloButton";
+			desertMap = new GameObject("Desert Map");
+			desertMap.tag = "DesertMap";
 			var desertRender = desertMap.AddComponent<SpriteRenderer>();
-			desertRender.sprite = SpriteReference.spriteStart;
+			desertRender.sprite = SpriteReference.spriteMapDesert;
 			desertMap.AddComponent<BoxCollider2D>();
 			desertMap.AddComponent<DesertMapCollision>();
-			desertMap.transform.localPosition = new Vector3(-2.0f, 3.0f, 0.0f);
+			desertMap.transform.localPosition = new Vector3(-8.5f, 2.5f, 0.0f);
 			desertRender.sortingOrder = 2;
+
+			//Euro Map
+			euroMap = new GameObject("Euro Map");
+			euroMap.tag = "EuroMap";
+			var euroRender = euroMap.AddComponent<SpriteRenderer>();
+			euroRender.sprite = SpriteReference.spriteMapEuro;
+			euroMap.AddComponent<BoxCollider2D>();
+			euroMap.AddComponent<EuroMapCollision>();
+			euroMap.transform.localPosition = new Vector3(-3.0f, 2.5f, 0.0f);
+			euroRender.sortingOrder = 2;
+
+			//Metro Map
+			metroMap = new GameObject("Metro Map");
+			metroMap.tag = "MetroMap";
+			var metroRender = metroMap.AddComponent<SpriteRenderer>();
+			metroRender.sprite = SpriteReference.spriteMapMetro;
+			metroMap.AddComponent<BoxCollider2D>();
+			metroMap.AddComponent<MetroMapCollision>();
+			metroMap.transform.localPosition = new Vector3(3.0f, 2.5f, 0.0f);
+			metroRender.sortingOrder = 2;
+
+			//Snow Map
+			snowMap = new GameObject("Snow Map");
+			snowMap.tag = "SnowMap";
+			var snowRender = snowMap.AddComponent<SpriteRenderer>();
+			snowRender.sprite = SpriteReference.spriteMapSnowy;
+			snowMap.AddComponent<BoxCollider2D>();
+			snowMap.AddComponent<SnowMapCollision>();
+			snowMap.transform.localPosition = new Vector3(8.5f, 2.5f, 0.0f);
+			snowRender.sortingOrder = 2;
 
 			//Maps are visible, set mapsCreated to true
 			mapsCreated = true;
@@ -395,7 +454,10 @@ namespace GSP
 		void DestroyMaps()
 		{
 			//Destroy the maps
-			Destroy (GameObject.FindGameObjectWithTag("SoloButton"));
+			Destroy (GameObject.FindGameObjectWithTag("DesertMap"));
+			Destroy (GameObject.FindGameObjectWithTag("EuroMap"));
+			Destroy (GameObject.FindGameObjectWithTag("MetroMap"));
+			Destroy (GameObject.FindGameObjectWithTag("SnowMap"));
 
 			//Maps no longer visible, set mapsCreated to false
 			mapsCreated = false;
