@@ -27,14 +27,15 @@ namespace GSP
 		GameObject optionsButton;			//Options button
 		GameObject quitButton;				//Quit button
 		GameObject backButton;				//Back button
-		bool created;						//Determines if menu buttons were created
+		bool menuCreated;					//Determines if menu buttons were created
 
 		//Map and Player Selection
 		GameObject desertMap;				//Desert Map
 		GameObject snowMap;					//Snowy Map
-		GameObject cityMap;					//Metropolis Map
+		GameObject metroMap;				//Metropolis Map
 		GameObject euroMap;					//European Map
 		public string m_mapSelection;		//Holds scene name of map
+		bool mapsCreated;					//Determines if selection maps were created
 		#region Menu Data Declaration Stuff
 
 		// Holds the reference to the game object.
@@ -51,8 +52,9 @@ namespace GSP
 			m_programState = OVERALLSTATES.INTRO;		//Initial beginning of game
 			m_menuState = MENUSTATES.HOME;				//Prevents triggers from occuring before called
 			timeHolder = Time.time + 3.0f;				//Initialize first wait period
-			created = false;							//Menu has not been created yet
+			menuCreated = false;						//Menu has not been created yet
 			m_mapSelection = "nothing";					//Nothing has been chosen yet
+			mapsCreated = false;						//Map selection has not been created yet
 
 			#region Menu Data Initialisation Stuff
 			
@@ -123,22 +125,28 @@ namespace GSP
 				{
 				case MENUSTATES.HOME:
 					//HOME - Menu hub, displays all buttons for menu
-					if(!created)
+					if(!menuCreated)
 					{
 						CreateButtons();
 						state.text = "";
+					} //end if
+					if(mapsCreated)
+					{
+						DestroyMaps();
 					} //end if
 					break;
 					//SOLO - Single Player game
 				case MENUSTATES.SOLO:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
+					} //end if
+					if(!mapsCreated)
+					{
 						CreateMaps();
 						state.text = "Click which map you want to play.";
 					} //end if
-
 					//Apply any choices for Single Player here
 
 					//Only continue once a map has been chosen
@@ -159,7 +167,7 @@ namespace GSP
 					//MULTI - Multiplayer game
 				case MENUSTATES.MULTI:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
@@ -183,7 +191,7 @@ namespace GSP
 					//CREDITS - Display names and instructions
 				case MENUSTATES.CREDITS:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
@@ -191,25 +199,24 @@ namespace GSP
 					//Show credits
 					state.text = "The Traveler\n\nCreated by:\nBrent Spector - Lead Game Designer\n" +
 						"Damien Robbs - Lead Programmer\nJavier Mendoza - Lead UI\n" +
-						"Jacky Yuen - Lead Graphics and Audio.\n\nPress Exit to go back to the menu.";
+						"Jacky Yuen - Lead Graphics and Audio.\n\nPress Back to return to the menu.";
 					//Return back to menu home when done
 					break;
 					//OPTIONS - Display and allow change to any options we want
 				case MENUSTATES.OPTIONS:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
 
 					//Display options buttons
-					state.text = "There are currently no options. Press Exit to go back" +
-						" to the menu.";
+					state.text = "There are currently no options. Press Back to return to the menu.";
 					break;
 					//QUIT - Change program to END to wrap up any loose ends
 				case MENUSTATES.QUIT:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
@@ -294,7 +301,7 @@ namespace GSP
 			soloButton = new GameObject("Solo Button");
 			soloButton.tag = "SoloButton";
 			var soloRender = soloButton.AddComponent<SpriteRenderer>();
-			soloRender.sprite = SpriteReference.spriteStart;
+			soloRender.sprite = SpriteReference.spriteSolo;
 			soloButton.AddComponent<BoxCollider2D>();
 			soloButton.AddComponent<SoloButtonCollision>();
 			soloButton.transform.localPosition = new Vector3(0.0f, 3.0f, 0.0f);
@@ -304,7 +311,7 @@ namespace GSP
 			multiButton = new GameObject("Multi Button");
 			multiButton.tag = "MultiButton";
 			var multiRender = multiButton.AddComponent<SpriteRenderer>();
-			multiRender.sprite = SpriteReference.spriteContinue;
+			multiRender.sprite = SpriteReference.spriteMulti;
 			multiButton.AddComponent<BoxCollider2D>();
 			multiButton.AddComponent<MultiButtonCollision>();
 			multiButton.transform.localPosition = new Vector3(0.0f, 1.5f, 0.0f);
@@ -341,8 +348,8 @@ namespace GSP
 			quitRender.sortingOrder = 2;
 			#endregion
 
-			//Set created to true
-			created = true;
+			//Menu is visible, so menuCreated is true
+			menuCreated = true;
 		} //end CreateButtons()
 
 		void DestroyButtons()
@@ -354,15 +361,15 @@ namespace GSP
 			Destroy (GameObject.FindGameObjectWithTag("OptionsButton"));
 			Destroy (GameObject.FindGameObjectWithTag("QuitButton"));
 
-			//Set created to false
-			created = false;
+			//Menu is no longer visible, so menuCreated is false
+			menuCreated = false;
 
 			//Create Backbutton
 			//Back Button
 			backButton = new GameObject("Back Button");
 			backButton.tag = "BackButton";
 			var backRender = backButton.AddComponent<SpriteRenderer>();
-			backRender.sprite = SpriteReference.spriteExit;
+			backRender.sprite = SpriteReference.spriteBack;
 			backButton.AddComponent<BoxCollider2D>();
 			backButton.AddComponent<BackButtonCollision>();
 			backButton.transform.localPosition = new Vector3(0.0f, -3.0f, 0.0f);
@@ -380,8 +387,19 @@ namespace GSP
 			desertMap.AddComponent<DesertMapCollision>();
 			desertMap.transform.localPosition = new Vector3(-2.0f, 3.0f, 0.0f);
 			desertRender.sortingOrder = 2;
+
+			//Maps are visible, set mapsCreated to true
+			mapsCreated = true;
 		} //end CreateMaps()
 
+		void DestroyMaps()
+		{
+			//Destroy the maps
+			Destroy (GameObject.FindGameObjectWithTag("SoloButton"));
+
+			//Maps no longer visible, set mapsCreated to false
+			mapsCreated = false;
+		} //end DestroyMaps()
 		public void ChangeMenuState(MENUSTATES state)
 		{
 			m_menuState = state;
