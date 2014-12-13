@@ -7,7 +7,7 @@ namespace GSP
 	public class BrentsStateMachine : MonoBehaviour
 	{
 		//Contains overall states of program
-		enum OVERALLSTATES {INTRO, MENU, GAME, END};
+		public enum OVERALLSTATES {INTRO, MENU, GAME, END};
 		//Contains states of menu
 		public enum MENUSTATES {HOME, SOLO, MULTI, CREDITS, OPTIONS, QUIT};
 		
@@ -15,17 +15,27 @@ namespace GSP
 		OVERALLSTATES m_programState;		//Current overall state
 		MENUSTATES m_menuState;				//Current menu state
 		float timeHolder;					//Holds waiting time
+
+		//Backgrounds
 		GameObject introBackground;			//Intro Background
 		GameObject menuBackground;			//Menu Background
+
+		//Buttons
 		GameObject soloButton;				//Solo play button
 		GameObject multiButton;				//Multiplayer button
 		GameObject creditsButton;			//Credits button
 		GameObject optionsButton;			//Options button
 		GameObject quitButton;				//Quit button
 		GameObject backButton;				//Back button
-		public string m_ButtonState;		//Holds what state the button is in
-		bool created;						//Determines if menu buttons were created
+		bool menuCreated;					//Determines if menu buttons were created
 
+		//Map and Player Selection
+		GameObject desertMap;				//Desert Map
+		GameObject snowMap;					//Snowy Map
+		GameObject metroMap;				//Metropolis Map
+		GameObject euroMap;					//European Map
+		public string m_mapSelection;		//Holds scene name of map
+		bool mapsCreated;					//Determines if selection maps were created
 		#region Menu Data Declaration Stuff
 
 		// Holds the reference to the game object.
@@ -42,7 +52,9 @@ namespace GSP
 			m_programState = OVERALLSTATES.INTRO;		//Initial beginning of game
 			m_menuState = MENUSTATES.HOME;				//Prevents triggers from occuring before called
 			timeHolder = Time.time + 3.0f;				//Initialize first wait period
-			created = false;
+			menuCreated = false;						//Menu has not been created yet
+			m_mapSelection = "nothing";					//Nothing has been chosen yet
+			mapsCreated = false;						//Map selection has not been created yet
 
 			#region Menu Data Initialisation Stuff
 			
@@ -60,7 +72,7 @@ namespace GSP
 
 			// Get the menu data object's script.
 			m_menuDataScript = m_menuData.GetComponent<MenuData>();
-			
+
 			#endregion
 
 			//Create Intro Background
@@ -113,61 +125,102 @@ namespace GSP
 				{
 				case MENUSTATES.HOME:
 					//HOME - Menu hub, displays all buttons for menu
-					if(!created)
+					if(!menuCreated)
 					{
 						CreateButtons();
 						state.text = "";
+					} //end if
+					if(mapsCreated)
+					{
+						DestroyMaps();
 					} //end if
 					break;
 					//SOLO - Single Player game
 				case MENUSTATES.SOLO:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
 
-					//Apply any choices for Single Player here
-					state.text = "Setting up solo play mode, one moment.";
+					//Display maps for selection
+					state.transform.position = new Vector3(0.5f, 0.4f, 0.0f);
+					if(!mapsCreated)
+					{
+						CreateMaps();
+						state.text = "Click which map you want to play.";
+					} //end if
 
-					#region Menu Data Adding Stuff
+					//Only continue once a map has been chosen
+					if(m_mapSelection != "nothing")
+					{
+						//Pick player amount
+						#region Menu Data Adding Stuff
 
-					// Set the number of players to one for solo mode.
-					m_menuDataScript.NumberPlayers = 1;
+						// Set the number of players to one for solo mode.
+						m_menuDataScript.NumberPlayers = 1;
 
-					#endregion
+						#endregion
 
-					//Transition into game state
-					m_programState = OVERALLSTATES.GAME;
+						//Transition into game state
+						m_programState = OVERALLSTATES.GAME;
+					} //end if
 					break;
 					//MULTI - Multiplayer game
 				case MENUSTATES.MULTI:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
+					
+					//Display maps for selection
+					state.transform.position = new Vector3(0.5f, 0.4f, 0.0f);
+					if(!mapsCreated)
+					{
+						CreateMaps();
+						state.text = "Click which map you want to play.";
+					} //end if
+					
+					//Only continue once a map has been chosen
+					if(m_mapSelection != "nothing")
+					{
+						state.text = "Enter the number of players (1-4)";
+						//Pick player amount
+						#region Menu Data Adding Stuff
 
-					//Apply any choices for Multiplayer here
-					state.text = "Setting up multiplayer mode, one moment.";
-
-					#region Menu Data Adding Stuff
-						
-					// Get the number of players some how.
-						
-					// Until then, set the number of players to two for multi-mode.
-					m_menuDataScript.NumberPlayers = 2;
-						
-					#endregion
-						
-					//Transition into game state
-					m_programState = OVERALLSTATES.GAME;
-					timeHolder = Time.time + 1.5f;
+						//Set number of players
+						if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+						{
+							m_menuDataScript.NumberPlayers = 1;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						else if(Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+						{
+							m_menuDataScript.NumberPlayers = 2;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						else if(Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+						{
+							m_menuDataScript.NumberPlayers = 3;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						else if(Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+						{
+							m_menuDataScript.NumberPlayers = 4;
+							//Transition into game state
+							m_programState = OVERALLSTATES.GAME;
+						} //end if
+						#endregion
+					} //end if
 					break;
 					//CREDITS - Display names and instructions
 				case MENUSTATES.CREDITS:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
@@ -175,25 +228,24 @@ namespace GSP
 					//Show credits
 					state.text = "The Traveler\n\nCreated by:\nBrent Spector - Lead Game Designer\n" +
 						"Damien Robbs - Lead Programmer\nJavier Mendoza - Lead UI\n" +
-						"Jacky Yuen - Lead Graphics and Audio.\n\nPress Exit to go back to the menu.";
+						"Jacky Yuen - Lead Graphics and Audio.\n\nPress Back to return to the menu.";
 					//Return back to menu home when done
 					break;
 					//OPTIONS - Display and allow change to any options we want
 				case MENUSTATES.OPTIONS:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
 
 					//Display options buttons
-					state.text = "There are currently no options. Press Exit to go back" +
-						" to the menu.";
+					state.text = "There are currently no options. Press Back to return to the menu.";
 					break;
 					//QUIT - Change program to END to wrap up any loose ends
 				case MENUSTATES.QUIT:
 					//Clear buttons if not cleared yet
-					if(created)
+					if(menuCreated)
 					{
 						DestroyButtons();
 					} //end if
@@ -210,11 +262,12 @@ namespace GSP
 				//GAME
 			case OVERALLSTATES.GAME:
 				//GAMEPLAY ENTRY POINT
-				//Destroy old background
+				//Destroy old background and back button
 				Destroy (GameObject.FindGameObjectWithTag("MenuBackground"));
+				Destroy (GameObject.FindGameObjectWithTag("BackButton"));
 
 				//Load selected level
-				Application.LoadLevel("area01");
+				Application.LoadLevel(m_mapSelection);
 
 				//Reset states
 				m_programState = OVERALLSTATES.MENU;
@@ -277,7 +330,7 @@ namespace GSP
 			soloButton = new GameObject("Solo Button");
 			soloButton.tag = "SoloButton";
 			var soloRender = soloButton.AddComponent<SpriteRenderer>();
-			soloRender.sprite = SpriteReference.spriteStart;
+			soloRender.sprite = SpriteReference.spriteSolo;
 			soloButton.AddComponent<BoxCollider2D>();
 			soloButton.AddComponent<SoloButtonCollision>();
 			soloButton.transform.localPosition = new Vector3(0.0f, 3.0f, 0.0f);
@@ -287,7 +340,7 @@ namespace GSP
 			multiButton = new GameObject("Multi Button");
 			multiButton.tag = "MultiButton";
 			var multiRender = multiButton.AddComponent<SpriteRenderer>();
-			multiRender.sprite = SpriteReference.spriteContinue;
+			multiRender.sprite = SpriteReference.spriteMulti;
 			multiButton.AddComponent<BoxCollider2D>();
 			multiButton.AddComponent<MultiButtonCollision>();
 			multiButton.transform.localPosition = new Vector3(0.0f, 1.5f, 0.0f);
@@ -324,8 +377,8 @@ namespace GSP
 			quitRender.sortingOrder = 2;
 			#endregion
 
-			//Set created to true
-			created = true;
+			//Menu is visible, so menuCreated is true
+			menuCreated = true;
 		} //end CreateButtons()
 
 		void DestroyButtons()
@@ -337,21 +390,78 @@ namespace GSP
 			Destroy (GameObject.FindGameObjectWithTag("OptionsButton"));
 			Destroy (GameObject.FindGameObjectWithTag("QuitButton"));
 
-			//Set created to false
-			created = false;
+			//Menu is no longer visible, so menuCreated is false
+			menuCreated = false;
 
 			//Create Backbutton
 			//Back Button
 			backButton = new GameObject("Back Button");
 			backButton.tag = "BackButton";
 			var backRender = backButton.AddComponent<SpriteRenderer>();
-			backRender.sprite = SpriteReference.spriteExit;
+			backRender.sprite = SpriteReference.spriteBack;
 			backButton.AddComponent<BoxCollider2D>();
 			backButton.AddComponent<BackButtonCollision>();
 			backButton.transform.localPosition = new Vector3(0.0f, -3.0f, 0.0f);
 			backRender.sortingOrder = 2;
 		} //end DestroyButtons()
 
+		void CreateMaps()
+		{
+			//Desert Map
+			desertMap = new GameObject("Desert Map");
+			desertMap.tag = "DesertMap";
+			var desertRender = desertMap.AddComponent<SpriteRenderer>();
+			desertRender.sprite = SpriteReference.spriteMapDesert;
+			desertMap.AddComponent<BoxCollider2D>();
+			desertMap.AddComponent<DesertMapCollision>();
+			desertMap.transform.localPosition = new Vector3(-8.5f, 2.5f, 0.0f);
+			desertRender.sortingOrder = 2;
+
+			//Euro Map
+			euroMap = new GameObject("Euro Map");
+			euroMap.tag = "EuroMap";
+			var euroRender = euroMap.AddComponent<SpriteRenderer>();
+			euroRender.sprite = SpriteReference.spriteMapEuro;
+			euroMap.AddComponent<BoxCollider2D>();
+			euroMap.AddComponent<EuroMapCollision>();
+			euroMap.transform.localPosition = new Vector3(-3.0f, 2.5f, 0.0f);
+			euroRender.sortingOrder = 2;
+
+			//Metro Map
+			metroMap = new GameObject("Metro Map");
+			metroMap.tag = "MetroMap";
+			var metroRender = metroMap.AddComponent<SpriteRenderer>();
+			metroRender.sprite = SpriteReference.spriteMapMetro;
+			metroMap.AddComponent<BoxCollider2D>();
+			metroMap.AddComponent<MetroMapCollision>();
+			metroMap.transform.localPosition = new Vector3(3.0f, 2.5f, 0.0f);
+			metroRender.sortingOrder = 2;
+
+			//Snow Map
+			snowMap = new GameObject("Snow Map");
+			snowMap.tag = "SnowMap";
+			var snowRender = snowMap.AddComponent<SpriteRenderer>();
+			snowRender.sprite = SpriteReference.spriteMapSnowy;
+			snowMap.AddComponent<BoxCollider2D>();
+			snowMap.AddComponent<SnowMapCollision>();
+			snowMap.transform.localPosition = new Vector3(8.5f, 2.5f, 0.0f);
+			snowRender.sortingOrder = 2;
+
+			//Maps are visible, set mapsCreated to true
+			mapsCreated = true;
+		} //end CreateMaps()
+
+		void DestroyMaps()
+		{
+			//Destroy the maps
+			Destroy (GameObject.FindGameObjectWithTag("DesertMap"));
+			Destroy (GameObject.FindGameObjectWithTag("EuroMap"));
+			Destroy (GameObject.FindGameObjectWithTag("MetroMap"));
+			Destroy (GameObject.FindGameObjectWithTag("SnowMap"));
+
+			//Maps no longer visible, set mapsCreated to false
+			mapsCreated = false;
+		} //end DestroyMaps()
 		public void ChangeMenuState(MENUSTATES state)
 		{
 			m_menuState = state;
