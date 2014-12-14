@@ -38,6 +38,12 @@ namespace GSP.Char
 		{
 			get { return m_resourceList.TotalWeight; }
 		} // end ResourceWeight property
+
+		// Gets the current size of resources the character is holding.
+		public int ResourceSize
+		{
+			get { return m_resourceList.TotalSize; }
+		} // end ResourceWeight property
 		#endregion
 
 		#region Ally
