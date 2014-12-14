@@ -38,6 +38,9 @@ namespace GSP
 
 		// This is the reference to the woodcutting resource clip.
 		public static AudioClip sfxWoodcutting = Resources.Load<AudioClip>( "GSP362_TeamA_Resource_Woodcutting" );
+
+		// This is the reference to the explosion clip.
+		public static AudioClip sfxExplosion = Resources.Load<AudioClip>( "GSP362_TeamA_Secret_Explosion" );
 	} // end PrefabReference class
 } // end namespace
 
