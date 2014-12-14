@@ -11,5 +11,5 @@ namespace GSP
 				GetComponent<BrentsStateMachine>();
 			stateMachine.ChangeMenuState (BrentsStateMachine.MENUSTATES.CREDITS);
 		} //end OnMouseDown()
-	} //end SoloButtonCollision
+	} //end CreditsButtonCollision
 } //end namespace GSP
