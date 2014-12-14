@@ -11,5 +11,5 @@ namespace GSP
 				GetComponent<BrentsStateMachine>();
 			stateMachine.ChangeMenuState (BrentsStateMachine.MENUSTATES.MULTI);
 		} //end OnMouseDown()
-	} //end SoloButtonCollision
+	} //end MultiButtonCollision
 } //end namespace GSP

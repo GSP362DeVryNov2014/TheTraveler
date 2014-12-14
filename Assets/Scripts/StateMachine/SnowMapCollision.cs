@@ -11,5 +11,5 @@ namespace GSP
 				GetComponent<BrentsStateMachine>();
 			stateMachine.m_mapSelection = "area04";
 		} //end OnMouseDown()
-	} //end SoloButtonCollision
+	} //end SnowMapCollision
 } //end namespace GSP

@@ -3,13 +3,13 @@ using System.Collections;
 
 namespace GSP
 {
-	public class OptionsButtonCollision : MonoBehaviour 
+	public class HelpButtonCollision : MonoBehaviour 
 	{
 		void OnMouseDown()
 		{
 			BrentsStateMachine stateMachine = GameObject.FindGameObjectWithTag ("GameController").
 				GetComponent<BrentsStateMachine>();
-			stateMachine.ChangeMenuState (BrentsStateMachine.MENUSTATES.OPTIONS);
+			stateMachine.ChangeMenuState (BrentsStateMachine.MENUSTATES.HELP);
 		} //end OnMouseDown()
-	} //end SoloButtonCollision
+	} //end HelpButtonCollision
 } //end namespace GSP

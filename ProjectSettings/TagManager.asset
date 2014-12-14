@@ -19,7 +19,7 @@ TagManager:
   - SoloButton
   - MultiButton
   - CreditsButton
-  - OptionsButton
+  - HelpButton
   - QuitButton
   - BackButton
   - DesertMap

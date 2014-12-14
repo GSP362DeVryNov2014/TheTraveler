@@ -33,9 +33,9 @@ namespace GSP
 		//NOTE: These should add up to less than 100 so that 
 		//there is a chance nothing occurs. Minimum chance of
 		//one or else there will be problems
-		int m_enemyChance = 1;
-		int m_allyChance = 1;
-		int m_itemChance = 97;
+		int m_enemyChance = 25;
+		int m_allyChance = 15;
+		int m_itemChance = 15;
 		
 		//Event Summary
 		string m_GUIResult;

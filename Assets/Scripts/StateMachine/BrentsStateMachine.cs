@@ -9,7 +9,7 @@ namespace GSP
 		//Contains overall states of program
 		public enum OVERALLSTATES {INTRO, MENU, GAME, END};
 		//Contains states of menu
-		public enum MENUSTATES {HOME, SOLO, MULTI, CREDITS, OPTIONS, QUIT};
+		public enum MENUSTATES {HOME, SOLO, MULTI, CREDITS, HELP, QUIT};
 		
 		//State machine variables
 		OVERALLSTATES m_programState;		//Current overall state
@@ -24,7 +24,7 @@ namespace GSP
 		GameObject soloButton;				//Solo play button
 		GameObject multiButton;				//Multiplayer button
 		GameObject creditsButton;			//Credits button
-		GameObject optionsButton;			//Options button
+		GameObject helpButton;				//Help button
 		GameObject quitButton;				//Quit button
 		GameObject backButton;				//Back button
 		bool menuCreated;					//Determines if menu buttons were created
@@ -129,6 +129,9 @@ namespace GSP
 					{
 						CreateButtons();
 						state.text = "";
+						state.fontSize = 18;
+						m_mapSelection = "nothing";
+						state.anchor = TextAnchor.MiddleCenter;
 					} //end if
 					if(mapsCreated)
 					{
@@ -231,16 +234,34 @@ namespace GSP
 						"Jacky Yuen - Lead Graphics and Audio.\n\nPress Back to return to the menu.";
 					//Return back to menu home when done
 					break;
-					//OPTIONS - Display and allow change to any options we want
-				case MENUSTATES.OPTIONS:
-					//Clear buttons if not cleared yet
+					//HELP - Displays the instructions for the game
+				case MENUSTATES.HELP:
+					//Clear buttons and display instructions if not cleared yet
 					if(menuCreated)
 					{
 						DestroyButtons();
+						state.text = "GOAL OF THE GAME\nYou are a traveling merchant on a quest to make " +
+							"Gold. As such you travel location to location in search of resources\nto collect " +
+							"and sell to the local villages to make Gold. Each location values the resources " +
+							"the same. Ore is 10 Gold,\nWool is 20 Gold, Wood is 15 Gold, and Fish are 15 Gold. " +
+							"In order to beat local merchants you must finish with the most\nGold at the end. By " +
+							"touching a hut at the right end, you will automatically end the contest and force all " +
+							"other players to\nsell their resources. The merchant with the most Gold at the end " +
+							"wins the game!\n\nHOW TO PLAY\nTurns are based on the following flow. The first step " +
+							"is to roll the dice by pressing them flashing Action Button in the\ntop right of your " +
+							"screen. The box to the left will display how many steps you can move this turn. Use " +
+							"the arrows to the\nbottom right to move your character. When done, click the End Turn " +
+							"Action Button in the top right of your screen. This\nwill trigger a map event. If " +
+							"you landed on a resource, you will pick up that resource. Otherwise a normal map event\n" +
+							"will occur. You will either face an enemy, find an ally, find an item, or have nothing " +
+							"occur. Enemies are capable of\nstealing all of one resource from you, allies will aid you " +
+							"in carrying resources, and items will help you fight enemies\nbetter (usually). Resources " +
+							"are logs, wool, fish, and ore rocks you find around the map. To end the game, just\nreach " +
+							"one of the huts on the right side of the map. This will end the game and show the winner!";
+						state.fontSize = 12;
 					} //end if
 
-					//Display options buttons
-					state.text = "There are currently no options. Press Back to return to the menu.";
+					state.transform.position = new Vector3(0.5f, 0.6f, 0.0f);
 					break;
 					//QUIT - Change program to END to wrap up any loose ends
 				case MENUSTATES.QUIT:
@@ -356,15 +377,15 @@ namespace GSP
 			creditsButton.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
 			creditsRender.sortingOrder = 2;
 			
-			//Options Button
-			optionsButton = new GameObject("Options Button");
-			optionsButton.tag = "OptionsButton";
-			var optionsRender = optionsButton.AddComponent<SpriteRenderer>();
-			optionsRender.sprite = SpriteReference.spriteOptions;
-			optionsButton.AddComponent<BoxCollider2D>();
-			optionsButton.AddComponent<OptionsButtonCollision>();
-			optionsButton.transform.localPosition = new Vector3(0.0f, -1.5f, 0.0f);
-			optionsRender.sortingOrder = 2;
+			//Help Button
+			helpButton = new GameObject("Help Button");
+			helpButton.tag = "HelpButton";
+			var helpRender = helpButton.AddComponent<SpriteRenderer>();
+			helpRender.sprite = SpriteReference.spriteHelp;
+			helpButton.AddComponent<BoxCollider2D>();
+			helpButton.AddComponent<HelpButtonCollision>();
+			helpButton.transform.localPosition = new Vector3(0.0f, -1.5f, 0.0f);
+			helpRender.sortingOrder = 2;
 			
 			//Quit Button
 			quitButton = new GameObject("Quit Button");
@@ -387,7 +408,7 @@ namespace GSP
 			Destroy (GameObject.FindGameObjectWithTag("SoloButton"));
 			Destroy (GameObject.FindGameObjectWithTag("MultiButton"));
 			Destroy (GameObject.FindGameObjectWithTag("CreditsButton"));
-			Destroy (GameObject.FindGameObjectWithTag("OptionsButton"));
+			Destroy (GameObject.FindGameObjectWithTag("HelpButton"));
 			Destroy (GameObject.FindGameObjectWithTag("QuitButton"));
 
 			//Menu is no longer visible, so menuCreated is false
@@ -414,7 +435,7 @@ namespace GSP
 			desertRender.sprite = SpriteReference.spriteMapDesert;
 			desertMap.AddComponent<BoxCollider2D>();
 			desertMap.AddComponent<DesertMapCollision>();
-			desertMap.transform.localPosition = new Vector3(-8.5f, 2.5f, 0.0f);
+			desertMap.transform.position = new Vector3(-4.5f, 2.5f, 0.0f);
 			desertRender.sortingOrder = 2;
 
 			//Euro Map
@@ -424,7 +445,7 @@ namespace GSP
 			euroRender.sprite = SpriteReference.spriteMapEuro;
 			euroMap.AddComponent<BoxCollider2D>();
 			euroMap.AddComponent<EuroMapCollision>();
-			euroMap.transform.localPosition = new Vector3(-3.0f, 2.5f, 0.0f);
+			euroMap.transform.position = new Vector3(-1.5f, 2.5f, 0.0f);
 			euroRender.sortingOrder = 2;
 
 			//Metro Map
@@ -434,7 +455,7 @@ namespace GSP
 			metroRender.sprite = SpriteReference.spriteMapMetro;
 			metroMap.AddComponent<BoxCollider2D>();
 			metroMap.AddComponent<MetroMapCollision>();
-			metroMap.transform.localPosition = new Vector3(3.0f, 2.5f, 0.0f);
+			metroMap.transform.position = new Vector3(1.5f, 2.5f, 0.0f);
 			metroRender.sortingOrder = 2;
 
 			//Snow Map
@@ -444,7 +465,7 @@ namespace GSP
 			snowRender.sprite = SpriteReference.spriteMapSnowy;
 			snowMap.AddComponent<BoxCollider2D>();
 			snowMap.AddComponent<SnowMapCollision>();
-			snowMap.transform.localPosition = new Vector3(8.5f, 2.5f, 0.0f);
+			snowMap.transform.position = new Vector3(4.5f, 2.5f, 0.0f);
 			snowRender.sortingOrder = 2;
 
 			//Maps are visible, set mapsCreated to true
