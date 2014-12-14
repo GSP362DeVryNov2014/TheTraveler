@@ -92,6 +92,9 @@ namespace GSP
 		private List<GSP.Char.Character> m_playerScriptList; //access Character.cs scripts from each player to get player values
 		private List<GSP.Char.ResourceList> m_PlayerResourceList; //access Characters.cs resourcesList scripts
 
+		//Audio
+		GameObject audioSrc;
+
 		//=================================================================================================
 		//-----------------------------------Functions-----------------------------------------------------
 		//=================================================================================================
@@ -180,6 +183,9 @@ namespace GSP
 
 			//this initializes things after Start()
 			m_initAfterStart = true;
+
+			//Init audio
+			audioSrc = GameObject.FindGameObjectWithTag( "AudioSourceTag" );
 		}	//END start()
 
 		private void InitAfterStart()
@@ -525,6 +531,9 @@ namespace GSP
 					m_colorActionButtonDefault = true;
 
 					m_GUIDiceDistVal = m_DieScript.Dice.Roll(1,8);
+
+					//Play die roll sound
+					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxDice ); //Play die roll sound
 
 					//nextState()
 					m_gamePlayState = GamePlayState.CALCDISTANCE;

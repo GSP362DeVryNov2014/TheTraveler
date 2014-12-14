@@ -9,6 +9,7 @@ namespace GSP.JAVIERGUI
 		GSP.GUIMapEvents m_GUIMapEventsScript;
 		GSP.MapEvent m_MapEventScript;
 		GameObject m_PlayerEntity;
+		GameObject audioSrc;
 
 		//main container values
 		int m_mainWidth = -1;
@@ -23,6 +24,7 @@ namespace GSP.JAVIERGUI
 		void Start () {
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.GUIMapEvents> ();
 			m_MapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.MapEvent> ();
+			audioSrc = GameObject.FindGameObjectWithTag( "AudioSourceTag" );
 		}
 
 		public void InitThis( GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWdth, int p_startHght, string p_result)
@@ -39,7 +41,20 @@ namespace GSP.JAVIERGUI
 			m_headerString = m_MapEventScript.ResolveFight(m_PlayerEntity); //"Needs to call a\nfunction in Fight!\nThat returns a string.";
 		
 			#region TODO:AddSound for fight here
-			//add sound here
+			Die m_die = new Die();
+			int roll = m_die.Roll(1, 3);
+			if(roll == 1)
+			{
+				audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxSwordHit1 ); //Play sword sound
+			} //end if
+			else if(roll == 2)
+			{
+				audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxSwordHit2 ); //Play sword sound
+			} //end else if
+			else
+			{
+				audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxSwordHit3 ); //Play sword sound
+			} //end else
 			#endregion
 		}	//end public void InitThis(blah, blah, blah, blah)
 
