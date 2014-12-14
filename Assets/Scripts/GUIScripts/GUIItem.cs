@@ -9,6 +9,7 @@ namespace GSP.JAVIERGUI
 		GameObject m_PlayerEntity; 						//will initialize to the actual player in InitThis.
 		GSP.GUIMapEvents m_GUIMapEventsScript;
 		GSP.MapEvent m_MapEventScript;
+		GSP.JAVIERGUI.GUIBottomBar m_GUIBottomBarScript;
 
 		string m_headerString;
 		string m_itemString;
@@ -24,7 +25,7 @@ namespace GSP.JAVIERGUI
 		
 		// Use this for initialization
 		void Start () {
-			
+			m_GUIBottomBarScript = GameObject.FindGameObjectWithTag("GamePlayStateMachineTag").GetComponent<GSP.JAVIERGUI.GUIBottomBar>();
 		}	//end Start()
 		
 		public void InitGUIItem(GameObject p_PlayerEntity, int p_startX, int p_startY, int p_startWidth, int p_startHeight, string p_resultMapEvent) //string p_itemStr, string p_resourceStr )
@@ -98,8 +99,9 @@ namespace GSP.JAVIERGUI
 			
 			if( GUI.Button(new Rect(newX, newY, newWdth, newHght*2), "Yes") )
 			{
+				m_GUIBottomBarScript.AnimateItemButton();
+
 				//GET RESOURCE RESULT FROM MAPEVENT
-				//function() will get teh result of the map Event.
 				m_headerString = m_MapEventScript.ResolveItem(m_PlayerEntity);
 
 				m_selectionMadeAddRemove = true;
@@ -132,11 +134,18 @@ namespace GSP.JAVIERGUI
 			
 			if ( GUI.Button (new Rect( doneStartX, doneStartY, doneWidth, doneHeight), "DONE") )
 			{
+				//stop animation
+				m_GUIBottomBarScript.StopAnimation();
+
 				m_isActionRunning = false;
 				m_selectionMadeAddRemove = false;
 				//once nothing is happening, program returns to Controller's End Turn State
 				m_GUIMapEventsScript.MapeEventDone();
 			}
 		}	//end private void ConfigDoneButton()
+
+
+
+
 	}	//end public class GUIItem
 } //end namepsace GSP.JAVIERGUI

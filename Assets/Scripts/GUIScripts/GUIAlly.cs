@@ -7,7 +7,7 @@ namespace GSP.JAVIERGUI
 		////////////////////////////////////////////////////////////////////////
 		//	Creates the GUI for ALLY MapEvent
 		//		on Start()		
-		//			+gets information from Char
+		//			+gets informati4on from Char
 		//			+ask to add Ally
 		//				yes: addAlly, then displayResults and doneButton
 		//				no: display results and doneButton
@@ -27,6 +27,7 @@ namespace GSP.JAVIERGUI
 		//GSP.Char.Character m_PlayerCharacterScript;		//used during testing
 		GSP.GUIMapEvents m_GUIMapEventsScript;
 		GSP.MapEvent m_MapEventScript;
+		GSP.JAVIERGUI.GUIBottomBar m_GUIBottomBarScript;
 		
 		const int m_AllyHelpMAXWEIGHTIncrease =150;
 		string m_headerString;
@@ -46,7 +47,8 @@ namespace GSP.JAVIERGUI
 
 		// Use this for initialization
 		void Start () {
-			
+			m_GUIBottomBarScript = GameObject.FindGameObjectWithTag("GamePlayStateMachineTag").GetComponent<GSP.JAVIERGUI.GUIBottomBar>();
+
 		}	//end Start()
 
 
@@ -119,6 +121,7 @@ namespace GSP.JAVIERGUI
 			if( GUI.Button(new Rect(newX, newY, newWdth, newHght*2), "Yes") )
 			{
 				#region Add Ally Sound
+				m_GUIBottomBarScript.AnimateAllyButton();
 				//TODO:	Ally is added here
 				#endregion
 
@@ -156,6 +159,9 @@ namespace GSP.JAVIERGUI
 			
 			if ( GUI.Button (new Rect( doneStartX, doneStartY, doneWidth, doneHeight), "DONE") )
 			{
+				//stop animation
+				m_GUIBottomBarScript.StopAnimation();
+
 				m_isActionRunning = false;
 				m_selectionMadeAddRemove = false;
 				//once nothing is happening, program returns to Controller's End Turn State

@@ -161,7 +161,7 @@ namespace GSP.JAVIERGUI
 		{
 			if( m_runAnimation == false)
 			{
-				PickButtonColor (m_viewItems);
+				PickButtonColor (m_viewAllies );
 			}
 			else
 			{
@@ -219,12 +219,14 @@ namespace GSP.JAVIERGUI
 		public void AnimateAllyButton()
 		{
 			m_runAllyAnim = true;
+			m_runAnimation = true;
 		}	//public void AnimateAllyButton()
 
 
 		public void AnimateItemButton()
 		{
 			m_runItemAnim = true;
+			m_runAnimation = true;
 		}	//public void AnimateAllyButton()
 
 
@@ -236,15 +238,31 @@ namespace GSP.JAVIERGUI
 				m_animTimer = 0.0;
 			}
 			
-			if( (p_isAnimating == true) || (m_animTimer < 1.0f) )
+			if(p_isAnimating == true)
 			{
-				GUI.backgroundColor = Color.red;
+				if (m_animTimer < 1.0f)
+				{
+					GUI.backgroundColor = Color.red;
+				}
+				else
+				{
+					GUI.backgroundColor = Color.yellow;
+				}	
 			}
 			else
 			{
-				GUI.backgroundColor = Color.yellow;
-			}	
+				GUI.backgroundColor = Color.red;
+			}
 		}	//end private void animTimer()
+
+
+		public void StopAnimation()
+		{
+			m_runAllyAnim = false;
+			m_runItemAnim = false;
+			m_runAnimation = false;
+
+		}	//end public void StopAnimation()
 
 	}	//end public class GUIBottomBar : MonoBehaviour
 

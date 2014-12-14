@@ -160,7 +160,6 @@ namespace GSP
 			case m_EnumMapEvent.ALLY:
 				if( m_initScript == false )
 				{
-					m_GUIBottomBarScript.AnimateAllyButton();
 					m_GUIAllyScript.InitGUIAlly( m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight );
 					m_initScript = true;
 				}
@@ -169,7 +168,6 @@ namespace GSP
 			case m_EnumMapEvent.ITEM:
 				if( m_initScript == false )
 				{
-					m_GUIBottomBarScript.AnimateItemButton();
 					m_GUIItemScript.InitGUIItem(m_PlayerEntity, m_mainStartX, m_mainStartY, m_mainWidth, m_mainHeight, m_resultString );
 					m_initScript = true;
 				}
@@ -220,6 +218,8 @@ namespace GSP
 		public void MapeEventDone()
 		{
 			m_currEnumMpEvent = m_EnumMapEvent.DONE;
+			m_GUIBottomBarScript.StopAnimation();
+			m_GameplayStateMachineScript.StopAnimation();
 		}
 
 	}	//end public class GUIMapEvents : Monobehavior

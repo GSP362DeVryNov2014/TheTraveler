@@ -33,17 +33,17 @@ namespace GSP.JAVIERGUI
 
 			m_EndSceneCharDataObject = m_EndSceneDataScript.GetData( m_MiscScript.DetermineWinner() );
 
-			m_headerString = "Did not Initialize.";
+			m_headerString = "";
 			m_headerString = "Player " +(m_EndSceneCharDataObject.PlayerNumber).ToString() +" is the Winner!\n" 
 				+"Player " +(m_EndSceneCharDataObject.PlayerNumber).ToString() +" collected " +(m_EndSceneCharDataObject.PlayerCurrency).ToString() +" Gold.";
 
 			List<KeyValuePair<int, int>> playerList = m_MiscScript.GetList();
-			m_bodyString = "Did not Initialize.";
+			m_bodyString = "";
 			for( int i =1; i <= (m_EndSceneDataScript.Count -1); i++)
 			{
 				m_EndSceneCharDataObject = m_EndSceneDataScript.GetData(playerList[i].Key);
-				m_bodyString = "[" +(i+1).ToString() +" Place] "
-							+"Player " +(m_EndSceneCharDataObject.PlayerNumber).ToString() +" collected " +(m_EndSceneCharDataObject.PlayerCurrency).ToString() +" Gold.";
+				m_bodyString = m_bodyString +"[" +(i+1).ToString() +" Place] "
+							+"Player " +(m_EndSceneCharDataObject.PlayerNumber).ToString() +" collected " +(m_EndSceneCharDataObject.PlayerCurrency).ToString() +" Gold.\n";
 			}
 
 			m_isActionRunning = true;

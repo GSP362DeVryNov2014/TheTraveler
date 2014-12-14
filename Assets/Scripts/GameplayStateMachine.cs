@@ -515,9 +515,15 @@ namespace GSP
 				//create a roll dice button
 				m_GUIActionString = "Action\nRoll Dice";
 
+				//highlight button
+				m_colorActionButtonDefault = false;
+
 				//if button is clicked, destroy button
 				if( m_GUIActionPressed )
 				{
+					//stop animation
+					m_colorActionButtonDefault = true;
+
 					m_GUIDiceDistVal = m_DieScript.Dice.Roll(1,8);
 
 					//nextState()
@@ -780,6 +786,13 @@ namespace GSP
 				GUI.backgroundColor = Color.yellow;
 			}	
 		}	//end private void animTimer()
+
+
+		public void StopAnimation()
+		{
+			m_colorResourceButtonDefault = true;
+			m_colorActionButtonDefault = true;
+		}	//end public void StopAnimation()
 	
 
 	}	//end public class GameplayStateMachine : MonoBehaviour
