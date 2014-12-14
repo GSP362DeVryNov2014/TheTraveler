@@ -131,6 +131,7 @@ namespace GSP
 						state.text = "";
 						state.fontSize = 18;
 						m_mapSelection = "nothing";
+						state.anchor = TextAnchor.MiddleCenter;
 					} //end if
 					if(mapsCreated)
 					{
@@ -239,10 +240,28 @@ namespace GSP
 					if(menuCreated)
 					{
 						DestroyButtons();
-						state.text = "Ponies.";
+						state.text = "GOAL OF THE GAME\nYou are a traveling merchant on a quest to make " +
+							"Gold. As such you travel location to location in search of resources\nto collect " +
+							"and sell to the local villages to make Gold. Each location values the resources " +
+							"the same. Ore is 10 Gold,\nWool is 20 Gold, Wood is 15 Gold, and Fish are 15 Gold. " +
+							"In order to beat local merchants you must finish with the most\nGold at the end. By " +
+							"touching a hut at the right end, you will automatically end the contest and force all " +
+							"other players to\nsell their resources. The merchant with the most Gold at the end " +
+							"wins the game!\n\nHOW TO PLAY\nTurns are based on the following flow. The first step " +
+							"is to roll the dice by pressing them flashing Action Button in the\ntop right of your " +
+							"screen. The box to the left will display how many steps you can move this turn. Use " +
+							"the arrows to the\nbottom right to move your character. When done, click the End Turn " +
+							"Action Button in the top right of your screen. This\nwill trigger a map event. If " +
+							"you landed on a resource, you will pick up that resource. Otherwise a normal map event\n" +
+							"will occur. You will either face an enemy, find an ally, find an item, or have nothing " +
+							"occur. Enemies are capable of\nstealing all of one resource from you, allies will aid you " +
+							"in carrying resources, and items will help you fight enemies\nbetter (usually). Resources " +
+							"are logs, wool, fish, and ore rocks you find around the map. To end the game, just\nreach " +
+							"one of the huts on the right side of the map. This will end the game and show the winner!";
 						state.fontSize = 12;
 					} //end if
 
+					state.transform.position = new Vector3(0.5f, 0.6f, 0.0f);
 					break;
 					//QUIT - Change program to END to wrap up any loose ends
 				case MENUSTATES.QUIT:
