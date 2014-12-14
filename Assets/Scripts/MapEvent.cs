@@ -15,6 +15,9 @@ namespace GSP
 		//Holds the objects for referencing the player and its script functions.
 		GameObject m_player;
 		Character m_playerCharScript;
+
+		//Audio
+		GameObject audioSrc;
 		
 		//NOTE!!
 		//SIZE must be the last item in the enum so that anything based
@@ -48,6 +51,9 @@ namespace GSP
 			
 			// Reseed the die.
 			m_die.Reseed(Environment.TickCount);
+
+			//Audio
+			audioSrc = GameObject.FindGameObjectWithTag( "AudioSourceTag" );
 		}
 
 		//Calls map event and returns string
@@ -109,6 +115,24 @@ namespace GSP
 				
 				//Declare what was landed on
 				m_GUIResult = "You got a resource:\n" + temp.ResourceName;
+
+				//Play found for what was landed on
+				if(temp.ResourceName = "Fish")
+				{
+					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxFishing ); //Play fish sound
+				} //end if
+				else if(temp.ResourceName = "Wood")
+				{
+					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxWoodcutting ); //Play wood sound
+				} //end else if
+				else if(temp.ResourceName = "Wool")
+				{
+					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxShearing ); //Play wool sound
+				} //end else if
+				else
+				{
+					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxMining ); //Play ore sound
+				} //end else
 				return "RESOURCE";
 			} //end else if RESOURCE TILE
 		} //end DetermineEvent(GameObject player)
