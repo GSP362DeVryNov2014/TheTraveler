@@ -48,6 +48,9 @@ namespace GSP
 		//.....InitializingValues.....
 		bool m_initAfterStart = false;
 		//......GUI Values......
+		bool m_colorActionButtonDefault = true;
+		bool m_colorResourceButtonDefault = true;
+		double m_animTimer = 0.0;
 		string m_GUIActionString;			//Changes the String in the Action button According to State player is in
 		string m_MapEventString; 			//holds what type of action event will occur
 		string m_MapEventResultString; 		//if mapEvent is Item, what Resource is picked up? Null if not a resource event
@@ -127,7 +130,7 @@ namespace GSP
 
 			#endregion
 
-			#region Menu Data Initialisation Stuff
+			//#region Menu Data Initialisation Stuff
 
 			// Get the game object with the menu data tag.
 			GameObject menuData = GameObject.FindGameObjectWithTag( "MenuDataTag" );
@@ -145,7 +148,7 @@ namespace GSP
 			// Finally, destroy the menu data object.
 			Destroy( menuData );
 
-			#endregion
+			//#endregion
 
 			//initialize empty lists
 			m_playerList = new List<GameObject>();
@@ -183,6 +186,9 @@ namespace GSP
 		{
 			//Add Players Instances
 			AddItems(m_GUINumOfPlayers);
+
+			//#region TODO: PLAY STARTING SOUND
+			//#endregion
 
 		}	// end private void InitAfterStart()
 
@@ -399,9 +405,13 @@ namespace GSP
 			//
 			//--------------------------------------------------------------------------------
 		{
+			animTimer(m_colorResourceButtonDefault);
+
 			if (GUI.Button (new Rect ((p_col * p_width) + (p_col + 1) * p_gap, 32, p_width, p_height),"Resources")) 		//resrouces toggle Show/Hide Button
 			{
-				
+				//set Default Value
+				m_colorResourceButtonDefault = true;
+
 				if ( !(m_GUIShowResources) ) 
 				{	m_GUIShowResources = true; }	//Show Resources Containers
 				else 
@@ -443,8 +453,11 @@ namespace GSP
 			//		 
 			//------------------------------------------------------------------------------
 		{
+			animTimer(m_colorActionButtonDefault);
+
 			//Makes sure Action Button gets pressed only once per State
-			if (!(m_GUIActionPressed)) {
+			if (!(m_GUIActionPressed)) 
+			{
 				if (GUI.Button (new Rect ((col * width) + (col + 1) * gap, 2, width, 2 * height), m_GUIActionString)) 
 				{
 					m_GUIActionPressed = true;
@@ -502,10 +515,16 @@ namespace GSP
 				//create a roll dice button
 				m_GUIActionString = "Action\nRoll Dice";
 
+				//highlight button
+				m_colorActionButtonDefault = false;
+
 				//if button is clicked, destroy button
 				if( m_GUIActionPressed )
 				{
-					m_GUIDiceDistVal = m_DieScript.Dice.Roll(3,6);
+					//stop animation
+					m_colorActionButtonDefault = true;
+
+					m_GUIDiceDistVal = m_DieScript.Dice.Roll(1,8);
 
 					//nextState()
 					m_gamePlayState = GamePlayState.CALCDISTANCE;
@@ -739,6 +758,41 @@ namespace GSP
 		{
 			return m_GUINumOfPlayers;
 		}	//end public int GetNumOfPlayers()
+	
+		public void AnimateActionButton(bool p_isPlayRed)
+		{
+			m_colorActionButtonDefault = p_isPlayRed;
+		}	//end public bool AnimateActionButton(bool p_isPlayRed)
+
+		public void AnimateResourceButton( bool p_isPlayRed )
+		{
+			m_colorResourceButtonDefault = p_isPlayRed;
+		}	//end public bool AnimateResourceButton( bool p_isPlayRed)
+
+		private void animTimer(bool p_isAnimating)
+		{
+			m_animTimer = m_animTimer +Time.deltaTime;
+			if(m_animTimer > 2.0)
+			{
+				m_animTimer = 0.0;
+			}
+
+			if( (p_isAnimating == true) || (m_animTimer < 1.0f) )
+			{
+				GUI.backgroundColor = Color.red;
+			}
+			else
+			{
+				GUI.backgroundColor = Color.yellow;
+			}	
+		}	//end private void animTimer()
+
+
+		public void StopAnimation()
+		{
+			m_colorResourceButtonDefault = true;
+			m_colorActionButtonDefault = true;
+		}	//end public void StopAnimation()
 	
 
 	}	//end public class GameplayStateMachine : MonoBehaviour

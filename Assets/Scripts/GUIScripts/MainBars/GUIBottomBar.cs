@@ -22,8 +22,14 @@ namespace GSP.JAVIERGUI
 
 
 		//....Feedback Values....
+		private double m_animTimer = 0.0;
+		private bool m_runAnimation = false;
+
 		private bool m_viewItems = false;
 		private bool m_viewAllies = false;
+
+		private bool m_runItemAnim = false;
+		private bool m_runAllyAnim = false;
 
 		// Use this for initialization
 		void Awake () {
@@ -100,10 +106,23 @@ namespace GSP.JAVIERGUI
 
 		private void ConfigItemButton( int p_x, int p_y, int p_width, int p_height )
 		{
-			PickButtonColor (m_viewItems);
+			if( m_runAnimation == false)
+			{
+				PickButtonColor (m_viewItems);
+			}
+			else
+			{
+				AnimTimer( m_runItemAnim );
+			}
 
+	
 			if( GUI.Button( new Rect(p_x, p_y, p_width, p_height), "ITEMS") )
 			{
+				//stop animation
+				m_runItemAnim = false;
+				m_runAnimation = false;
+
+				//set view values
 				if( m_viewItems == false )
 				{
 					m_viewAllies = false;
@@ -131,16 +150,32 @@ namespace GSP.JAVIERGUI
 				resultString = (m_CharacterScript.DefencePower).ToString();
 				GUI.Box(new Rect (p_x +(col *p_width), p_y +(row *p_height), p_width, p_height), "DP: " +resultString );
 
+				col = col+1;
+				resultString = ( m_CharacterScript.ResourceValue.ToString() +"/" +m_CharacterScript.MaxInventory.ToString() ) ;
+				GUI.Box(new Rect (p_x +(col *p_width), p_y +(row *p_height), p_width, p_height), "DP: " +resultString );
 			}
 		}	//edn private void ConfigItemBarDisplay
 
 
 		private void ConfigAllyButton( int p_x, int p_y, int p_width, int p_height )
 		{
-			PickButtonColor( m_viewAllies );
+			if( m_runAnimation == false)
+			{
+				PickButtonColor (m_viewAllies );
+			}
+			else
+			{
+				AnimTimer( m_runAllyAnim );
+			}
+
 
 			if( GUI.Button( new Rect(p_x, p_y, p_width, p_height), "ALLIES") )
 			{
+				//stop animation
+				m_runAllyAnim = false;
+				m_runAnimation = false;
+
+				//set view values
 				if( m_viewAllies == false )
 				{
 					m_viewItems = false;
@@ -168,9 +203,9 @@ namespace GSP.JAVIERGUI
 		}	//private void ConfigAllyBarDisplay( int p_x, int p_y, int p_width, int p_height )
 
 
-		private void PickButtonColor( bool p_boolean )
+		private void PickButtonColor(bool p_isSelected)
 		{
-			if( p_boolean == true)
+			if (p_isSelected == true) 
 			{
 				GUI.backgroundColor = Color.yellow;
 			}
@@ -178,7 +213,56 @@ namespace GSP.JAVIERGUI
 			{
 				GUI.backgroundColor = Color.red;
 			}
-		}	//private void PickButtonColor( bool p_boolean )
+		}
+
+
+		public void AnimateAllyButton()
+		{
+			m_runAllyAnim = true;
+			m_runAnimation = true;
+		}	//public void AnimateAllyButton()
+
+
+		public void AnimateItemButton()
+		{
+			m_runItemAnim = true;
+			m_runAnimation = true;
+		}	//public void AnimateAllyButton()
+
+
+		private void AnimTimer(bool p_isAnimating)
+		{
+			m_animTimer = m_animTimer +Time.deltaTime;
+			if(m_animTimer > 2.0)
+			{
+				m_animTimer = 0.0;
+			}
+			
+			if(p_isAnimating == true)
+			{
+				if (m_animTimer < 1.0f)
+				{
+					GUI.backgroundColor = Color.red;
+				}
+				else
+				{
+					GUI.backgroundColor = Color.yellow;
+				}	
+			}
+			else
+			{
+				GUI.backgroundColor = Color.red;
+			}
+		}	//end private void animTimer()
+
+
+		public void StopAnimation()
+		{
+			m_runAllyAnim = false;
+			m_runItemAnim = false;
+			m_runAnimation = false;
+
+		}	//end public void StopAnimation()
 
 	}	//end public class GUIBottomBar : MonoBehaviour
 

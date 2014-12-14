@@ -37,7 +37,11 @@ namespace GSP.JAVIERGUI
 			m_isActionRunning = true;
 
 			m_headerString = m_MapEventScript.ResolveFight(m_PlayerEntity); //"Needs to call a\nfunction in Fight!\nThat returns a string.";
-		}
+		
+			#region TODO:AddSound for fight here
+			//add sound here
+			#endregion
+		}	//end public void InitThis(blah, blah, blah, blah)
 
 		// Update is called once per frame
 		void OnGUI () 

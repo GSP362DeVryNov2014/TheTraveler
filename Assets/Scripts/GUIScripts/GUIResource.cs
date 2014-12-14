@@ -8,6 +8,8 @@ namespace GSP.JAVIERGUI
 		GSP.GUIMapEvents m_GUIMapEventsScript;
 		GSP.MapEvent m_MapEventScript;
 		GameObject m_PlayerEntity;
+		GSP.JAVIERGUI.GUIBottomBar m_BottomBarScript;
+		GSP.GameplayStateMachine m_GamePlayStateMachine; //stop animation for MAIN GUI
 		
 		//main container values
 		int m_mainWidth = -1;
@@ -22,6 +24,8 @@ namespace GSP.JAVIERGUI
 		void Start () {
 			m_GUIMapEventsScript = GameObject.FindGameObjectWithTag ("GUIMapEventSpriteTag").GetComponent<GSP.GUIMapEvents> ();
 			m_MapEventScript = GameObject.FindGameObjectWithTag ("DieTag").GetComponent<GSP.MapEvent> ();
+			m_BottomBarScript = GameObject.FindGameObjectWithTag ("GamePlayStateMachineTag").GetComponent<GSP.JAVIERGUI.GUIBottomBar>();
+			m_GamePlayStateMachine = GameObject.FindGameObjectWithTag ("GamePlayStateMachineTag").GetComponent<GSP.GameplayStateMachine>();
 		}
 		
 		public void InitThis( int p_startX, int p_startY, int p_startWdth, int p_startHght, string p_result)
@@ -74,6 +78,10 @@ namespace GSP.JAVIERGUI
 				m_isActionRunning = false;
 				//once nothing is happening, program returns to Controller's End Turn State
 				m_GUIMapEventsScript.MapeEventDone();
+
+				//stop animation
+				m_BottomBarScript.StopAnimation();
+				m_GamePlayStateMachine.StopAnimation();
 			}
 		}
 

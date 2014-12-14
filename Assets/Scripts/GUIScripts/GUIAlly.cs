@@ -7,7 +7,7 @@ namespace GSP.JAVIERGUI
 		////////////////////////////////////////////////////////////////////////
 		//	Creates the GUI for ALLY MapEvent
 		//		on Start()		
-		//			+gets information from Char
+		//			+gets informati4on from Char
 		//			+ask to add Ally
 		//				yes: addAlly, then displayResults and doneButton
 		//				no: display results and doneButton
@@ -27,6 +27,7 @@ namespace GSP.JAVIERGUI
 		//GSP.Char.Character m_PlayerCharacterScript;		//used during testing
 		GSP.GUIMapEvents m_GUIMapEventsScript;
 		GSP.MapEvent m_MapEventScript;
+		GSP.JAVIERGUI.GUIBottomBar m_GUIBottomBarScript;
 		
 		const int m_AllyHelpMAXWEIGHTIncrease =150;
 		string m_headerString;
@@ -35,10 +36,10 @@ namespace GSP.JAVIERGUI
 //		int m_playerWeight = -1;
 //		int m_playerMaxWeight = -1;
 
-		int m_mainStartX = -1;
-		int m_mainStartY = -1;
-		int m_mainWidth = -1;
-		int m_mainHeight = -1;
+		int m_mainStartX 	= -1;
+		int m_mainStartY 	= -1;
+		int m_mainWidth 	= -1;
+		int m_mainHeight	= -1;
 
 		bool m_selectionMadeAddRemove = false;	//for internal use, determines if player w to add Ally or not
 		bool m_isActionRunning = false;
@@ -46,7 +47,8 @@ namespace GSP.JAVIERGUI
 
 		// Use this for initialization
 		void Start () {
-			
+			m_GUIBottomBarScript = GameObject.FindGameObjectWithTag("GamePlayStateMachineTag").GetComponent<GSP.JAVIERGUI.GUIBottomBar>();
+
 		}	//end Start()
 
 
@@ -118,11 +120,11 @@ namespace GSP.JAVIERGUI
 			
 			if( GUI.Button(new Rect(newX, newY, newWdth, newHght*2), "Yes") )
 			{
-				//TODO:ADD ALLY needs a GameObject, not sure what I am suppose to add
-				//		So I am adding the player for now so it wont crash
-				//m_PlayerAllyScript.AddAlly( m_PlayerEntity );
-				//m_playerMaxWeight = m_PlayerCharacterScript.MaxWeight +(  m_PlayerCharacterScript.NumAllies *m_AllyHelpMAXWEIGHTIncrease );
-				//m_PlayerCharacterScript.MaxWeight = m_playerMaxWeight;
+				#region Add Ally Sound
+				m_GUIBottomBarScript.AnimateAllyButton();
+				//TODO:	Ally is added here
+				#endregion
+
 				m_headerString = m_MapEventScript.ResolveAlly(m_PlayerEntity, "YES");  //"New Ally Added.\nNew Max Weight is "+m_playerMaxWeight.ToString();
 
 				m_selectionMadeAddRemove = true;
@@ -157,6 +159,9 @@ namespace GSP.JAVIERGUI
 			
 			if ( GUI.Button (new Rect( doneStartX, doneStartY, doneWidth, doneHeight), "DONE") )
 			{
+				//stop animation
+				m_GUIBottomBarScript.StopAnimation();
+
 				m_isActionRunning = false;
 				m_selectionMadeAddRemove = false;
 				//once nothing is happening, program returns to Controller's End Turn State
