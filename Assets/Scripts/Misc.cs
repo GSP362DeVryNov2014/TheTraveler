@@ -21,6 +21,17 @@ namespace GSP
 			m_currencyDict = new Dictionary<int, int>();
 		} // end Start function
 
+		// This is called every frame.
+		void Update()
+		{
+			// Check for the 'c' key being pressed.
+			if ( Input.GetKeyDown( KeyCode.C ) )
+			{
+				// Change to the cake scene!
+				Application.LoadLevel( "cake" );
+			} // end if statement
+		} // end Update function
+
 		// Determine who is the winner and fill in the sorted list.
 		public int DetermineWinner()
 		{
