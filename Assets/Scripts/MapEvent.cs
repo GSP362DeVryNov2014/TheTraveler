@@ -117,15 +117,15 @@ namespace GSP
 				m_GUIResult = "You got a resource:\n" + temp.ResourceName;
 
 				//Play found for what was landed on
-				if(temp.ResourceName = "Fish")
+				if(temp.ResourceName == "Fish")
 				{
 					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxFishing ); //Play fish sound
 				} //end if
-				else if(temp.ResourceName = "Wood")
+				else if(temp.ResourceName == "Wood")
 				{
 					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxWoodcutting ); //Play wood sound
 				} //end else if
-				else if(temp.ResourceName = "Wool")
+				else if(temp.ResourceName == "Wool")
 				{
 					audioSrc.audio.PlayOneShot( GSP.AudioReference.sfxShearing ); //Play wool sound
 				} //end else if

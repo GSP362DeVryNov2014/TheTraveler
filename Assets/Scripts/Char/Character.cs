@@ -593,7 +593,7 @@ namespace GSP.Char
 			var boxCollider = GetComponent<BoxCollider2D>();
 
 			// Set the box collider smaller to fix for the scaling fix.
-			boxCollider.size = new Vector2( 0.38f, 0.4f );
+			boxCollider.size = new Vector2( 0.18f, 0.2f );
 
 			// Switch over the selection.
 			switch (facingDirection)
